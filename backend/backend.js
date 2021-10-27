@@ -6,7 +6,7 @@ const client = new Client({
   user: 'postgres',
   password: 'postgres',
   host: 'localhost',
-  database: 'gotham_dev'
+  database: 'gotham'
 });
 
 app.get('/', function (req, res) {

@@ -1,0 +1,16 @@
+CREATE DATABASE gotham;
+
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  firstname TEXT,
+  lastname TEXT
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+  id SERIAL PRIMARY KEY,
+  title TEXT,
+  description TEXT,
+  status TEXT,
+  user_id INTEGER,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
