@@ -11,10 +11,6 @@ const client = new Client({
   database: 'gotham'
 });
 
-app.get('/', function (req, res) {
-  res.send('hello world');
-})
-
 app.get('/api/users', async (req, res) => {
   const result = await client.query('SELECT * FROM users;');
   res.send(result.rows);
@@ -110,6 +106,26 @@ app.delete('/api/users/:id', async (req, res) => {
 app.get('/api/tasks', async (req, res) => {
   const result = await client.query('SELECT * FROM tasks;');
   res.send(result.rows);
+});
+
+app.put('/api/tasks/:id', async function (req, res) {
+  const result = await client.query('UPDATE tasks SET title=$1, description=$2, status=$3, user_id=$4 WHERE id = $5 RETURNING *', [req.body.title, req.body.description, req.body.status, req.body.user_id, req.params.id])
+  res.send({
+    result: result.rows[0]
+  });
+});
+
+app.get('/api/tasks/users/:idUser', async function (req, res) {
+
+  const result = await client.query('SELECT title, description, status, user_id FROM tasks WHERE user_id = $1;', [req.params.idUser])
+  if (result.rows.length === 0) {
+    return res.status(404).send({
+      error: 'the task is unknown'
+    });
+  }
+  res.send({
+    result: result.rows[0]
+  });
 });
 
 app.get('/api/tasks/:id', async (req, res) => {
