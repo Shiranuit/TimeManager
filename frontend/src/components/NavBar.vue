@@ -28,8 +28,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .nav-bar {
-  padding-top: 4vh;
-  padding-left: 1vh;
   background-color: #42b983;
   color: rgb(255, 255, 255);
   font-size: 20px;
@@ -37,29 +35,36 @@ export default {
   text-align: left;
   width: 100%;
   height: 8vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home {
+  width: 20%;
 }
 
 .title {
   float: left;
-  padding-left: 1%;
-  transform: translate(0, -50%);
-  height: 100%;
+  transform: translate(10%, 50%);
+  // padding-left: 2%;
+  // padding-top: 2%;
 }
 
 .logo {
   height: 100%;
   width: 100%;
+  padding-left: 2%;
+  transform: translate(10%, 0%);
 }
 
 .logo-container {
   width: 6vh;
   float: left;
-  transform: translate(0, -50%);
 }
 
 .profile-menu {
   padding-right: 1%;
   float: right;
-  transform: translate(0, -50%);
 }
 </style>

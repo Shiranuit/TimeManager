@@ -1,14 +1,36 @@
 <template>
   <div class="view">
-    <nav-bar/>
+    <nav-bar />
     <div class="login">
       <b-container fluid class="login-flexbox">
         <b-col class="login-context">
-          <b-row v-if="!show_login"><b-form-input v-model="email" placeholder="Email"></b-form-input></b-row>
-          <b-row><b-form-input v-model="username" placeholder="Username"></b-form-input></b-row>
-          <b-row><b-form-input v-model="password" type="password" placeholder="Password"></b-form-input></b-row>
-          <b-row><b-button class=action-button v-on:click="login_register">{{ show_login && "Login" || "Register" }}</b-button></b-row>
-          <b-row><b-link class="swap-action" v-on:click="swap_action">{{ show_login && "Register a new account ?" || "Already have an account ?" }}</b-link></b-row>
+          <b-row v-if="!show_login"
+            ><b-form-input v-model="email" placeholder="Email"></b-form-input
+          ></b-row>
+          <b-row
+            ><b-form-input
+              v-model="username"
+              placeholder="Username"
+            ></b-form-input
+          ></b-row>
+          <b-row
+            ><b-form-input
+              v-model="password"
+              type="password"
+              placeholder="Password"
+            ></b-form-input
+          ></b-row>
+          <b-row
+            ><b-button class="action-button" v-on:click="login_register">{{
+              (show_login && "Login") || "Register"
+            }}</b-button></b-row
+          >
+          <b-row
+            ><b-link class="swap-action" v-on:click="swap_action">{{
+              (show_login && "Register a new account ?") ||
+              "Already have an account ?"
+            }}</b-link></b-row
+          >
         </b-col>
       </b-container>
     </div>
@@ -16,20 +38,20 @@
 </template>
 
 <script>
-import axios from 'axios';
-import NavBar from '../components/NavBar.vue';
+import axios from "axios";
+import NavBar from "../components/NavBar.vue";
 export default {
-  name: 'Login',
+  name: "Login",
   components: {
-    NavBar
+    NavBar,
   },
   data() {
     return {
       show_login: true,
-      email: '',
-      username: '',
-      password: '',
-    }
+      email: "",
+      username: "",
+      password: "",
+    };
   },
   methods: {
     swap_action() {
@@ -45,46 +67,57 @@ export default {
     },
 
     login() {
-      this.$store.commit('setUserInfo', {
-        userId: 0,
-        username: 'Shiranuit',
-        email: 'shiranui007@gmail.com',
-      });
-      this.$router.push('/home');
+      axios
+        .get(this.$constructUrl(`/api/users/userByName/${this.username}`))
+        .then((response) => {
+          if (response.data.error) {
+            throw new Error(response.data.error);
+          }
+
+          this.$store.commit("setUserInfo", response.data.result);
+          this.$router.push("/home");
+        })
+        .catch((error) => {
+          this.$bvToast.toast(error.message, {
+            title: "Error",
+            variant: "danger",
+            solid: true,
+          });
+        });
     },
 
     register() {
-      axios.post(`http://${this.$store.state.host}/api/users/`, {
-        email: this.email,
-        username: this.username,
-        password: this.password,
-      }).then(response => {
-        if (response.data.error) {
-          this.$bvToast.toast(response.data.error, {
-            title: 'Error',
-            variant: 'danger',
-            solid: true
+      axios
+        .post(this.$constructUrl("/api/users/"), {
+          email: this.email,
+          username: this.username,
+          password: this.password,
+        })
+        .then((response) => {
+
+          if (response.data.error) {
+            throw new Error(response.data.error);
+          }
+
+          this.$store.commit("setUserInfo", response.data.result);
+          this.$router.push("/home");
+        })
+        .catch((error) => {
+          this.$bvToast.toast(error.message, {
+            title: "Error",
+            variant: "danger",
+            solid: true,
           });
-          return;
-        }
-        this.$store.commit('setUserId', response.data);
-        this.$router.push('/home');
-      }).catch(error => {
-        this.$bvToast.toast(error.message, {
-          title: 'Error',
-          variant: 'danger',
-          solid: true
         });
-      })
-    }
+    },
   },
   beforeMount() {
     console.log(this.$store.state.userInfo);
     if (this.$store.state.userInfo !== null) {
-      this.$router.push('/home');
+      this.$router.push("/home");
     }
-  }
-}
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -2,8 +2,8 @@
   <div>
     <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
       <template #button-content>
-        <b class="username">{{ userInfo.username }}</b>
-        <b-avatar button @click="onClick"></b-avatar>
+        <b class="username">{{ userInfo.email }}</b>
+        <b-avatar button></b-avatar>
       </template>
       <b-dropdown-item to="/user/settings">Settings</b-dropdown-item>
       <b-dropdown-item v-on:click="logout"><span class="logout-button">Logout</span></b-dropdown-item>

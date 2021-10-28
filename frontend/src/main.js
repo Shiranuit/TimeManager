@@ -1,20 +1,25 @@
-import '@babel/polyfill'
-import 'mutationobserver-shim'
-import Vue from 'vue'
-import './plugins/bootstrap-vue'
-import './plugins/bootstrap-vue'
-import App from './App.vue'
-import './registerServiceWorker'
-import router from './router'
-import store from './store'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import '@babel/polyfill';
+import 'mutationobserver-shim';
+import Vue from 'vue';
+import './plugins/bootstrap-vue';
+import './plugins/bootstrap-vue';
+import './plugins/url';
+import App from './App.vue';
+import './registerServiceWorker';
+import router from './router';
+import store from './store';
+import { IconsPlugin } from 'bootstrap-vue';
 
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
-Vue.config.productionTip = false,
+import VueApexCharts from 'vue-apexcharts'
+Vue.use(VueApexCharts)
 
-Vue.use(BootstrapVue);
+Vue.component('apexchart', VueApexCharts)
+
+Vue.config.productionTip = false;
+
 Vue.use(IconsPlugin);
 
 new Vue({
