@@ -99,7 +99,7 @@ export default {
             const dayKey = hour.format('Do MMMM YYYY');
             const monthKey = hour.format('MMMM YYYY');
             counterPerDay[dayKey] = (counterPerDay[dayKey] || 0) + 1;
-            counterPerMonth[monthKey] = (counterPerMonth[dayKey] || 0) + 1;
+            counterPerMonth[monthKey] = (counterPerMonth[monthKey] || 0) + 1;
           }
         }
 
