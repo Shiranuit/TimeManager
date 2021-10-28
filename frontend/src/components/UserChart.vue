@@ -2,11 +2,13 @@
   <div>
     <b-col>
       <b-row>
+        <span>Hours worked per day</span>
         <div class="hours-worked">
           <apexchart width="100%" type="line" :options="chartOptions" :series="series"></apexchart>
         </div>
       </b-row>
       <b-row>
+        <span>Hours worked per month</span>
         <div class="hours-worked">
           <apexchart width="100%" type="donut" :options="chartOptions2" :series="series2"></apexchart>
         </div>
