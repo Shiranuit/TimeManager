@@ -8,7 +8,7 @@
       </b-row>
       <b-row>
         <div class="hours-worked">
-          <apexchart width="100%" type="donut" :options="chartOptions" :series="series"></apexchart>
+          <apexchart width="100%" type="donut" :options="chartOptions2" :series="series2"></apexchart>
         </div>
       </b-row>
     </b-col>
@@ -35,6 +35,17 @@ export default {
           type: 'categorie'
         },
       },
+      chartOptions2: {
+        chart: {
+          id: 'vuechart-example',
+          toolbar: {
+            show: false
+          },
+          type: 'donut'
+        },
+        labels: [],
+      },
+      series2: [],
       series: [],
       user: {
         username: '',
@@ -78,23 +89,32 @@ export default {
 
         let dates = moment.twix(moment.utc(min), moment.utc(max)).toArray('day');
 
-        const counter = {};
+        const counterPerDay = {};
+        const counterPerMonth = {}
 
         for (const workingtime of workingtimes) {
           const hours = moment.twix(moment.utc(workingtime.start), moment.utc(workingtime.end)).toArray('hour');
 
           for (const hour of hours) {
-            const key = hour.format('Do MMMM YYYY');
-            counter[key] = (counter[key] || 0) + 1;
+            const dayKey = hour.format('Do MMMM YYYY');
+            const monthKey = hour.format('MMMM YYYY');
+            counterPerDay[dayKey] = (counterPerDay[dayKey] || 0) + 1;
+            counterPerMonth[monthKey] = (counterPerMonth[dayKey] || 0) + 1;
           }
         }
 
-        const serie = [];
+        const serieDay = [];
+        // const serieMonth = [];
         for (const date of dates) {
           const key = date.format('Do MMMM YYYY');
-          serie.push({x: key, y: counter[key] || 0});
+          serieDay.push({x: key, y: counterPerDay[key] || 0});
         }
-        this.series.push({name: 'Hours worked per day', data: serie})
+        for (const key of Object.keys(counterPerMonth)) {
+          this.series2.push(counterPerMonth[key]);
+          this.chartOptions2.labels.push(key);
+        }
+        this.series.push({name: 'Hours worked per day', data: serieDay})
+        // this.series2.push({name: 'Hours worked per month', data: serieMonth})
       }).catch(error => {
         this.$bvToast.toast(error.message, {
           title: "Error",
