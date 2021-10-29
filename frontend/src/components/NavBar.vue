@@ -13,7 +13,7 @@
         Home
       </div>
       <div class="custom-button" @click="$router.push('/userManagement')">
-        User Management
+        Users Management
       </div>
     </div>
     <user-profile-menu class="profile-menu" v-if="this.$store.state.userInfo !== null"/>
