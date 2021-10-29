@@ -3,7 +3,7 @@
     <nav-bar/>
     <div class="settings">
       <div class="user-profile-settings">
-        <user-settings :userId="this.userId"/>
+        <user-settings :userId="this.userId" :me="true"/>
       </div>
     </div>
   </div>

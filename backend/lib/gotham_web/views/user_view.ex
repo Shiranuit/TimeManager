@@ -2,7 +2,7 @@ defmodule GothamWeb.UserView do
   use GothamWeb, :view
   alias GothamWeb.UserView
 
-  def render("index.json", %{users: users}) do
+  def render("show_list.json", %{users: users}) do
     %{result: render_many(users, UserView, "user.json")}
   end
 

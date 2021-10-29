@@ -8,6 +8,7 @@ defmodule GothamWeb.Router do
   scope "/api/users", GothamWeb do
     pipe_through [:api]
 
+    get "/_list", UserController, :list_users
     get "/userByName/:name", UserController, :get_user_info_by_name
     get "/:userID", UserController, :get_user_info
     post "/", UserController, :sign_in

@@ -102,7 +102,9 @@ export default {
         this.edit.username = false;
         this.edit.email = false;
         this.user = response.data.result;
-        this.$store.commit('setUserInfo', response.data.result);
+        if (this.me) {
+          this.$store.commit('setUserInfo', response.data.result);
+        }
       }).catch(error => {
         this.$bvToast.toast(error.message, {
           title: "Error",
@@ -117,8 +119,10 @@ export default {
         if (response.data.error) {
           throw new Error(response.data.error);
         }
-        this.$store.commit('setUserInfo', null);
-        this.$router.push('/');
+        if (this.me) {
+          this.$store.commit('setUserInfo', null);
+          this.$router.push('/');
+        }
       }).catch(error => {
         this.$bvToast.toast(error.message, {
           title: "Error",
@@ -133,6 +137,9 @@ export default {
     userId: {
       type: Number,
     },
+    me: {
+      type: Boolean
+    }
   },
   created() {
     if (!this.userId) {

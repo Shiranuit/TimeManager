@@ -8,6 +8,14 @@
       </div>
       <div class="title">Time Manager</div>
     </div>
+    <div class="button-container" v-if="this.$store.state.userInfo !== null">
+      <div class="custom-button" @click="$router.push('/home')">
+        Home
+      </div>
+      <div class="custom-button" @click="$router.push('/userManagement')">
+        User Management
+      </div>
+    </div>
     <user-profile-menu class="profile-menu" v-if="this.$store.state.userInfo !== null"/>
   </div>
 </template>
@@ -66,5 +74,31 @@ export default {
 .profile-menu {
   padding-right: 1%;
   float: right;
+}
+
+.custom-button {
+  height: 100%;
+  width: 200px;
+  padding-left: 1%;
+  padding-right: 1%;
+  align-content: center;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  background-color: #42b983;
+}
+
+.custom-button:hover {
+  cursor: pointer;
+  background-color: #328660;
+}
+
+.button-container {
+  width: auto;
+  height: 100%;
+  display: flex;
+  justify-items: center;
+  align-content: center;
 }
 </style>

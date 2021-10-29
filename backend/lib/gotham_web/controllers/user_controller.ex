@@ -24,6 +24,11 @@ defmodule GothamWeb.UserController do
     end
   end
 
+  def list_users(conn, _params) do
+    users = UserController.list_users()
+    render(conn, "show_list.json", %{users: users})
+  end
+
   def get_user_info(conn, %{"userID" => userID}) do
     user = UserController.get_user!(userID)
     json(conn, %{
