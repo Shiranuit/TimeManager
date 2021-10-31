@@ -5,9 +5,7 @@ class WorkingTimeController extends BaseController {
     super();
   }
 
-  async init() {
 
-  }
 };
 
 module.exports = WorkingTimeController;

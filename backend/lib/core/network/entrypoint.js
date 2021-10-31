@@ -16,6 +16,20 @@ class EntryPoint {
     this.server.listen(this.backend.config.port);
   }
 
+  async stopListening () {
+
+    let resolve = null;
+    const promise = new Promise((res, rej) => {
+      resolve = res;
+    });
+
+    this.server.close(() => {
+      resolve();
+    });
+
+    return promise;
+  }
+
   execute (req, res) {
     const request = new Request(req, res);
 

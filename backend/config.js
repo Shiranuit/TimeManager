@@ -14,8 +14,8 @@ module.exports = {
   },
   postgres: {
     host: 'localhost',
-    port: 5432,
-    database: 'postgres',
+    // port: 5432,
+    database: 'gotham',
     user: 'postgres',
     password: 'postgres',
   }

@@ -5,9 +5,7 @@ class UserController extends BaseController {
     super();
   }
 
-  async init() {
 
-  }
 };
 
 module.exports = UserController;

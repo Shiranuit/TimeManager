@@ -1,10 +1,11 @@
 class BaseController {
   constructor (actions = []) {
     this.__actions = new Set(actions);
+    this.backend = null;
   }
 
-  async init() {
-
+  async init(backend) {
+    this.backend = backend;
   }
 }
 

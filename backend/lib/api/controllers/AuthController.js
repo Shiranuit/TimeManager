@@ -9,16 +9,9 @@ class AuthController extends BaseController {
     ]);
   }
 
-  async init() {
-
-  }
-
   async login(req) {
-    console.log(req);
-    return {
-      controller: req.getController(),
-      action: req.getAction(),
-    }
+    
+    return await this.backend.ask('postgres:query', 'SELECT * FROM users;');
   }
 
   async logout(req) {
