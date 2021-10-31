@@ -1,5 +1,5 @@
 class RequestInput {
-  constructor(request) {
+  constructor (request) {
     this.request = request;
     this.url = new URL(request.url, `http://${request.headers.host}`);
     this.body = {};
@@ -28,19 +28,19 @@ class RequestInput {
     return this.url.pathname;
   }
 
-  getMethod() {
+  getMethod () {
     return this.request.method;
   }
 
-  getAction() {
+  getAction () {
     return this.action;
   }
 
-  getController() {
+  getController () {
     return this.controller;
   }
 
-  
+
 }
 
 module.exports = RequestInput;

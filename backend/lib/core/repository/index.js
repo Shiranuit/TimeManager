@@ -1,12 +1,12 @@
 const ClockRepository = require('./clockRepository');
 
 class RepositoryModule {
-  constructor() {
+  constructor () {
     this.backend = null;
     this.clock = new ClockRepository(this);
   }
 
-  async init(backend) {
+  async init (backend) {
     this.backend = backend;
     await this.clock.init(backend);
   }

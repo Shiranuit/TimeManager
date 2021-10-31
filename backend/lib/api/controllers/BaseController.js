@@ -4,7 +4,7 @@ class BaseController {
     this.backend = null;
   }
 
-  async init(backend) {
+  async init (backend) {
     this.backend = backend;
   }
 }

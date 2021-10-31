@@ -27,7 +27,7 @@ class Backend extends BackendEventEmitter {
     this.state = BackendStateEnum.STARTING;
   }
 
-  async ask(event, ...args)  {
+  async ask (event, ...args)  {
     const _args = {...args};
     this.logger.debug(`Ask ${event}: ${JSON.stringify(_args)}`);
     return super.ask(event, ...args);

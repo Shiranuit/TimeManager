@@ -11,67 +11,67 @@ class Request {
     this.context = {};
   }
 
-  getJWT() {
+  getJWT () {
     return this.input.body.jwt || null;
   }
 
-  getUser() {
+  getUser () {
     return this.context.user || null;
   }
 
-  isAnonymous() {
+  isAnonymous () {
     return !this.getUser() || this.getUser().id === null;
   }
 
-  getAction() {
+  getAction () {
     return this.input.getAction();
   }
 
-  getController() {
+  getController () {
     return this.input.getController();
   }
 
-  setResult(result) {
+  setResult (result) {
     this.response.setResult(result);
   }
 
-  setError(error) {
+  setError (error) {
     this.response.setError(error);
   }
 
-  getBody() {
+  getBody () {
     return this.input.body;
   }
 
-  getArgs() {
+  getArgs () {
     return this.input.args;
   }
 
-  getBoolean(name) {
+  getBoolean (name) {
     return get(this.input.args, name) !== undefined;
   }
 
-  getNumber(name, def = null) {
+  getNumber (name, def = null) {
     return this._getNumber(this.input.args, name, name, def);
   }
 
-  getInteger(name, def = null) {
+  getInteger (name, def = null) {
     return this._getInteger(this.input.args, name, name, def);
   }
 
-  getArray(name, def = null) {
+  getArray (name, def = null) {
     return this._getArray(this.input.args, name, name, def);
   }
 
-  getString(name, def = null) {
+  getString (name, def = null) {
     return this._getString(this.input.args, name, name, def);
   }
 
-  getObject(name, def = null) {
+  getObject (name, def = null) {
     return this._getObject(this.input.args, name, name, def);
   }
 
-  getBodyBoolean(name) {
+  getBodyBoolean (name) {
     const value = get(this.input.body, name);
 
     if (value === undefined || value === null) {
@@ -83,28 +83,28 @@ class Request {
     }
   }
 
-  getBodyNumber(name, def = null) {
+  getBodyNumber (name, def = null) {
     return this._getNumber(this.input.body, name, `body.${name}`, def);
   }
   
-  getBodyInteger(name, def = null) {
+  getBodyInteger (name, def = null) {
     return this._getInteger(this.input.body, name, `body.${name}`, def);
   }
 
-  getBodyString(name, def = null) {
+  getBodyString (name, def = null) {
     return this._getString(this.input.body, name, `body.${name}`, def);
   }
 
-  getBodyObject(name, def = null) {
+  getBodyObject (name, def = null) {
     return this._getObject(this.input.body, name, `body.${name}`, def);
   }
 
-  getBodyArray(name, def = null) {
+  getBodyArray (name, def = null) {
     return this._getArray(this.input.body, name, `body.${name}`, def);
   }
 
 
-  _getNumber(
+  _getNumber (
     obj,
     name,
     errorName,
@@ -129,7 +129,7 @@ class Request {
     return _value;
   }
 
-  _getInteger(
+  _getInteger (
     obj,
     name,
     errorName,
@@ -154,7 +154,7 @@ class Request {
     return _value;
   }
 
-  _getString(
+  _getString (
     obj,
     name,
     errorName,
@@ -177,7 +177,7 @@ class Request {
     return value;
   }
 
-  _getArray(
+  _getArray (
     obj,
     name,
     errorName,
@@ -200,7 +200,7 @@ class Request {
     return value;
   }
 
-  _getObject(
+  _getObject (
     obj,
     name,
     errorName,

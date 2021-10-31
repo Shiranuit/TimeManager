@@ -1,5 +1,5 @@
 class Token {
-  constructor(data) {
+  constructor (data) {
     this.id = data.id || null;
     this.userId = data.userId || null;
     this.jwt = data.jwt || null;
@@ -8,7 +8,7 @@ class Token {
     this.refreshed = false;
   }
 
-  toJSON() {
+  toJSON () {
     return {
       id: this.userId,
       userId: this.userId,

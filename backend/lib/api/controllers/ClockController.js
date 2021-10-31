@@ -2,12 +2,14 @@ const BaseController = require('./BaseController');
 const error = require('../../errors');
 
 class ClockController extends BaseController {
-  constructor() {
+  constructor () {
     super([
       { verb: 'get', path: '/_me', action: 'getMyClock' },
       { verb: 'get', path: '/:userId', action: 'getClock' },
+
       { verb: 'post', path: '/_me', action: 'createOrUpdateMyClock' },
       { verb: 'post', path: '/:userId', action: 'createOrUpdate' },
+
       { verb: 'delete', path: '/_me', action: 'deleteMyClock' },
       { verb: 'delete', path: '/:userId', action: 'delete' },
     ]);
@@ -39,7 +41,7 @@ class ClockController extends BaseController {
     const user = await this.backend.ask('core:security:user:get', userId);
 
     if (!user) {
-      error.throwError('security:user:not_found', userId);
+      error.throwError('security:user:with_id_not_found', userId);
     }
 
     let clock = await this.backend.ask('core:clock:get', userId);
@@ -77,7 +79,7 @@ class ClockController extends BaseController {
     const user = await this.backend.ask('core:security:user:get', userId);
 
     if (!user) {
-      error.throwError('security:user:not_found', userId);
+      error.throwError('security:user:with_id_not_found', userId);
     }
 
     const clock = await this.backend.ask('core:clock:get', userId);
@@ -109,7 +111,7 @@ class ClockController extends BaseController {
     const user = await this.backend.ask('core:security:user:get', userId);
 
     if (!user) {
-      error.throwError('security:user:not_found', userId);
+      error.throwError('security:user:with_id_not_found', userId);
     }
 
     await this.backend.ask('core:clock:delete', userId);

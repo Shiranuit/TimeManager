@@ -2,16 +2,16 @@ const error = require('../../errors');
 const RouterPart = require('./routerPart');
 
 class Router {
-  constructor() {
+  constructor () {
     this.routes = new Map();
     this.backend = null;
   }
 
-  async init(backend) {
+  async init (backend) {
     this.backend = backend;
   }
 
-  attach(verb, path, handler, controller, action) {
+  attach (verb, path, handler, controller, action) {
     const _path = this._cleanupPath(path);
     const _verb = verb.toLowerCase();
     const part = new RouterPart(verb, _path, handler, controller, action);
@@ -36,11 +36,11 @@ class Router {
     verbRoutes.get(part.getTemplate().length).push(part);
   }
 
-  _cleanupPath(path) {
+  _cleanupPath (path) {
     return path.split('/').filter(item => item !== '').join('/');
   }
 
-  find(verb, path) {
+  find (verb, path) {
     const _verb = verb.toLowerCase();
     if (!this.routes.has(_verb)) {
       error.throwError('network:http:url_not_found', `${verb.toUpperCase()} ${path}`);

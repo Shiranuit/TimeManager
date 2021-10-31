@@ -1,11 +1,11 @@
 const User = require('../../model/user');
 
 class UserRepository {
-  constructor() {
+  constructor () {
     this.backend = null;
   }
 
-  async init(backend) {
+  async init (backend) {
     this.backend = backend;
 
     backend.onAsk('core:security:user:create', this.registerUser.bind(this));
@@ -14,7 +14,7 @@ class UserRepository {
     backend.onAsk('core:security:user:update', this.updateUser.bind(this));
   }
 
-  async registerUser(data) {
+  async registerUser (data) {
     const hashedPassword = await this.backend.ask('core:security:vault:hash', data.password);
     
     const result = await this.backend.ask(
@@ -26,7 +26,7 @@ class UserRepository {
     return new User(result.rows[0].id);
   }
 
-  async verify(data) {
+  async verify (data) {
     const hashedPassword = await this.backend.ask('core:security:vault:hash', data.password);
 
     const result = await this.backend.ask(
@@ -42,7 +42,7 @@ class UserRepository {
     return new User(result.rows[0].id);
   }
 
-  async getUser(id) {
+  async getUser (id) {
     const result = await this.backend.ask(
       'postgres:query',
       'SELECT id, username, email FROM users WHERE id = $1;',
@@ -60,7 +60,7 @@ class UserRepository {
     };
   }
 
-  async updateUser(id, data) {
+  async updateUser (id, data) {
     const result = await this.backend.ask(
       'postgres:query',
       'UPDATE users SET username = $2, email = $3 WHERE id = $1;',

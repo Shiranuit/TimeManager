@@ -1,5 +1,5 @@
 class BackendError extends Error {
-  constructor(status, id, message, type='BackendError') {
+  constructor (status, id, message, type='BackendError') {
     super(message);
     this.id = id;
     this.status = status || 0;

@@ -2,6 +2,7 @@ const InternalError = require('./internalError');
 const BadRequestError = require('./badRequestError');
 const ServiceUnavailableError = require('./serviceUnavailableError');
 const SecurityError = require('./securityError');
+const ApiError = require('./apiError');
 
 module.exports = {
   'request:discarded:shutdown': {
@@ -44,6 +45,10 @@ module.exports = {
     message: 'User "%s" not found',
     type: SecurityError,
   },
+  'security:user:with_idnot_found': {
+    message: 'User with id "%s" not found',
+    type: SecurityError,
+  },
   'security:user:invalid_credentials': {
     message: 'Invalid credentials',
     type: SecurityError,
@@ -71,5 +76,13 @@ module.exports = {
   'security:user:not_authenticated': {
     message: 'User not authenticated',
     type: SecurityError,
+  },
+  'api:workingtime:creation_failed': {
+    message: 'Failed to create working time',
+    type: ApiError,
+  },
+  'api:workingtime:not_found': {
+    message: 'No working time found with id "%s" for user_id "%s"',
+    type: ApiError,
   }
 };

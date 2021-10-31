@@ -8,12 +8,13 @@ const NUMBER_PATTERN = /[0-9]/;
 const LOWER_PATTERN = /[a-z]/;
 
 class AuthController extends BaseController {
-  constructor() {
+  constructor () {
     super([
       { verb: 'get', path: '/_login', action: 'login' },
       { verb: 'get', path: '/_logout', action: 'logout' },
       { verb: 'post', path: '/_register', action: 'register' },
       { verb: 'get', path: '/_checkToken', action: 'checkToken' },
+
       { verb: 'get', path: '/_me', action: 'getMyUser'},
       { verb: 'put', path: '/', action: 'updateMyUser' },
       { verb: 'delete', path: '/', action: 'deleteMyUser' },

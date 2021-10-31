@@ -3,13 +3,13 @@ const Token = require('../../model/token');
 const error = require('../../errors');
 
 class TokenRepository {
-  constructor() {
+  constructor () {
     this.backend = null;
     this.config = {};
     this.tokens = new Map();
   }
 
-  async init(backend) {
+  async init (backend) {
     this.backend = backend;
     this.config = backend.config.auth.jwt;
 
@@ -19,7 +19,7 @@ class TokenRepository {
     backend.onAsk('core:security:token:refresh', this.refresh.bind(this));
   }
 
-  async generateToken(user, options) {
+  async generateToken (user, options) {
     const encodedJwt = jwt.sign({id: user.id}, this.config.secret, options);
     
     const token = new Token({
@@ -34,7 +34,7 @@ class TokenRepository {
     return token;
   }
 
-  async expire(encodedJwt) {
+  async expire (encodedJwt) {
     try {
       const decoded = jwt.verify(encodedJwt, this.config.secret);
       const hash = `${decoded.id}#${encodedJwt}`;
@@ -47,7 +47,7 @@ class TokenRepository {
     }
   }
 
-  async verify(encodedJwt) {
+  async verify (encodedJwt) {
     if (!encodedJwt) {
       return null;
     }
@@ -77,7 +77,7 @@ class TokenRepository {
     error.throwError('security:token:invalid');
   }
 
-  async refresh(token) {
+  async refresh (token) {
 
   }
 

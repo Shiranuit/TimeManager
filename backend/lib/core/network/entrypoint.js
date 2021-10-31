@@ -3,7 +3,7 @@ const Request = require('../../api/requests/request');
 const error = require('../../errors');
 
 class EntryPoint {
-  constructor() {
+  constructor () {
     this.server = http.createServer(this.execute.bind(this));
     this.backend = null;
   }

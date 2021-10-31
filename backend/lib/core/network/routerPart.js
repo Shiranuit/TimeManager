@@ -1,6 +1,6 @@
 class RouterPart {
 
-  constructor(method, path, handler, controller, action) {
+  constructor (method, path, handler, controller, action) {
     this.method = method;
     this.path = `/${path}`;
     this.handler = handler;
@@ -11,7 +11,7 @@ class RouterPart {
 
   }
 
-  _constructTemplate(path) {
+  _constructTemplate (path) {
     const templatePath = [];
     for (const subPath of path.split('/')) {
       if (subPath[0] === ':') {
@@ -32,27 +32,27 @@ class RouterPart {
     return templatePath;
   }
 
-  getMethod() {
+  getMethod () {
     return this.method;
   }
 
-  getPath() {
+  getPath () {
     return this.path;
   }
 
-  getHandler() {
+  getHandler () {
     return this.handler;
   }
 
-  getTemplatePath() {
+  getTemplatePath () {
     return this.templatePath;
   }
 
-  getTemplate() {
+  getTemplate () {
     return this.template;
   }
 
-  getParams(path) {
+  getParams (path) {
     const _path = path.split('/').filter(item => item !== '');
     const params = {};
 

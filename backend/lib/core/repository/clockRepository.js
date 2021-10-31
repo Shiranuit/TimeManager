@@ -1,9 +1,9 @@
 class ClockRepository {
-  constructor() {
+  constructor () {
     this.backend = null;
   }
 
-  async init(backend) {
+  async init (backend) {
     this.backend = backend;
 
     backend.onAsk('core:clock:create', this.createClock.bind(this));
@@ -12,7 +12,7 @@ class ClockRepository {
     backend.onAsk('core:clock:delete', this.deleteClock.bind(this));
   }
 
-  async getClock(userId) {
+  async getClock (userId) {
     const result = await this.backend.ask(
       'postgres:query',
       'SELECT id, status, start_date FROM clocks WHERE user_id = $1;',
@@ -30,7 +30,7 @@ class ClockRepository {
     };
   }
 
-  async createClock(userId) {
+  async createClock (userId) {
     const result = await this.backend.ask(
       'postgres:query',
       'INSERT INTO clocks (user_id) VALUES ($1) RETURNING id, status, start_date;',
@@ -48,7 +48,7 @@ class ClockRepository {
     };
   }
 
-  async updateClock(userId, status) {
+  async updateClock (userId, status) {
     const result = await this.backend.ask(
       'postgres:query',
       'UPDATE clocks SET status = $2 WHERE user_id = $1 RETURNING id, status, start_date;',
@@ -66,7 +66,7 @@ class ClockRepository {
     };
   }
 
-  async deleteClock(userId) {
+  async deleteClock (userId) {
     await this.backend.ask(
       'postgres:query',
       'DELETE FROM clocks WHERE user_id = $1;',

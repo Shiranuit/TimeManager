@@ -3,7 +3,7 @@ const InternalError = require('../../errors/internalError');
 const assert = require('../../utils/assertType');
 
 class RequestResponse {
-  constructor(response) {
+  constructor (response) {
     this.response = response;
     this.error = null;
     this.result = {};
