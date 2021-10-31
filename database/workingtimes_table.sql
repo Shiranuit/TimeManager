@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS public.workingtimes (
+  id SERIAL PRIMARY KEY,
+  _start TIMESTAMP NOT NULL,
+  _end TIMESTAMP NOT NULL,
+  _description TEXT NOT NULL,
+  user_id INTEGER NOT NULL,
+
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
