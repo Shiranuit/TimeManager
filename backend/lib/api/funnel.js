@@ -8,6 +8,7 @@ const {
 } = require('./controllers');
 const Router = require('../core/network/router');
 const InternalError = require('../errors/internalError');
+const User = require('../model/user');
 
 class Funnel {
   constructor () {
@@ -26,7 +27,7 @@ class Funnel {
       for (const route of controller.__actions) {
         const path = route.path[0] === '/' ? `/${controllerName}${route.path}` : `/${controllerName}/${route.path}`;
         if (!controller[route.action] || typeof controller[route.action] !== 'function') {
-          throw InternalError(`Cannot attach path ${route.verb.toUpperCase()} ${path}: not action ${route.action} for controller ${controllerName}`);
+          throw new InternalError(`Cannot attach path ${route.verb.toUpperCase()} ${path}: no action ${route.action} for controller ${controllerName}`);
         }
         this.backend.router.attach(route.verb, path, controller[route.action].bind(controller), controllerName, route.action);
       }
@@ -53,7 +54,9 @@ class Funnel {
   }
 
   async checkRights (req) {
-    
+    const token = await this.backend.ask('core:security:token:verify', req.getJWT());
+    console.log(token);
+    req.context.user = token ? new User(token.userId) : new User(null);
   }
 };
 

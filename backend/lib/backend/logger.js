@@ -1,7 +1,16 @@
 class Logger {
+  constructor(backend) {
+    this.backend = backend;
+    this.config = backend.config.logger;
+  }
+
   debug(message) {
+    if (!this.config.debug) {
+      return;
+    }
+
     const date = new Date().toLocaleString();
-    console.debug('\x1b[32m%s\x1b[0m', `[INFO][${date}] ${message}`);
+    console.debug('\x1b[32m%s\x1b[0m', `[DEBUG][${date}] ${message}`);
   }
 
   info(message) {

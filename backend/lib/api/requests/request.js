@@ -8,6 +8,19 @@ class Request {
     this.input = new RequestInput(request);
     this.response = new RequestResponse(response);
     this.routerPart = null;
+    this.context = {};
+  }
+
+  getJWT() {
+    return this.input.body.jwt || null;
+  }
+
+  getUser() {
+    return this.context.user || null;
+  }
+
+  isAnonymous() {
+    return !this.getUser() || this.getUser().id === null;
   }
 
   getAction() {

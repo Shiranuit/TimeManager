@@ -2,10 +2,12 @@ const BackendEventEmitter = require('./events/backendEventEmitter');
 const Funnel = require('../api/funnel');
 const EntryPoint = require('../core/network/entrypoint');
 const BackendStateEnum = require('../types/BackendState');
+const SecurityModule = require('../core/security');
 const Prom = require('../utils/prom');
-const Logger = require('../utils/logger');
+const Logger = require('./logger');
 const Router = require('../core/network/router');
-const Postgres = require('../services/postgres');
+const Postgres = require('../services/postgres/postgres');
+const { stringify } = require('querystring');
 
 class Backend extends BackendEventEmitter {
 
@@ -17,14 +19,22 @@ class Backend extends BackendEventEmitter {
     this.entryPoint = new EntryPoint();
     this.router = new Router();
     this.postgres = new Postgres();
+
+    this.security = new SecurityModule();
     
-    this.logger = new Logger();
+    this.logger = new Logger(this);
     this.state = BackendStateEnum.STARTING;
+  }
+
+  async ask(event, ...args)  {
+    const _args = {...args};
+    this.logger.debug(`Ask ${event}: ${JSON.stringify(_args)}`);
+    return super.ask(event, ...args);
   }
 
   async start () {
     try {
-    // Backend is starting
+      // Backend is starting
       this.logger.info('Starting backend...');
       await super.pipe('backend:state:start');
 
@@ -32,6 +42,7 @@ class Backend extends BackendEventEmitter {
       await this.funnel.init(this);
       await this.entryPoint.init(this);
       await this.postgres.init(this);
+      await this.security.init(this);
 
       // Module initialized, requests still not accepted
       await super.pipe('backend:state:live');

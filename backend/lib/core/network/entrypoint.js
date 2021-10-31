@@ -13,7 +13,8 @@ class EntryPoint {
   }
 
   async startListening () {
-    this.server.listen(this.backend.config.port);
+    this.server.listen(this.backend.config.http.port);
+    this.backend.logger.info(`Backend is listening on port: ${this.backend.config.http.port}`);
   }
 
   async stopListening () {
@@ -32,6 +33,7 @@ class EntryPoint {
 
   execute (req, res) {
     const request = new Request(req, res);
+    this.backend.logger.debug(`${request.input.getMethod()} ${request.input.getPath()} from ${req.connection.remoteAddress}`);
 
     const fullContent = [];
     req.on('data', data => {

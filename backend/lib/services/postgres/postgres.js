@@ -12,6 +12,7 @@ class Postgres {
     try {
       this.backend.logger.info('Trying to connect to Postgres');
       this.client = new Client(backend.config.postgres);
+      
       await this.client.connect();
       this.backend.logger.info('Connected to Postgres');
     } catch (err) {
