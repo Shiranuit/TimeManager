@@ -35,7 +35,6 @@ class ClockController extends BaseController {
     }
 
     return {
-      id: clock.id,
       status: clock.status,
       start: clock.start,
     };
@@ -59,14 +58,23 @@ class ClockController extends BaseController {
         error.throwError('api:clock:creation_failed');
       }
     } else {
-      clock = await this.backend.ask('core:clock:update', userId, !clock.status);
+      if (clock.status) {
+        this.backend.ask('core:workingtime:create', userId, {
+          _start: clock.start,
+          _end: new Date().toISOString(),
+          _description: '',
+        });
+      } else {
+        clock.start = new Date().toISOString();
+      }
+
+      clock = await this.backend.ask('core:clock:update', userId, { start: clock.start, status: !clock.status });
       if (!clock) {
         error.throwError('api:clock:update_failed');
       }
     }
 
     return {
-      id: clock.id,
       status: clock.status,
       start: clock.start,
     };
@@ -84,7 +92,6 @@ class ClockController extends BaseController {
     }
 
     return {
-      id: clock.id,
       status: clock.status,
       start: clock.start,
     };
@@ -106,7 +113,6 @@ class ClockController extends BaseController {
     }
 
     return {
-      id: clock.id,
       status: clock.status,
       start: clock.start,
     };

@@ -139,10 +139,10 @@ class AuthController extends BaseController {
       error.throwError('security:user:not_authenticated');
     }
 
-    const userInfo = await this.backend.ask('core:security:user:get', req.getUser().id);
+    const userInfos = await this.backend.ask('core:security:user:get', req.getUser().id);
 
     // Should never happen but just in case
-    if (!userInfo) {
+    if (!userInfos) {
       error.throwError('security:user:not_found', req.getUser().id);
     }
 
@@ -152,7 +152,7 @@ class AuthController extends BaseController {
       username: body.username,
     }
 
-    return await this.backend.ask('core:security:user:update', req.getUser().id, {...userInfo, ...sanitizeBody});
+    return await this.backend.ask('core:security:user:update', req.getUser().id, {...userInfos, ...sanitizeBody});
   }
 
   async deleteMyUser (req) {

@@ -21,7 +21,7 @@ class Funnel {
     this.controllers.set('auth', new AuthController());
     this.controllers.set('user', new UserController());
     this.controllers.set('clock', new ClockController());
-    this.controllers.set('workingTime', new WorkingTimeController());
+    this.controllers.set('workingtime', new WorkingTimeController());
 
     for (const [controllerName, controller] of this.controllers) {
       for (const route of controller.__actions) {

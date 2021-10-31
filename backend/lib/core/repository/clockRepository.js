@@ -33,7 +33,7 @@ class ClockRepository {
   async createClock (userId) {
     const result = await this.backend.ask(
       'postgres:query',
-      'INSERT INTO clocks (user_id) VALUES ($1) RETURNING id, status, start_date;',
+      'INSERT INTO clocks (user_id) VALUES ($1) RETURNING status, start_date;',
       [userId]
     );
 
@@ -48,11 +48,11 @@ class ClockRepository {
     };
   }
 
-  async updateClock (userId, status) {
+  async updateClock (userId, data) {
     const result = await this.backend.ask(
       'postgres:query',
-      'UPDATE clocks SET status = $2 WHERE user_id = $1 RETURNING id, status, start_date;',
-      [userId, status]
+      'UPDATE clocks SET status = $2, start_date = $3 WHERE user_id = $1 RETURNING status, start_date;',
+      [userId, data.status, data.start]
     );
 
     if (result.rows.length === 0) {
