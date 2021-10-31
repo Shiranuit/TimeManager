@@ -24,8 +24,14 @@ class ClockController extends BaseController {
 
     if (!clock) {
       clock = await this.backend.ask('core:clock:create', req.getUser().id);
+      if (!clock) {
+        error.throwError('api:clock:creation_failed');
+      }
     } else {
       clock = await this.backend.ask('core:clock:update', req.getUser().id, !clock.status);
+      if (!clock) {
+        error.throwError('api:clock:update_failed');
+      }
     }
 
     return {
@@ -48,8 +54,15 @@ class ClockController extends BaseController {
 
     if (!clock) {
       clock = await this.backend.ask('core:clock:create', userId);
+
+      if (!clock) {
+        error.throwError('api:clock:creation_failed');
+      }
     } else {
       clock = await this.backend.ask('core:clock:update', userId, !clock.status);
+      if (!clock) {
+        error.throwError('api:clock:update_failed');
+      }
     }
 
     return {
@@ -65,6 +78,10 @@ class ClockController extends BaseController {
     }
 
     const clock = await this.backend.ask('core:clock:get', req.getUser().id);
+
+    if (!clock) {
+      error.throwError('api:clock:not_found', req.getUser().id);
+    }
 
     return {
       id: clock.id,
@@ -85,7 +102,7 @@ class ClockController extends BaseController {
     const clock = await this.backend.ask('core:clock:get', userId);
 
     if (!clock) {
-      return null;
+      error.throwError('api:clock:not_found', userId);
     }
 
     return {

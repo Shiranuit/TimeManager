@@ -84,5 +84,21 @@ module.exports = {
   'api:workingtime:not_found': {
     message: 'No working time found with id "%s" for user_id "%s"',
     type: ApiError,
-  }
+  },
+  'api:workingtime:update_failed': {
+    message: 'Failed to update working time',
+    type: ApiError,
+  },
+  'api:clock:creation_failed': {
+    message: 'Failed to create a new clock',
+    type: ApiError,
+  },
+  'api:clock:not_found': {
+    message: 'No clock found',
+    type: ApiError,
+  },
+  'api:clock:update_failed': {
+    message: 'Failed to update clock',
+    type: ApiError,
+  },
 };
