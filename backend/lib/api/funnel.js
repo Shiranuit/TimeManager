@@ -55,7 +55,6 @@ class Funnel {
 
   async checkRights (req) {
     const token = await this.backend.ask('core:security:token:verify', req.getJWT());
-    console.log(token);
     req.context.user = token ? new User(token.userId) : new User(null);
   }
 };

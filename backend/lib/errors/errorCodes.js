@@ -67,5 +67,9 @@ module.exports = {
   'security:token:expired': {
     message: 'Token expired',
     type: SecurityError,
+  },
+  'security:user:not_authenticated': {
+    message: 'User not authenticated',
+    type: SecurityError,
   }
 };

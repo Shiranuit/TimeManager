@@ -15,15 +15,17 @@ class AuthController extends BaseController {
       { verb: 'post', path: '/_register', action: 'register' },
       { verb: 'get', path: '/_checkToken', action: 'checkToken' },
       { verb: 'get', path: '/_me', action: 'getMyUser'},
+      { verb: 'put', path: '/', action: 'updateMyUser' },
+      { verb: 'delete', path: '/', action: 'deleteMyUser' },
     ]);
   }
 
-  async init(backend) {
+  async init (backend) {
     super.init(backend);
     this.config = backend.config.auth;
   }
 
-  async login(req) {
+  async login (req) {
     const username = req.getBodyString('username');
     const password = req.getBodyString('password');
     const expiresIn = req.getString('expiresIn', '1h');
@@ -47,13 +49,13 @@ class AuthController extends BaseController {
     }
   }
 
-  async logout(req) {
+  async logout (req) {
     await this.backend.ask('core:security:token:delete', req.getJWT());
 
     return true;
   }
 
-  async register(req) {
+  async register (req) {
     const username = req.getBodyString('username');
     const email = req.getBodyString('email');
     const password = req.getBodyString('password');
@@ -103,7 +105,7 @@ class AuthController extends BaseController {
     }
   }
 
-  async checkToken(req) {
+  async checkToken (req) {
     const token = await this.backend.ask('core:security:token:verify', req.getJWT());
 
     if (!token) {
@@ -121,7 +123,7 @@ class AuthController extends BaseController {
     }
   }
 
-  async getMyUser(req) {
+  async getMyUser (req) {
     if (req.isAnonymous()) {
       return {
         id: null
@@ -129,6 +131,35 @@ class AuthController extends BaseController {
     }
 
     return await this.backend.ask('core:security:user:get', req.getUser().id);
+  }
+
+  async updateMyUser (req) {
+    if (req.isAnonymous()) {
+      error.throwError('security:user:not_authenticated');
+    }
+
+    const userInfo = await this.backend.ask('core:security:user:get', req.getUser().id);
+
+    // Should never happen but just in case
+    if (!userInfo) {
+      error.throwError('security:user:not_found', req.getUser().id);
+    }
+
+    const body = req.getBody();
+    const sanitizeBody = {
+      email: body.email,
+      username: body.username,
+    }
+
+    return await this.backend.ask('core:security:user:update', req.getUser().id, {...userInfo, ...sanitizeBody});
+  }
+
+  async deleteMyUser (req) {
+    if (req.isAnonymous()) {
+      error.throwError('security:user:not_authenticated');
+    }
+
+    return await this.backend.ask('core:security:user:delete', req.getUser().id);
   }
 };
 
