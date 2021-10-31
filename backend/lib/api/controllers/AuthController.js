@@ -14,7 +14,11 @@ class AuthController extends BaseController {
   }
 
   async login(req) {
-    
+    console.log(req);
+    return {
+      controller: req.getController(),
+      action: req.getAction(),
+    }
   }
 
   async logout(req) {

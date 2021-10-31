@@ -11,10 +11,10 @@ class Router {
     this.backend = backend;
   }
 
-  attach(verb, path, handler) {
+  attach(verb, path, handler, controller, action) {
     const _path = this._cleanupPath(path);
     const _verb = verb.toLowerCase();
-    const part = new RouterPart(verb, _path, handler);
+    const part = new RouterPart(verb, _path, handler, controller, action);
     
     if (!this.routes.has(_verb)) {
       this.routes.set(_verb, new Map());
@@ -92,14 +92,6 @@ class Router {
 
     return route;
   }
-
-  async execute(req) {
-    const route = this.find(req.input.getMethod(), req.getPath());
-    const params = route.getParams(req.getPath());
-    req.input.body = {...req.input.body, ...params};
-    return route.handler(req);
-  }
-
 
 }
 

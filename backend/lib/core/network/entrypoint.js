@@ -27,7 +27,7 @@ class EntryPoint {
     req.on('end', () => {
       try {
         if (fullContent.length > 0) {
-          req.input.body = JSON.parse(fullContent.join('')) || {};
+          request.input.body = JSON.parse(fullContent.join('')) || {};
         }
       } catch (e) {
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -36,11 +36,28 @@ class EntryPoint {
         return;
       }
 
+      try {
+      const routerPart = this.backend.router.find(request.input.getMethod(), request.input.getPath());
+
+      request.input.action = routerPart.action;
+      request.input.controller = routerPart.controller;
+      request.routerPart = routerPart;
+
+      for (const [paramName, paramValue] of Object.entries(routerPart.getParams(request.input.getPath()))) {
+        request.input.args[paramName] = paramValue;
+      }
+      } catch (e) {
+        request.response.setError(e);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(request.response.toJSON()));
+        return;
+      }
+
       this.backend.funnel.execute(request, (error, result) => {
         const _res = result || request;
   
         if (error && !_res.response.error) {
-          _res.setError(error);
+          _res.response.setError(error);
         }
   
         res.writeHead(200, { 'Content-Type': 'application/json' });

@@ -1,8 +1,9 @@
 class BackendError extends Error {
-  constructor(status, id, message) {
+  constructor(status, id, message, type='BackendError') {
     super(message);
     this.id = id;
     this.status = status || 0;
+    this.type = type;
   }
 
   toJSON () {
@@ -10,7 +11,8 @@ class BackendError extends Error {
       id: this.id,
       status: this.status,
       message: this.message,
-      stack: this.stack
+      stack: this.stack,
+      type: this.type
     };
   }
 }

@@ -3,10 +3,12 @@ class RequestInput {
     this.request = request;
     this.url = new URL(request.url, `http://${request.headers.host}`);
     this.body = {};
-    this.query = {};
+    this.args = {};
+    this.action = null;
+    this.controller = null;
 
     for (const [key, value] of this.url.searchParams) {
-      this.query[key] = value;
+      this.args[key] = value;
     }
   }
 
@@ -29,6 +31,16 @@ class RequestInput {
   getMethod() {
     return this.request.method;
   }
+
+  getAction() {
+    return this.action;
+  }
+
+  getController() {
+    return this.controller;
+  }
+
+  
 }
 
 module.exports = RequestInput;

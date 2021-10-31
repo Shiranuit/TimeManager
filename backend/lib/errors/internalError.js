@@ -1,8 +1,8 @@
 const BackendError = require('./backendError');
 
 class InternalError extends BackendError {
-  constructor(message, id = 0) {
-    super(500, id, message);
+  constructor(message, id = '') {
+    super(500, id, message, 'InternalError');
   }
 }
 

@@ -1,11 +1,14 @@
 class RouterPart {
 
-  constructor(method, path, handler) {
+  constructor(method, path, handler, controller, action) {
     this.method = method;
     this.path = `/${path}`;
     this.handler = handler;
     this.template = this._constructTemplate(path);
     this.templatePath = '/' + this.template.map(item => item.template).join('/');
+    this.controller = controller;
+    this.action = action;
+
   }
 
   _constructTemplate(path) {
