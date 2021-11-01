@@ -1,5 +1,5 @@
-name: Deploy
-description: Deploy
+name: Lint
+description: Lint
 
 inputs:
   SSH_HOST:
@@ -14,17 +14,18 @@ inputs:
   SSH_PORT:
     description: SSH PORT
     required: true
+  SSH_PASSWORD:
+    description: SSH PASSWORD
+    required: true
 
 runs:
   using: "composite"
   steps:
-    - name: Deploy
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan -t rsa,dsa "${{ inputs.SSH_HOST }}" 2>/dev/null > ~/.ssh/known_hosts
-        echo -e "${{ inputs.SSH_DEPLOY_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        eval `ssh-agent -s`
-        ssh-add ~/.ssh/id_rsa
-        ssh "${{ inputs.SSH_USERNAME }}@${{ inputs.SSH_HOST }}" "whoami"
-      shell: bash
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ inputs.SSH_HOST }}
+        username: ${{ inputs.SSH_USERNAME }}
+        key: ${{ inputs.SSH_DEPLOY_kEY }}
+        port: ${{ inputs.SSH_PORT }}
+        script: whoami
