@@ -31,5 +31,5 @@ runs:
         script: |
           cd ~/TimeManager
           docker-compose stop
-          git pull origin master
+          git pull origin yannick-node
           docker-compose up --build -d
