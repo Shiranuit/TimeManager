@@ -1,6 +1,12 @@
 name: Pull request checks
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - '!master'
+  pull_requests:
+    - '!master'
+  workflow_dispatch:
 
 jobs:
   lint:
