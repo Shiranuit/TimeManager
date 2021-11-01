@@ -1,6 +1,6 @@
 name: Pull request checks
 
-on: [pull_requests]
+on: [pull_request]
 
 jobs:
   lint:
