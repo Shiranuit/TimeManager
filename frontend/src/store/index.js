@@ -3,10 +3,12 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+console.log(process.env.VUE_APP_BACKEND_HOST)
+
 export default new Vuex.Store({
   state: {
     userInfo: null,
-    host: 'localhost',
+    host: process.env.VUE_APP_BACKEND_HOST || 'localhost',
     port: '4000',
     ssl: false,
     jwt: null
