@@ -5,7 +5,11 @@
         <b-icon icon="graph-up" class="statistics-icon"></b-icon>
         View Statistics
       </b-button>
-      <b-button squared v-b-modal.create-worked-time class="new-workingtime" variant="primary" @click="deselectItem">
+      <b-button squared class="refresh-button" variant="info" @click="fetchWorkingTimes">
+        <b-icon icon="arrow-clockwise" class="statistics-icon"></b-icon>
+        Refresh
+      </b-button>
+      <b-button squared v-b-modal.create-worked-time class="new-workingtime" variant="info" @click="deselectItem">
         <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
         <div>Add a new working period</div>
       </b-button>
@@ -43,7 +47,7 @@
       </div>
     </b-modal>
     <b-modal id="view-statistics" title="User Statistics">
-      <user-chart :user-id="this.userId"/>
+      <user-chart :user-id="this.userId" :me="this.me"/>
     </b-modal>
   </div>
 </template>
@@ -95,20 +99,26 @@ export default {
       };
     },
     deleteWorkingTime(id) {
-      axios.delete(this.$constructUrl(`/api/workingtimes/${id}`))
-        .then(response => {
-          if (response.data.error) {
-            throw new Error(response.data.error);
-          }
-          this.workingtimes = this.workingtimes.filter(item => item.id !== id)
-          this.items = this.items.filter(item => item.ID !== id);
-        }).catch(error => {
-          this.$bvToast.toast(error.message, {
-            title: "Error",
-            variant: "danger",
-            solid: true,
-          });
+      const url = this.me
+        ? this.$constructUrl(`/api/workingtime/_me/${id}`)
+        : this.$constructUrl(`/api/workingtime/${this.userId}/${id}`);
+
+      axios.delete(
+        url,
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+        this.workingtimes = this.workingtimes.filter(item => item.id !== id)
+        this.items = this.items.filter(item => item.ID !== id);
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
         });
+      });
     },
     selectItem(id) {
       this.selected = this.workingtimes.find(item => item.id === id);
@@ -130,31 +140,38 @@ export default {
       date.setUTCMinutes(this.selected.time.minutes);
       this.selected.start = date.getTime();
       this.selected.end = this.selected.start + ms(this.selected.worked);
-      axios.put(this.$constructUrl(`/api/workingtimes/${id}`), {
-        working_time: {
+
+      const url = this.me
+        ? this.$constructUrl(`/api/workingtime/_me/${id}`)
+        : this.$constructUrl(`/api/workingtime/${this.userId}/${id}`);
+
+      axios.put(
+        url,
+        {
           start: new Date(this.selected.start).toISOString(),
           end: new Date(this.selected.end).toISOString(),
+        },
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
         }
-      }).then(response => {
-          if (response.data.error) {
-            throw new Error(response.data.error);
-          }
-          const result = response.data.result;
-          const workingtime = this.workingtimes.find(item => item.id === result.id);
-          workingtime.start = result.start;
-          workingtime.end = result.end;
-          const table_item = this.items.find(item => item.ID === result.id);
-          table_item.Start = moment(result.start).format('Do MMMM YYYY HH:mm:ss');
-          table_item.End = moment(result.end).format('Do MMMM YYYY HH:mm:ss');
-          table_item['Hours Worked'] = ms(moment.duration(moment(result.end) - moment(result.start)).asMilliseconds());
-          this.$bvModal.hide('edit-workingtime-modal' + id);
-        }).catch(error => {
-          this.$bvToast.toast(error.message, {
-            title: "Error",
-            variant: "danger",
-            solid: true,
-          });
+        const result = response.data.result;
+        const workingtime = this.workingtimes.find(item => item.id === result.id);
+        workingtime.start = result.start;
+        workingtime.end = result.end;
+        const table_item = this.items.find(item => item.ID === result.id);
+        table_item.Start = moment(result.start).format('Do MMMM YYYY HH:mm:ss');
+        table_item.End = moment(result.end).format('Do MMMM YYYY HH:mm:ss');
+        table_item['Hours Worked'] = ms(moment.duration(moment(result.end) - moment(result.start)).asMilliseconds());
+        this.$bvModal.hide('edit-workingtime-modal' + id);
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
         });
+      });
     },
     createWorkingTime() {
       if (!this.validatePickedTime() || !this.validatePickedDate() || !this.validateWorkedHours()) {
@@ -166,57 +183,75 @@ export default {
       date.setUTCMinutes(this.selected.time.minutes);
       this.selected.start = date.getTime();
       this.selected.end = this.selected.start + ms(this.selected.worked);
-      axios.post(this.$constructUrl(`/api/workingtimes/${this.userId}`), {
-        start: new Date(this.selected.start).toISOString(),
-        end: new Date(this.selected.end).toISOString(),
-      }).then(response => {
-          if (response.data.error) {
-            throw new Error(response.data.error);
-          }
-          const result = response.data.result;
-          this.workingtimes.push({
-            start: result.start,
-            end: result.end,
-            id: result.id,
-            worked: ms(moment.duration(moment.utc(result.end) - moment.utc(result.start)).asMilliseconds()),
-          });
-          this.items.push({
-            ID: result.id,
-            Start: moment(result.start).format('Do MMMM YYYY HH:mm:ss'),
-            End: moment(result.end).format('Do MMMM YYYY HH:mm:ss'),
-            "Hours Worked": ms(moment.duration(moment(result.end) - moment(result.start)).asMilliseconds()),
-          });
-          this.$bvModal.hide('create-worked-time');
-        }).catch(error => {
-          this.$bvToast.toast(error.message, {
-            title: "Error",
-            variant: "danger",
-            solid: true,
-          });
+
+      const url = this.me
+        ? this.$constructUrl(`/api/workingtime/_me`)
+        : this.$constructUrl(`/api/workingtime/${this.userId}`);
+
+      axios.post(
+        url,
+        {
+          start: new Date(this.selected.start).toISOString(),
+          end: new Date(this.selected.end).toISOString(),
+          jwt: this.$store.state.jwt
+        },
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+        const result = response.data.result;
+        this.workingtimes.push({
+          start: moment.utc(result.start).unix() * 1000,
+          end: moment.utc(result.end).unix() * 1000,
+          id: result.id,
+          worked: ms(moment.duration(moment.utc(result.end) - moment.utc(result.start)).asMilliseconds()),
         });
+        this.items.push({
+          ID: result.id,
+          Start: moment.utc(result.start).local().format('Do MMMM YYYY HH:mm:ss'),
+          End: moment.utc(result.end).local().format('Do MMMM YYYY HH:mm:ss'),
+          "Hours Worked": ms(moment.duration(moment.utc(result.end) - moment.utc(result.start)).asMilliseconds()),
+        });
+        this.$bvModal.hide('create-worked-time');
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
+        });
+      });
     },
     fetchWorkingTimes() {
-      axios.get(this.$constructUrl(`/api/workingtimes/${this.user.id}/_list`))
-      .then(response => {
+      const url = this.me
+        ? this.$constructUrl(`/api/workingtime/_me/_list`)
+        : this.$constructUrl(`/api/workingtime/${this.user.id}/_list`);
+
+      axios.get(
+        url,
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
         if (response.data.error) {
-          throw new Error(response.data.error);
+          throw new Error(response.data.error.message);
         }
 
         this.workingtimes = response.data.result.map(item => {
           return {
             id: item.id,
-            start: new Date(item.start).getTime(),
-            end: new Date(item.end).getTime(),
+            start: moment.utc(item.start).unix() * 1000,
+            end: moment.utc(item.end).unix() * 1000,
             worked: ms(moment.duration(moment.utc(item.end) - moment.utc(item.start)).asMilliseconds()),
           };
         });
+
+        this.items = [];
 
         for (const workingtime of this.workingtimes) {
           this.items.push({
             isActive: true,
             ID: workingtime.id,
-            Start: moment(workingtime.start).format('Do MMMM YYYY HH:mm:ss'),
-            End: moment(workingtime.end).format('Do MMMM YYYY HH:mm:ss'),
+            Start: moment.utc(workingtime.start).local().format('Do MMMM YYYY HH:mm:ss'),
+            End: moment.utc(workingtime.end).local().format('Do MMMM YYYY HH:mm:ss'),
             "Hours Worked": `${workingtime.worked}`,
           });
         }
@@ -233,16 +268,25 @@ export default {
     userId: {
       type: Number,
     },
+    me: {
+      type: Boolean,
+    }
   },
   created() {
-    if (!this.userId) {
+    if (!this.userId && !this.me) {
       this.$router.push('/');
     }
 
-    axios.get(this.$constructUrl(`/api/users/${this.userId}`))
-    .then(response => {
+    const url = this.me
+      ? this.$constructUrl(`/api/auth/_me`)
+      : this.$constructUrl(`/api/security/${this.userId}`);
+
+    axios.get(
+      url,
+      { headers:{ authorization:this.$store.state.jwt} }
+    ).then(response => {
       if (response.data.error) {
-        throw new Error(response.data.error);
+        throw new Error(response.data.error.message);
       }
       this.user = response.data.result;
       return this.fetchWorkingTimes();
@@ -275,6 +319,13 @@ export default {
 }
 
 .new-workingtime {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.refresh-button {
   width: 100%;
   align-items: center;
   display: flex;

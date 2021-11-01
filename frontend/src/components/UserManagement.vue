@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="statistics-container">
-      <b-button squared v-b-modal.create-user class="new-user" variant="primary" @click="deselectItem">
+      <b-button squared class="refresh-button" variant="info" @click="fetchUsers">
+        <b-icon icon="arrow-clockwise" class="statistics-icon" font-scale="2"></b-icon>
+        <div>Refresh</div>
+      </b-button>
+      <b-button squared v-b-modal.create-user class="new-user" variant="info" @click="deselectItem">
         <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
         <div>Create a new user account</div>
       </b-button>
@@ -9,7 +13,7 @@
     <b-table head-variant="dark" hover :items="items" :fields="fields" inline>
       <template #cell(Action)="row">
         <b-modal :id="'edit-user-modal' + row.item.ID" title="Edit user informations" hide-footer>
-          <user-settings :userId="row.item.ID" class="management-modal"/>
+          <user-settings :userId="row.item.ID" class="management-modal" :me="false"/>
         </b-modal>
         <b-button v-b-modal="'edit-user-modal' + row.item.ID" size="sm" class="mr-2" @click="selectItem(row.item.ID)">
           Edit
@@ -30,7 +34,7 @@
       </div>
     </b-modal>
     <b-modal id="view-statistics" title="User Statistics">
-      <user-chart :user-id="this.userId"/>
+      <user-chart :user-id="this.userId" :me="false"/>
     </b-modal>
   </div>
 </template>
@@ -62,61 +66,70 @@ export default {
       this.selected = {};
     },
     deleteUser(id) {
-      axios.delete(this.$constructUrl(`/api/users/${id}`))
-        .then(response => {
-          if (response.data.error) {
-            throw new Error(response.data.error);
-          }
-          this.items = this.items.filter(item => item.ID !== id);
-          this.users = this.users.filter(item => item.id !== id);
-        }).catch(error => {
-          this.$bvToast.toast(error.message, {
-            title: "Error",
-            variant: "danger",
-            solid: true,
-          });
+      axios.delete(
+        this.$constructUrl(`/api/security/${id}`),
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+        this.items = this.items.filter(item => item.ID !== id);
+        this.users = this.users.filter(item => item.id !== id);
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
         });
+      });
     },
     selectItem(id) {
       this.selected = this.users.find(item => item.id === id);
     },
     createUser() {
-      axios.post(this.$constructUrl(`/api/users/}`), {
-        email: new Date(this.selected.start).toISOString(),
-        username: new Date(this.selected.end).toISOString(),
-      }).then(response => {
-          if (response.data.error) {
-            throw new Error(response.data.error);
-          }
-          const result = response.data.result;
-          this.users.push({
-            email: result.email,
-            username: result.username,
-            id: result.id,
-          });
-          this.items.push({
-            ID: result.id,
-            Username: result.username,
-            Email: result.email,
-          });
-          this.$bvModal.hide('create-user');
-        }).catch(error => {
-          this.$bvToast.toast(error.message, {
-            title: "Error",
-            variant: "danger",
-            solid: true,
-          });
+      axios.post(
+        this.$constructUrl('/api/security/'),
+        {
+          email: new Date(this.selected.start).toISOString(),
+          username: new Date(this.selected.end).toISOString(),
+        },
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+        const result = response.data.result;
+        this.users.push({
+          email: result.email,
+          username: result.username,
+          id: result.id,
         });
+        this.items.push({
+          ID: result.id,
+          Username: result.username,
+          Email: result.email,
+        });
+        this.$bvModal.hide('create-user');
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
+        });
+      });
     },
     fetchUsers() {
-      axios.get(this.$constructUrl(`/api/users/_list`))
-      .then(response => {
+      axios.get(
+        this.$constructUrl('/api/security/_list'),
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
         if (response.data.error) {
-          throw new Error(response.data.error);
+          throw new Error(response.data.error.message);
         }
 
         this.users = response.data.result;
 
+        this.items = [];
         for (const user of this.users) {
           this.items.push({
             isActive: true,
@@ -158,6 +171,13 @@ export default {
 }
 
 .new-user {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.refresh-button {
   width: 100%;
   align-items: center;
   display: flex;

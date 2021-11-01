@@ -14,6 +14,11 @@ class SecurityController extends BaseController {
     ]);
   }
 
+  async init (backend) {
+    super.init(backend);
+    this.config = backend.config.auth;
+  }
+
   async listUsers(req) {
     return await this.backend.ask('core:security:user:list');
   }
@@ -47,17 +52,30 @@ class SecurityController extends BaseController {
       error.throwError('security:user:username_too_short', this.config.username.minLength);
     }
 
-    const user = await this.backend.ask('core:security:user:create', { username, email, password });
+    try {
+      const user = await this.backend.ask('core:security:user:create', { username, email, password });
 
-    if (!user) {
-      error.throwError('security:user:creation_failed');
+      if (!user) {
+        error.throwError('security:user:creation_failed');
+      }
+
+      return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      };
+    } catch (err) {
+      if (err.code) {
+        if (err.code === '23505') {
+          if (err.constraint === 'unique_username') {
+            error.throwError('security:user:username_taken');
+          } else if (err.constraint === 'unique_email') {
+            error.throwError('security:user:email_taken');
+          }
+        }
+      }
+      throw err;
     }
-
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-    };
   }
 
   async updateUser(req) {
@@ -89,17 +107,30 @@ class SecurityController extends BaseController {
       username: body.username,
     }));
 
-    const user = await this.backend.ask('core:security:user:update', userId, {...userInfos, ...sanitizeBody});
+    try {
+      const user = await this.backend.ask('core:security:user:update', userId, {...userInfos, ...sanitizeBody});
 
-    if (!user) {
-      error.throwError('security:user:update_failed');
+      if (!user) {
+        error.throwError('security:user:update_failed');
+      }
+
+      return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      };
+    } catch (err) {
+      if (err.code) {
+        if (err.code === '23505') {
+          if (err.constraint === 'unique_username') {
+            error.throwError('security:user:username_taken');
+          } else if (err.constraint === 'unique_email') {
+            error.throwError('security:user:email_taken');
+          }
+        }
+      }
+      throw err;
     }
-
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-    };
   }
 
   async deleteUser(req) {

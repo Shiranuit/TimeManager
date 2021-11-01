@@ -2,7 +2,7 @@
   <div class="view">
     <nav-bar/>
     <div class="user-working-time">
-    <working-time :userId="this.$route.params.userId"/>
+    <working-time :userId="this.$route.params.userId" :me="false"/>
   </div>
 </div>
 </template>

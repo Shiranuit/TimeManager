@@ -12,7 +12,8 @@ class Request {
   }
 
   getJWT () {
-    return this.input.body.jwt || null;
+    const jwt = this.input.getHeader('Authorization');
+    return jwt && jwt !== 'null' ? jwt : null;
   }
 
   getUser () {
@@ -20,7 +21,7 @@ class Request {
   }
 
   isAnonymous () {
-    return !this.getUser() || this.getUser().id === null;
+    return !this.context.user || this.context.user === null;
   }
 
   getAction () {

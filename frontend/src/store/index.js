@@ -8,11 +8,15 @@ export default new Vuex.Store({
     userInfo: null,
     host: 'localhost',
     port: '4000',
-    ssl: false
+    ssl: false,
+    jwt: null
   },
   mutations: {
     setUserInfo(state, userInfo) {
-      state.userInfo = userInfo
+      state.userInfo = userInfo;
+    },
+    setJWT(state, jwt) {
+      state.jwt = jwt;
     }
   },
   getters: {

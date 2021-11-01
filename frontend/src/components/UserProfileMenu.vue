@@ -16,12 +16,13 @@ export default {
   name: 'UserProfileMenu',
   computed: {
     userInfo() {
-        return this.$store.state.userInfo;
+        return this.$store.state.userInfo || {};
     }
   },
   methods: {
     logout() {
       this.$store.commit('setUserInfo', null);
+      this.$store.commit('setJWT', null);
       this.$router.push('/');
     }
   }

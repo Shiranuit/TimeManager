@@ -26,7 +26,7 @@ export default {
     }
   },
   beforeMount() {
-    if (this.$store.state.userInfo === null) {
+    if (this.$store.state.jwt === null) {
       this.$router.push('/');
     }
   }

@@ -68,16 +68,41 @@ export default {
       }
     },
 
+    getUserInfo() {
+      return axios.get(
+        this.$constructUrl('/api/auth/_me'),
+        { headers: { authorization: this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+
+        this.$store.commit("setUserInfo", response.data.result);
+      })
+
+    },
     login() {
       axios
-        .get(this.$constructUrl(`/api/users/userByName/${this.username}`))
-        .then((response) => {
+        .post(this.$constructUrl('/api/auth/_login'),
+          {
+            username: this.username,
+            password: this.password
+          }
+        ).then((response) => {
           if (response.data.error) {
-            throw new Error(response.data.error);
+            throw new Error(response.data.error.message);
           }
 
-          this.$store.commit("setUserInfo", response.data.result);
-          this.$router.push("/home");
+          const result = response.data.result;
+
+          if (!result.jwt) {
+            throw new Error('No jwt returned, authentication failed');
+          }
+
+          this.$store.commit("setJWT", result.jwt);
+          return this.getUserInfo().then(() => {
+            this.$router.push("/home");
+          })
         })
         .catch((error) => {
           this.$bvToast.toast(error.message, {
@@ -90,7 +115,7 @@ export default {
 
     register() {
       axios
-        .post(this.$constructUrl("/api/users/"), {
+        .post(this.$constructUrl('/api/auth/_register'), {
           email: this.email,
           username: this.username,
           password: this.password,
@@ -98,11 +123,19 @@ export default {
         .then((response) => {
 
           if (response.data.error) {
-            throw new Error(response.data.error);
+            throw new Error(response.data.error.message);
           }
 
-          this.$store.commit("setUserInfo", response.data.result);
-          this.$router.push("/home");
+          const result = response.data.result;
+
+          if (!result.jwt) {
+            throw new Error('No jwt returned, authentication failed');
+          }
+
+          this.$store.commit("setJWT", result.jwt);
+          return this.getUserInfo().then(() => {
+            this.$router.push("/home");
+          })
         })
         .catch((error) => {
           this.$bvToast.toast(error.message, {

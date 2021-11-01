@@ -26,10 +26,12 @@ class Funnel {
     for (const [controllerName, controller] of this.controllers) {
       for (const route of controller.__actions) {
         const path = route.path[0] === '/' ? `/${controllerName}${route.path}` : `/${controllerName}/${route.path}`;
+
         if (!controller[route.action] || typeof controller[route.action] !== 'function') {
-          throw new InternalError(`Cannot attach path ${route.verb.toUpperCase()} ${path}: no action ${route.action} for controller ${controllerName}`);
+          throw new InternalError(`Cannot attach path ${route.verb.toUpperCase()} /api/${path}: no action ${route.action} for controller ${controllerName}`);
         }
-        this.backend.router.attach(route.verb, path, controller[route.action].bind(controller), controllerName, route.action);
+
+        this.backend.router.attach(route.verb, `/api/${path}`, controller[route.action].bind(controller), controllerName, route.action);
       }
     }
 

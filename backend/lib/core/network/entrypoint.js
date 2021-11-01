@@ -32,8 +32,9 @@ class EntryPoint {
   }
 
   execute (req, res) {
+    this.backend.logger.debug('New request');
     const request = new Request(req, res);
-    this.backend.logger.debug(`${request.input.getMethod()} ${request.input.getPath()} from ${req.connection.remoteAddress}`);
+    this.backend.logger.debug(`Request: ${request.input.getMethod()} ${request.input.getPath()} from ${req.connection.remoteAddress}`);
 
     const fullContent = [];
     req.on('data', data => {
@@ -46,25 +47,38 @@ class EntryPoint {
           request.input.body = JSON.parse(fullContent.join('')) || {};
         }
       } catch (e) {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+          'Access-Control-Allow-Methods': ['GET', 'POST', 'PUT', 'DELETE'],
+          'Vary': 'Origin',
+        });
         const err = error.getError('request:invalid:body');
-        res.end(JSON.stringify({ status: err.status, error: err.message, stacktrace: e.stack }));
+        request.setError(err);
+        res.end(JSON.stringify(request.response.toJSON()));
         return;
       }
 
       try {
-      const routerPart = this.backend.router.find(request.input.getMethod(), request.input.getPath());
+        const routerPart = this.backend.router.find(request.input.getMethod(), request.input.getPath());
 
-      request.input.action = routerPart.action;
-      request.input.controller = routerPart.controller;
-      request.routerPart = routerPart;
+        request.input.action = routerPart.action;
+        request.input.controller = routerPart.controller;
+        request.routerPart = routerPart;
 
-      for (const [paramName, paramValue] of Object.entries(routerPart.getParams(request.input.getPath()))) {
-        request.input.args[paramName] = paramValue;
-      }
+        for (const [paramName, paramValue] of Object.entries(routerPart.getParams(request.input.getPath()))) {
+          request.input.args[paramName] = paramValue;
+        }
       } catch (e) {
-        request.response.setError(e);
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        request.setError(e);
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+          'Access-Control-Allow-Methods': ['GET', 'POST', 'PUT', 'DELETE'],
+          'Vary': 'Origin',
+        });
         res.end(JSON.stringify(request.response.toJSON()));
         return;
       }
@@ -73,16 +87,18 @@ class EntryPoint {
         const _res = result || request;
   
         if (error && !_res.response.error) {
-          _res.response.setError(error);
+          _res.setError(error);
         }
   
         res.writeHead(200, {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+          'Access-Control-Allow-Headers': '*',
+          'Access-Control-Allow-Methods': ['GET', 'POST', 'PUT', 'DELETE'],
           'Vary': 'Origin',
         });
         res.end(JSON.stringify(_res.response.toJSON()));
+        this.backend.logger.debug(JSON.stringify(_res.response.toJSON(), null, 4));
       });
     });
   }

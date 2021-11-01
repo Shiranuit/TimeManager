@@ -10,10 +10,10 @@ const LOWER_PATTERN = /[a-z]/;
 class AuthController extends BaseController {
   constructor () {
     super([
-      { verb: 'get', path: '/_login', action: 'login' },
+      { verb: 'post', path: '/_login', action: 'login' },
       { verb: 'get', path: '/_logout', action: 'logout' },
       { verb: 'post', path: '/_register', action: 'register' },
-      { verb: 'get', path: '/_checkToken', action: 'checkToken' },
+      { verb: 'post', path: '/_checkToken', action: 'checkToken' },
 
       { verb: 'get', path: '/_me', action: 'getMyUser'},
       { verb: 'put', path: '/', action: 'updateMyUser' },
@@ -27,7 +27,7 @@ class AuthController extends BaseController {
   }
 
   async login (req) {
-    const username = req.getBodyString('username');
+    const username = req.getBodyString('username').toLowerCase();
     const password = req.getBodyString('password');
     const expiresIn = req.getString('expiresIn', '1h');
 
@@ -61,7 +61,7 @@ class AuthController extends BaseController {
   }
 
   async register (req) {
-    const username = req.getBodyString('username');
+    const username = req.getBodyString('username').toLowerCase();
     const email = req.getBodyString('email');
     const password = req.getBodyString('password');
 
@@ -111,6 +111,7 @@ class AuthController extends BaseController {
           }
         }
       }
+      throw err;
     }
   }
 
@@ -134,9 +135,7 @@ class AuthController extends BaseController {
 
   async getMyUser (req) {
     if (req.isAnonymous()) {
-      return {
-        id: null
-      }
+      error.throwError('security:user:not_authenticated');
     }
 
     return await this.backend.ask('core:security:user:get', req.getUser().id);
@@ -154,23 +153,48 @@ class AuthController extends BaseController {
       error.throwError('security:user:not_found', req.getUser().id);
     }
 
+    if (body.email) {
+      if (!EMAIL_PATTERN.test(email)) {
+        error.throwError('request:invalid:email_format');
+      }
+    }
+
+    if (body.username) {
+      if (username.length < this.config.username.minLength) {
+        error.throwError('security:user:username_too_short', this.config.username.minLength);
+      }
+    }
+
     const body = req.getBody();
     const sanitizeBody = JSON.parse(JSON.stringify({
       email: body.email,
       username: body.username,
     }));
 
-    const user = await this.backend.ask('core:security:user:update', req.getUser().id, {...userInfos, ...sanitizeBody});
+    try {
+      const user = await this.backend.ask('core:security:user:update', req.getUser().id, {...userInfos, ...sanitizeBody});
 
-    if (!user) {
-      error.throwError('security:user:update_failed');
+      if (!user) {
+        error.throwError('security:user:update_failed');
+      }
+
+      return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      };
+    } catch (err) {
+      if (err.code) {
+        if (err.code === '23505') {
+          if (err.constraint === 'unique_username') {
+            error.throwError('security:user:username_taken');
+          } else if (err.constraint === 'unique_email') {
+            error.throwError('security:user:email_taken');
+          }
+        }
+      }
+      throw err;
     }
-
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-    };
   }
 
   async deleteMyUser (req) {

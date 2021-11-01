@@ -8,7 +8,7 @@
       </div>
       <div class="title">Time Manager</div>
     </div>
-    <div class="button-container" v-if="this.$store.state.userInfo !== null">
+    <div class="button-container" v-if="this.$store.state.jwt !== null">
       <div class="custom-button" @click="$router.push('/home')">
         Home
       </div>
@@ -16,7 +16,7 @@
         Users Management
       </div>
     </div>
-    <user-profile-menu class="profile-menu" v-if="this.$store.state.userInfo !== null"/>
+    <user-profile-menu class="profile-menu" v-if="this.$store.state.jwt !== null"/>
   </div>
 </template>
 

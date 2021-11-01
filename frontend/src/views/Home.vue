@@ -2,7 +2,7 @@
   <div class="view">
     <nav-bar/>
     <div class="home">
-    <working-time :userId="this.$store.state.userInfo.id"/>
+    <working-time :me="true"/>
   </div>
 </div>
 </template>
@@ -19,7 +19,7 @@ export default {
     WorkingTime
   },
   beforeMount() {
-    if (this.$store.state.userInfo === null) {
+    if (this.$store.state.jwt === null) {
       this.$router.push('/')
     }
   }

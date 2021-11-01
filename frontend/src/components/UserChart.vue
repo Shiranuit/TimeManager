@@ -36,6 +36,9 @@ export default {
         xaxis: {
           type: 'categorie'
         },
+        yaxis: {
+          decimalsInFloat: 1
+        }
       },
       chartOptions2: {
         chart: {
@@ -57,17 +60,23 @@ export default {
   },
   methods: {
     fetchWorkingTimes() {
-      axios.get(this.$constructUrl(`/api/workingtimes/${this.user.id}/_list`))
-      .then(response => {
+      const url = this.me
+        ? this.$constructUrl(`/api/workingtime/_me/_list`)
+        : this.$constructUrl(`/api/workingtime/${this.userId}/_list`);
+
+      axios.get(
+        url,
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
         if (response.data.error) {
-          throw new Error(response.data.error);
+          throw new Error(response.data.error.message);
         }
 
         const workingtimes = response.data.result.map(item => {
           return {
             id: item.id,
-            start: new Date(item.start).getTime(),
-            end: new Date(item.end).getTime(),
+            start: moment.utc(item.start).unix() * 1000,
+            end: moment.utc(item.end).unix() * 1000,
           };
         });
 
@@ -89,19 +98,22 @@ export default {
           return;
         }
 
-        let dates = moment.twix(moment.utc(min), moment.utc(max)).toArray('day');
+        let dates = moment.twix(moment(min), moment(max)).toArray('day');
 
         const counterPerDay = {};
         const counterPerMonth = {}
 
         for (const workingtime of workingtimes) {
-          const hours = moment.twix(moment.utc(workingtime.start), moment.utc(workingtime.end)).toArray('hour');
+          const range = moment.twix(moment(workingtime.start), moment(workingtime.end));
+          const days = range.toArray('day');
 
-          for (const hour of hours) {
-            const dayKey = hour.format('Do MMMM YYYY');
-            const monthKey = hour.format('MMMM YYYY');
-            counterPerDay[dayKey] = (counterPerDay[dayKey] || 0) + 1;
-            counterPerMonth[monthKey] = (counterPerMonth[monthKey] || 0) + 1;
+          for (const day of days) {
+            const dayRange = moment.twix(moment(day), moment(day).add(23, 'h').add(59, 'm').add(59, 's'));
+            const time = dayRange.intersection(range).length('ms') / 3600000;
+            const dayKey = day.format('Do MMMM YYYY');
+            const monthKey = day.format('MMMM YYYY')
+            counterPerDay[dayKey] = (counterPerDay[dayKey] || 0) + time;
+            counterPerMonth[monthKey] = (counterPerMonth[monthKey] || 0) + time
           }
         }
 
@@ -130,16 +142,24 @@ export default {
     userId: {
       type: Number,
     },
+    me: {
+      type: Boolean,
+    }
   },
   created() {
-    if (!this.userId) {
+    if (!this.userId && !this.me) {
       this.$router.push('/');
     }
 
-    axios.get(this.$constructUrl(`/api/users/${this.userId}`))
-    .then(response => {
+    const url = this.me
+      ? this.$constructUrl(`/api/auth/_me`)
+      : this.$constructUrl(`/api/security/${this.userId}`);
+    axios.get(
+      url,
+      { headers:{ authorization:this.$store.state.jwt } }
+    ).then(response => {
       if (response.data.error) {
-        throw new Error(response.data.error);
+        throw new Error(response.data.error.message);
       }
       this.user = response.data.result;
       return this.fetchWorkingTimes();

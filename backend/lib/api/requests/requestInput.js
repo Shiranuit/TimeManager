@@ -12,6 +12,10 @@ class RequestInput {
     }
   }
 
+  getHeader (key) {
+    return this.request.headers[key.toLowerCase()];
+  }
+
   getHeaders () {
     return this.request.headers || {}; 
   }

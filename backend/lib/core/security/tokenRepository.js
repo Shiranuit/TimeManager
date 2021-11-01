@@ -56,7 +56,6 @@ class TokenRepository {
     try {
       decoded = jwt.verify(encodedJwt, this.config.secret);
     } catch (e) {
-      this.backend.logger.debug(e);
       // Might be a forged token, reject
       error.throwError('security:token:invalid');
     }

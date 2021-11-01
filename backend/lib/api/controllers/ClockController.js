@@ -60,7 +60,7 @@ class ClockController extends BaseController {
     } else {
       if (clock.status) {
         this.backend.ask('core:workingtime:create', userId, {
-          _start: clock.start,
+          _start: clock.start.toISOString(),
           _end: new Date().toISOString(),
           _description: '',
         });

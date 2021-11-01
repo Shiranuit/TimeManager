@@ -91,10 +91,20 @@ export default {
         this.$router.push('/');
       }
 
-      axios.put(this.$constructUrl(`/api/users/${this.user.id}`), {user: this.user})
-      .then(response => {
+      const url = this.me
+        ? this.$constructUrl(`/api/auth`)
+        : this.$constructUrl(`/api/security/${this.userId}`);
+
+      axios.put(
+        url,
+        { 
+          email: this.user.email,
+          username: this.user.username,
+        },
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
         if (response.data.error) {
-          throw new Error(response.data.error);
+          throw new Error(response.data.error.message);
         }
         if (!response.data) {
           throw new Error('Could not update user informations');
@@ -114,10 +124,16 @@ export default {
       });
     },
     deleteUser() {
-      axios.delete(this.$constructUrl(`/api/users/${this.user.id}`))
-      .then(response => {
+      const url = this.me
+        ? this.$constructUrl(`/api/auth`)
+        : this.$constructUrl(`/api/security/${this.userId}`);
+
+      axios.delete(
+        url,
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
         if (response.data.error) {
-          throw new Error(response.data.error);
+          throw new Error(response.data.error.message);
         }
         if (this.me) {
           this.$store.commit('setUserInfo', null);
@@ -142,14 +158,20 @@ export default {
     }
   },
   created() {
-    if (!this.userId) {
+    if (!this.userId && !this.me) {
       this.$router.push('/');
     }
 
-    axios.get(this.$constructUrl(`/api/users/${this.userId}`))
-    .then(response => {
+    const url = this.me
+      ? this.$constructUrl(`/api/auth/_me`)
+      : this.$constructUrl(`/api/security/${this.userId}`);
+
+    axios.get(
+      url,
+      { headers:{ authorization:this.$store.state.jwt } }
+    ).then(response => {
       if (response.data.error) {
-        throw new Error(response.data.error);
+        throw new Error(response.data.error.message);
       }
       this.user = response.data.result;
     }).catch(error => {

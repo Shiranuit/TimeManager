@@ -18,7 +18,7 @@ class RequestResponse {
       throw new InternalError('Cannot set non-error object as a request\'s error');
     }
 
-    if (!(this.error instanceof BackendError)) {
+    if (!(error instanceof BackendError)) {
       this.error = new InternalError(error.message);
       this.error.stack = error.stack;
       return;
@@ -103,7 +103,9 @@ class RequestResponse {
 
   toJSON () {
     if (this.error) {
-      return this.error.toJSON();
+      return {
+        error: this.error.toJSON()
+      };
     } else {
       return {
         result: this.result
