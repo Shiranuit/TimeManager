@@ -147,8 +147,7 @@ export default {
     },
   },
   beforeMount() {
-    console.log(this.$store.state.userInfo);
-    if (this.$store.state.userInfo !== null) {
+    if (this.$store.state.jwt !== null) {
       this.$router.push("/home");
     }
   },
