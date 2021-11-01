@@ -76,7 +76,12 @@ class EntryPoint {
           _res.response.setError(error);
         }
   
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+          'Vary': 'Origin',
+        });
         res.end(JSON.stringify(_res.response.toJSON()));
       });
     });
