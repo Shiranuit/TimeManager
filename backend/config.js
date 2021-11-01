@@ -25,10 +25,9 @@ module.exports = {
   postgres: {
     maxRetries: 60,
     retryDelay: '1s',
-    host: 'postgres',
-    // port: 5432,
-    database: 'gotham',
-    user: 'gotham',
-    password: 'gotham',
+    host: process.env.DB_HOST || 'postgres',
+    database: process.env.DB_NAME ||'postgres',
+    user: process.env.DB_USER ||'postgres',
+    password: process.env.DB_USER_PASSWORD ||'postgres',
   }
 };
