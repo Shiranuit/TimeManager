@@ -28,7 +28,4 @@ runs:
         username: ${{ inputs.SSH_USERNAME }}
         key: ${{ inputs.SSH_DEPLOY_kEY }}
         port: ${{ inputs.SSH_PORT }}
-        script: |
-          cd ~/TimeManager;
-          docker-compose stop;
-          docker-compose up --build -d;
+        script: whoami
