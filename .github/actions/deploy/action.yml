@@ -14,6 +14,9 @@ inputs:
   SSH_PORT:
     description: SSH PORT
     required: true
+  SSH_PASSWORD:
+    description: SSH PASSWORD
+    required: true
 
 runs:
   using: "composite"
