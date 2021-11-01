@@ -4,9 +4,11 @@ description: Lint
 runs:
   using: "composite"
   steps:
-    - run: |
-        cd backend;
-        npm run test:lint;
+    - run: cd backend
+      shell: bash
+    - run: npm install
+      shell: bash
+    - run: npm run test:lint
       shell: bash
       
     
