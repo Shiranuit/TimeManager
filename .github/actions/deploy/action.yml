@@ -18,22 +18,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install SSH Key
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ inputs.SSH_DEPLOY_KEY }} 
-        known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
-    - name: Adding Known Hosts
-      run: ssh-keyscan -H ${{ inputs.SSH_HOST }} >> ~/.ssh/known_hosts
-      shell: bash
     - name: executing remote ssh commands using ssh key
       uses: appleboy/ssh-action@master
       with:
         host: ${{ inputs.SSH_HOST }}
         username: ${{ inputs.SSH_USERNAME }}
-        key: ${{ inputs.SSH_DEPLOY_KEY }}
+        password: ${{ inputs.SSH_PASSWORD }}
         port: ${{ inputs.SSH_PORT }}
         script: |
           cd ~/TimeManager;
           docker-compose stop;
-          docker-compose up --build;
+          docker-compose up --build -d;
