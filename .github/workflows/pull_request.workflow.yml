@@ -1,12 +1,6 @@
 name: Pull request checks
 
-on:
-  push:
-    branches:
-      - '!master'
-  pull_requests:
-    - branches:
-      - '!master'
+on: [pull_requests]
 
 jobs:
   lint:
