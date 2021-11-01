@@ -29,10 +29,7 @@ runs:
         key: ${{ inputs.SSH_DEPLOY_kEY }}
         port: ${{ inputs.SSH_PORT }}
         script: |
-          cd ~
-          set -a
-          source .env
-          set +a
+          source ~/.env
           cd ~/TimeManager
           docker-compose stop
           git checkout master
