@@ -1,3 +1,5 @@
+'use strict';
+
 const BadRequestError = require('../errors/badRequestError');
 
 function assertString (attr, data) {

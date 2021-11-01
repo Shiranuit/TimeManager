@@ -1,3 +1,5 @@
+'use strict';
+
 class WorkingTimeRepository {
   constructor () {
     this.backend = null;

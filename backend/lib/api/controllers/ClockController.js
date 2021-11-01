@@ -1,3 +1,5 @@
+'use strict';
+
 const BaseController = require('./BaseController');
 const error = require('../../errors');
 
@@ -142,7 +144,6 @@ class ClockController extends BaseController {
     return true;
   }
 
-
-};
+}
 
 module.exports = ClockController;

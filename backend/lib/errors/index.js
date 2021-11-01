@@ -1,5 +1,6 @@
+'use strict';
+
 const util = require('util');
-const BackendError = require('./backendError');
 
 const errorCodes = require('./errorCodes');
 const InternalError = require('./internalError');
@@ -10,7 +11,8 @@ function throwError (errorId, ...errorMessage) {
     throw new InternalError(`Error code not found: ${errorId}`);
   }
 
-  throw new error['type'](util.format(error.message, ...errorMessage), errorId);
+  const ErrorClass = error.type;
+  throw new ErrorClass(util.format(error.message, ...errorMessage), errorId);
 }
 
 function getError (errorId, ...errorMessage) {
@@ -19,10 +21,11 @@ function getError (errorId, ...errorMessage) {
     throw new InternalError(`Error code not found: ${errorId}`);
   }
 
-  return new error['type'](util.format(error.message, ...errorMessage), errorId);
+  const ErrorClass = error.type;
+  return new ErrorClass(util.format(error.message, ...errorMessage), errorId);
 }
 
 module.exports = {
   throwError,
   getError
-}
+};

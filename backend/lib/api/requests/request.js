@@ -1,6 +1,8 @@
-const error = require("../../errors");
-const RequestInput = require("./requestInput");
-const RequestResponse = require("./requestResponse");
+'use strict';
+
+const error = require('../../errors');
+const RequestInput = require('./requestInput');
+const RequestResponse = require('./requestResponse');
 const { get, isPlainObject } = require('../../utils/safeObject');
 
 class Request {
@@ -36,8 +38,8 @@ class Request {
     this.response.setResult(result);
   }
 
-  setError (error) {
-    this.response.setError(error);
+  setError (err) {
+    this.response.setError(err);
   }
 
   getBody () {

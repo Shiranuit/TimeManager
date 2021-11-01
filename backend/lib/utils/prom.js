@@ -1,4 +1,6 @@
-async function sleep (ms){
+'use strict';
+
+async function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 

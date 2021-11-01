@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   AuthController: require('./AuthController'),
   SecurityController: require('./SecurityController'),

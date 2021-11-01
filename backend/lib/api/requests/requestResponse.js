@@ -1,3 +1,5 @@
+'use strict';
+
 const BackendError = require('../../errors/backendError');
 const InternalError = require('../../errors/internalError');
 const assert = require('../../utils/assertType');
@@ -28,7 +30,7 @@ class RequestResponse {
   }
 
   getHeader (name) {
-    assert.assertString('header name', value);
+    assert.assertString('header name', name);
 
     if (! name) {
       return true;
@@ -39,7 +41,7 @@ class RequestResponse {
   }
 
   removeHeader (name) {
-    assert.assertString('header name', value);
+    assert.assertString('header name', name);
 
     if (! name) {
       return true;
@@ -52,7 +54,7 @@ class RequestResponse {
   }
 
   setHeader (name, value) {
-    assert.assertString('header name', value);
+    assert.assertString('header name', name);
 
     if (! name) {
       return true;
@@ -78,22 +80,22 @@ class RequestResponse {
       case 'referer':
       case 'retry-after':
       case 'user-agent':
-        this.response.headers[_name] = _value;
+        this.response.headers[lowerCased] = _value;
         break;
       case 'set-cookie':
-        if (!this.response.headers[_name]) {
-          this.response.headers[_name] = [_value];
+        if (!this.response.headers[lowerCased]) {
+          this.response.headers[lowerCased] = [_value];
         }
         else {
-          this.response.headers[_name].push(_value);
+          this.response.headers[lowerCased].push(_value);
         }
         break;
       default: {
-        if (this.response.headers[_name]) {
-          this.response.headers[_name] += ', ' + _value;
+        if (this.response.headers[lowerCased]) {
+          this.response.headers[lowerCased] += ', ' + _value;
         }
         else {
-          this.response.headers[_name] = _value;
+          this.response.headers[lowerCased] = _value;
         }
       }
     }
@@ -106,11 +108,11 @@ class RequestResponse {
       return {
         error: this.error.toJSON()
       };
-    } else {
-      return {
-        result: this.result
-      };
     }
+
+    return {
+      result: this.result
+    };
   }
 }
 

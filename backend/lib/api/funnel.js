@@ -1,3 +1,5 @@
+'use strict';
+
 const BackendStateEnum = require('../types/BackendState');
 const error = require('../errors');
 const {
@@ -6,7 +8,7 @@ const {
   SecurityController,
   WorkingTimeController,
 } = require('./controllers');
-const Router = require('../core/network/router');
+
 const InternalError = require('../errors/internalError');
 const User = require('../model/user');
 
@@ -59,6 +61,6 @@ class Funnel {
     const token = await this.backend.ask('core:security:token:verify', req.getJWT());
     req.context.user = token ? new User(token.userId) : new User(null);
   }
-};
+}
 
 module.exports = Funnel;

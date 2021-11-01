@@ -1,10 +1,11 @@
+'use strict';
+
 const BackendEventEmitter = require('./events/backendEventEmitter');
 const Funnel = require('../api/funnel');
 const EntryPoint = require('../core/network/entrypoint');
 const BackendStateEnum = require('../types/BackendState');
 const SecurityModule = require('../core/security');
 const RepositoryModule = require('../core/repository');
-const Prom = require('../utils/prom');
 const Logger = require('./logger');
 const Router = require('../core/network/router');
 const Postgres = require('../services/postgres/postgres');
@@ -27,7 +28,7 @@ class Backend extends BackendEventEmitter {
     this.state = BackendStateEnum.STARTING;
   }
 
-  async ask (event, ...args)  {
+  async ask (event, ...args) {
     const _args = {...args};
     this.logger.debug(`Ask ${event}: ${JSON.stringify(_args)}`);
     return super.ask(event, ...args);
@@ -37,7 +38,6 @@ class Backend extends BackendEventEmitter {
     try {
       // Backend is starting
       this.logger.info('Starting backend...');
-      await super.pipe('backend:state:start');
 
       await this.router.init();
       await this.funnel.init(this);
@@ -47,12 +47,10 @@ class Backend extends BackendEventEmitter {
       await this.repository.init(this);
 
       // Module initialized, requests still not accepted
-      await super.pipe('backend:state:live');
 
       await this.entryPoint.startListening();
       
       // Backend is ready
-      await super.pipe('backend:state:ready');
       this.state = BackendStateEnum.RUNNING;
       this.logger.info('Backend has started');
     } catch (err) {
@@ -64,7 +62,6 @@ class Backend extends BackendEventEmitter {
   async shutdown () {
     this.state = BackendStateEnum.SHUTTING_DOWN;
     this.logger.info('Backend is shutting down');
-    await super.pipe('backend:shutdown');
 
     await this.entryPoint.stopListening();
   }

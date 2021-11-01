@@ -1,3 +1,5 @@
+'use strict';
+
 const BaseController = require('./BaseController');
 const error = require('../../errors');
 
@@ -260,7 +262,6 @@ class WorkingTimeController extends BaseController {
     return true;
   }
 
-
-};
+}
 
 module.exports = WorkingTimeController;

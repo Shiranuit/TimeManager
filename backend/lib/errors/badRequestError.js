@@ -1,3 +1,5 @@
+'use strict';
+
 const BackendError = require('./backendError');
 
 class BadRequest extends BackendError {

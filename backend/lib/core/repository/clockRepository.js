@@ -1,3 +1,5 @@
+'use strict';
+
 class ClockRepository {
   constructor () {
     this.backend = null;

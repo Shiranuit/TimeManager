@@ -1,3 +1,5 @@
+'use strict';
+
 function has (o, prop) {
   return Object.prototype.hasOwnProperty.call(o, prop);
 }

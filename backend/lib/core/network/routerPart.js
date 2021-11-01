@@ -1,3 +1,5 @@
+'use strict';
+
 class RouterPart {
 
   constructor (method, path, handler, controller, action) {

@@ -1,7 +1,9 @@
+'use strict';
+
 const BaseController = require('./BaseController');
 const error = require('../../errors');
 
-const EMAIL_PATTERN = /^[A-z0-9_\-]+(\.[A-z0-9_\-]+)*@[A-z0-9_\-]+(\.[A-z0-9_\-]+)*\.[A-z0-9_\-]+$/;
+const EMAIL_PATTERN = /^[A-z0-9_-]+(\.[A-z0-9_-]+)*@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z0-9_-]+$/;
 
 class SecurityController extends BaseController {
   constructor () {
@@ -19,7 +21,7 @@ class SecurityController extends BaseController {
     this.config = backend.config.auth;
   }
 
-  async listUsers(req) {
+  async listUsers() {
     return await this.backend.ask('core:security:user:list');
   }
 
@@ -141,6 +143,6 @@ class SecurityController extends BaseController {
     return true;
   }
 
-};
+}
 
 module.exports = SecurityController;

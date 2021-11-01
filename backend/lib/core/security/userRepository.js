@@ -1,3 +1,5 @@
+'use strict';
+
 const User = require('../../model/user');
 
 class UserRepository {

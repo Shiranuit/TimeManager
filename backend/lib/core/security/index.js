@@ -1,3 +1,5 @@
+'use strict';
+
 const UserRepository = require('./userRepository');
 const TokenRepository = require('./tokenRepository');
 const Vault = require('./vault');

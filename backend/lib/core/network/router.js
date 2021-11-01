@@ -1,3 +1,5 @@
+'use strict';
+
 const error = require('../../errors');
 const RouterPart = require('./routerPart');
 
@@ -75,7 +77,7 @@ class Router {
     }
 
     let route = null;
-    let minPlaceholders = -1
+    let minPlaceholders = -1;
     for (let i = 0; i < routes.length; i++) {
       let count = 0;
       for (const subPath of routes[i].getTemplate()) {

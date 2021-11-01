@@ -1,3 +1,5 @@
+'use strict';
+
 class Token {
   constructor (data) {
     this.id = data.id || null;
@@ -16,7 +18,7 @@ class Token {
       ttl: this.ttl,
       expiresAt: this.expiresAt,
       refreshed: this.refreshed
-    }
+    };
   }
 }
 

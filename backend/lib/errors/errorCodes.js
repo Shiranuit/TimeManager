@@ -1,3 +1,5 @@
+'use strict';
+
 const InternalError = require('./internalError');
 const BadRequestError = require('./badRequestError');
 const ServiceUnavailableError = require('./serviceUnavailableError');

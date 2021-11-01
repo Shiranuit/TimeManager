@@ -1,3 +1,5 @@
+'use strict';
+
 const BackendStateEnum = Object.freeze({
   STARTING: 1,
   RUNNING: 2,

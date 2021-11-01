@@ -1,3 +1,5 @@
+'use strict';
+
 class RequestInput {
   constructor (request) {
     this.request = request;

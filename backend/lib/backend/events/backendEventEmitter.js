@@ -1,3 +1,5 @@
+'use strict';
+
 const EventEmitter = require('events');
 const assert = require('assert');
 
@@ -5,7 +7,6 @@ class BackendEventEmitter extends EventEmitter {
   constructor () {
     super();
     this._ask = new Map();
-    this._pipe = new Map();
   }
 
   onAsk (event, fn) {
@@ -23,31 +24,6 @@ class BackendEventEmitter extends EventEmitter {
     const fn = this._ask.get(event);
 
     return await fn(...payload);
-  }
-
-  async onPipe (event, fn) {
-    assert(typeof fn === 'function', `Cannot listen to pipe event ${event}: "${fn}" is not a function`);
-
-    if (this._pipe.has(event)) {
-      this._pipe.get(event).push(fn);
-      return;
-    }
-
-    this._pipe.set(event, [fn]);
-  }
-
-  async pipe (event, ...payload) {
-    if (!this._pipe.has(event)) {
-      return;
-    }
-
-    let pipeData = data;
-    for (const fn of this._pipe.get(event)) {
-      pipeData = await new Promise((res, rej) => {
-        return fn(pipeData);
-      });
-    }
-    return pipeData
   }
 
 }

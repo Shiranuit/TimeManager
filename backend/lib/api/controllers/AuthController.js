@@ -1,8 +1,10 @@
+'use strict';
+
 const BaseController = require('./BaseController');
 const error = require('../../errors');
 const ms = require('ms');
 
-const EMAIL_PATTERN = /^[A-z0-9_\-]+(\.[A-z0-9_\-]+)*@[A-z0-9_\-]+(\.[A-z0-9_\-]+)*\.[A-z0-9_\-]+$/;
+const EMAIL_PATTERN = /^[A-z0-9_-]+(\.[A-z0-9_-]+)*@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z0-9_-]+$/;
 const CAPITAL_PATTERN = /[A-Z]/;
 const NUMBER_PATTERN = /[0-9]/;
 const LOWER_PATTERN = /[a-z]/;
@@ -51,7 +53,7 @@ class AuthController extends BaseController {
       jwt: token.jwt,
       ttl: token.ttl,
       expiresAt: token.expiresAt,
-    }
+    };
   }
 
   async logout (req) {
@@ -95,7 +97,7 @@ class AuthController extends BaseController {
       const token = await this.backend.ask('core:security:token:create', {
         username,
         password,
-      })
+      });
 
       return {
         id: user.id,
@@ -123,14 +125,14 @@ class AuthController extends BaseController {
         id: null,
         expiresIn: -1,
         expiresAt: -1,
-      }
+      };
     }
 
     return {
       id: token.userId,
       ttl: token.ttl,
       expiresAt: token.expiresAt,
-    }
+    };
   }
 
   async getMyUser (req) {
@@ -154,13 +156,13 @@ class AuthController extends BaseController {
     }
 
     if (body.email) {
-      if (!EMAIL_PATTERN.test(email)) {
+      if (!EMAIL_PATTERN.test(body.email)) {
         error.throwError('request:invalid:email_format');
       }
     }
 
     if (body.username) {
-      if (username.length < this.config.username.minLength) {
+      if (body.username.length < this.config.username.minLength) {
         error.throwError('security:user:username_too_short', this.config.username.minLength);
       }
     }
@@ -204,6 +206,6 @@ class AuthController extends BaseController {
 
     return await this.backend.ask('core:security:user:delete', req.getUser().id);
   }
-};
+}
 
 module.exports = AuthController;

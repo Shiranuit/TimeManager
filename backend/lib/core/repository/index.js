@@ -1,3 +1,5 @@
+'use strict';
+
 const ClockRepository = require('./clockRepository');
 const WorkingTimeRepository = require('./workingTimeRepository');
 

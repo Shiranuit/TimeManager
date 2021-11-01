@@ -1,5 +1,6 @@
-const { Client } = require('pg');
+'use strict';
 
+const { Client } = require('pg');
 
 class Postgres {
   constructor () {

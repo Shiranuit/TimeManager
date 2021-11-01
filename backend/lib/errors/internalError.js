@@ -1,4 +1,5 @@
-const { cp } = require('fs');
+'use strict';
+
 const BackendError = require('./backendError');
 
 class InternalError extends BackendError {

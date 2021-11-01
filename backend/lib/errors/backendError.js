@@ -1,3 +1,5 @@
+'use strict';
+
 class BackendError extends Error {
   constructor (status, id, message, type='BackendError') {
     super(message);

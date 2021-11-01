@@ -1,3 +1,5 @@
+'use strict';
+
 const http = require('http');
 const Request = require('../../api/requests/request');
 const error = require('../../errors');
@@ -20,7 +22,7 @@ class EntryPoint {
   async stopListening () {
 
     let resolve = null;
-    const promise = new Promise((res, rej) => {
+    const promise = new Promise((res) => {
       resolve = res;
     });
 
@@ -83,11 +85,11 @@ class EntryPoint {
         return;
       }
 
-      this.backend.funnel.execute(request, (error, result) => {
+      this.backend.funnel.execute(request, (err, result) => {
         const _res = result || request;
   
-        if (error && !_res.response.error) {
-          _res.setError(error);
+        if (err && !_res.response.error) {
+          _res.setError(err);
         }
   
         res.writeHead(200, {

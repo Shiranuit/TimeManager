@@ -1,3 +1,5 @@
+'use strict';
+
 const jwt = require('jsonwebtoken');
 const Token = require('../../model/token');
 const error = require('../../errors');
@@ -16,7 +18,6 @@ class TokenRepository {
     backend.onAsk('core:security:token:create', this.generateToken.bind(this));
     backend.onAsk('core:security:token:delete', this.expire.bind(this));
     backend.onAsk('core:security:token:verify', this.verify.bind(this));
-    backend.onAsk('core:security:token:refresh', this.refresh.bind(this));
   }
 
   async generateToken (user, options) {
@@ -75,11 +76,6 @@ class TokenRepository {
 
     error.throwError('security:token:invalid');
   }
-
-  async refresh (token) {
-
-  }
-
   
 }
 

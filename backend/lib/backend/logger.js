@@ -1,3 +1,5 @@
+'use strict';
+/* eslint-disable no-alert, no-console */
 class Logger {
   constructor (backend) {
     this.backend = backend;
@@ -28,5 +30,7 @@ class Logger {
     console.error('\x1b[31m%s\x1b[0m', `[ERROR][${date}] ${message}`);
   }
 }
+
+/* eslint-enable no-alert, no-console */
 
 module.exports = Logger;
