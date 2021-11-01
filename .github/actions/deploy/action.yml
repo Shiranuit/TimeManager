@@ -25,8 +25,7 @@ runs:
       run: |
         mkdir -p ~/.ssh
         ssh-keyscan -t rsa,dsa "${{ inputs.SSH_HOST }}" 2>/dev/null > ~/.ssh/known_hosts
-        echo -e "${{ inputs.SSH_KEY }}" > ~/.ssh/id_rsa
-        cat -e ~/.ssh/id_rsa
+        echo -e "${{ inputs.SSH_DEPLOY_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         eval `ssh-agent -s`
         ssh-add ~/.ssh/id_rsa
