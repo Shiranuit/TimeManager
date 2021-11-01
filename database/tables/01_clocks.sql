@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS public.clocks (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  status BOOLEAN NOT NULL DEFAULT TRUE,
+  start_date TIMESTAMP NOT NULL DEFAULT now(),
+
+  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users (id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
