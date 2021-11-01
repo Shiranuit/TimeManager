@@ -26,5 +26,5 @@ runs:
         chmod 600 ~/.ssh/id_rsa
         eval `ssh-agent -s`
         ssh-add ~/.ssh/id_rsa
-        ssh "${{ inputs.SSH_USERNAME }}@${{ inputs.SSH_HOST }}" "whoami"
+        ssh ${{ inputs.SSH_USERNAME }}@${{ inputs.SSH_HOST }} whoami
       shell: bash
