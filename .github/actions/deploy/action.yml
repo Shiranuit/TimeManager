@@ -1,0 +1,17 @@
+name: Lint
+description: Lint
+
+runs:
+  using: "composite"
+  steps:
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_DEPLOY_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ~/TimeManager;
+          docker-compose stop;
+          docker-compose up --build;
