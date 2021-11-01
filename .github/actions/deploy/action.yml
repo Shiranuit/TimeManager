@@ -24,6 +24,7 @@ runs:
     - name: executing remote ssh commands using ssh key
       uses: appleboy/ssh-action@master
       with:
+        debug: true
         host: ${{ inputs.SSH_HOST }}
         username: ${{ inputs.SSH_USERNAME }}
         password: ${{ inputs.SSH_PASSWORD }}
