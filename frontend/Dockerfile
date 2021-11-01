@@ -16,6 +16,8 @@ ADD babel.config.js .
 ADD vue.config.js .
 ADD package-lock.json .
 ADD package.json .
+ADD .env.dev_local .
+ADD .env.development .
 
 RUN npm install
 ADD public ./public
