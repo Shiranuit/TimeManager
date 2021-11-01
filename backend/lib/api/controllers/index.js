@@ -1,6 +1,6 @@
 module.exports = {
   AuthController: require('./AuthController'),
-  UserController: require('./UserController'),
+  SecurityController: require('./SecurityController'),
   ClockController: require('./ClockController'),
   WorkingTimeController: require('./WorkingTimeController'),
 };

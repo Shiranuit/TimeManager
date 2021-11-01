@@ -33,6 +33,14 @@ module.exports = {
     message: 'URL not found: "%s"',
     type: BadRequestError,
   },
+  'security:user:creation_failed': {
+    message: 'Failed to create user account',
+    type: SecurityError,
+  },
+  'security:user:update_failed': {
+    message: 'Failed to update user account informations',
+    type: SecurityError,
+  },
   'security:user:username_taken': {
     message: 'Username already taken',
     type: SecurityError,
@@ -45,7 +53,7 @@ module.exports = {
     message: 'User "%s" not found',
     type: SecurityError,
   },
-  'security:user:with_idnot_found': {
+  'security:user:with_id_not_found': {
     message: 'User with id "%s" not found',
     type: SecurityError,
   },
@@ -67,6 +75,10 @@ module.exports = {
   },
   'security:token:invalid': {
     message: 'Invalid token',
+    type: SecurityError,
+  },
+  'security:token:creation_failed': {
+    message: 'Failed to generate new token',
     type: SecurityError,
   },
   'security:token:expired': {

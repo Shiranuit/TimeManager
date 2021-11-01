@@ -12,6 +12,8 @@ class UserRepository {
     backend.onAsk('core:security:user:verify', this.verify.bind(this));
     backend.onAsk('core:security:user:get', this.getUser.bind(this));
     backend.onAsk('core:security:user:update', this.updateUser.bind(this));
+    backend.onAsk('core:security:user:list', this.listUsers.bind(this));
+    backend.onAsk('core:security:user:delete', this.deleteUser.bind(this));
   }
 
   async registerUser (data) {
@@ -63,7 +65,7 @@ class UserRepository {
   async updateUser (id, data) {
     const result = await this.backend.ask(
       'postgres:query',
-      'UPDATE users SET username = $2, email = $3 WHERE id = $1;',
+      'UPDATE users SET username = $2, email = $3 WHERE id = $1 RETURNING id, username, email;',
       [id, data.username, data.email]
     );
 
@@ -74,8 +76,25 @@ class UserRepository {
     return {
       username: result.rows[0].username,
       email: result.rows[0].email,
-      id
+      id: result.rows[0].id
     };
+  }
+
+  async listUsers () {
+    const result = await this.backend.ask(
+      'postgres:query',
+      'SELECT id, email, username FROM users;',
+    );
+
+    return result.rows || [];
+  }
+
+  async deleteUser (id) {
+    await this.backend.ask(
+      'postgres:query',
+      'DELETE FROM users WHERE id = $1;',
+      [id]
+    );
   }
 }
 

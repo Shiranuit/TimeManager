@@ -42,6 +42,10 @@ class AuthController extends BaseController {
 
     const token = await this.backend.ask('core:security:token:create', user, { expiresIn: ms(expiresIn) });
 
+    if (!token) {
+      error.throwError('security:token:creation_failed');
+    }
+
     return {
       id: token.userId,
       jwt: token.jwt,
@@ -83,6 +87,10 @@ class AuthController extends BaseController {
         email,
         password,
       });
+
+      if (!user) {
+        error.throwError('security:user:creation_failed');
+      }
 
       const token = await this.backend.ask('core:security:token:create', {
         username,
@@ -147,12 +155,22 @@ class AuthController extends BaseController {
     }
 
     const body = req.getBody();
-    const sanitizeBody = {
+    const sanitizeBody = JSON.parse(JSON.stringify({
       email: body.email,
       username: body.username,
+    }));
+
+    const user = await this.backend.ask('core:security:user:update', req.getUser().id, {...userInfos, ...sanitizeBody});
+
+    if (!user) {
+      error.throwError('security:user:update_failed');
     }
 
-    return await this.backend.ask('core:security:user:update', req.getUser().id, {...userInfos, ...sanitizeBody});
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    };
   }
 
   async deleteMyUser (req) {

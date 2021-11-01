@@ -3,7 +3,7 @@ const error = require('../errors');
 const {
   AuthController,
   ClockController,
-  UserController,
+  SecurityController,
   WorkingTimeController,
 } = require('./controllers');
 const Router = require('../core/network/router');
@@ -19,7 +19,7 @@ class Funnel {
   init (backend) {
     this.backend = backend;
     this.controllers.set('auth', new AuthController());
-    this.controllers.set('user', new UserController());
+    this.controllers.set('security', new SecurityController());
     this.controllers.set('clock', new ClockController());
     this.controllers.set('workingtime', new WorkingTimeController());
 
