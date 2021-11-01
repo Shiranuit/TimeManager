@@ -5,6 +5,11 @@ services:
     build: ./backend
     ports:
       - "4000:4000"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-postgres}
+      DB_USER: ${DB_USER:-postgres}
+      DB_USER_PASSWORD: ${DB_USER_PASSWORD:-postgres}
     depends_on:
       - postgres
 
@@ -18,10 +23,10 @@ services:
   postgres:
     image: postgres:9.6
     environment:
-      POSTGRES_PASSWORD: postgres
-      DB_NAME: gotham
-      DB_USER: gotham
-      DB_USER_PASSWORD: gotham
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-postgres}
+      DB_USER: ${DB_USER:-postgres}
+      DB_USER_PASSWORD: ${DB_USER_PASSWORD:-postgres}
     volumes:
       - ./database/postgres-init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
       - ./database/tables:/datamodel
