@@ -94,14 +94,17 @@ class AuthController extends BaseController {
         error.throwError('security:user:creation_failed');
       }
 
-      const token = await this.backend.ask('core:security:token:create', {
-        username,
-        password,
-      });
+      const token = await this.backend.ask(
+        'core:security:token:create',
+        user,
+        { expiresIn: ms('1h') }
+      );
 
       return {
-        id: user.id,
-        jwt: token,
+        id: token.userId,
+        jwt: token.jwt,
+        ttl: token.ttl,
+        expiresAt: token.expiresAt,
       };
     } catch (err) {
       if (err.code) {

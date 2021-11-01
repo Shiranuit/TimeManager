@@ -23,10 +23,12 @@ module.exports = {
     algorithm: 'sha256'
   },
   postgres: {
-    host: 'localhost',
+    maxRetries: 60,
+    retryDelay: '1s',
+    host: 'postgres',
     // port: 5432,
     database: 'gotham',
-    user: 'postgres',
-    password: 'postgres',
+    user: 'gotham',
+    password: 'gotham',
   }
 };
