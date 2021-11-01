@@ -29,7 +29,7 @@ runs:
         key: ${{ inputs.SSH_DEPLOY_kEY }}
         port: ${{ inputs.SSH_PORT }}
         script: |
-          cd TimeManager;
-          docker-compose stop;
-          git pull origin master;
-          docker-compose up --build -d;
+          cd ~/TimeManager
+          docker-compose stop
+          git pull origin master
+          docker-compose up --build -d
