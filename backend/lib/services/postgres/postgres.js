@@ -29,7 +29,7 @@ class Postgres {
           this.backend.logger.error('Could not connect to Postgres in time');
           throw err;
         } else {
-          this.backend.logger.info(`Waiting for postgres...`);
+          this.backend.logger.info('Waiting for postgres...');
         }
       }
       await Prom.sleep(retryDelay);
