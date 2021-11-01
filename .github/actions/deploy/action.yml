@@ -14,9 +14,6 @@ inputs:
   SSH_PORT:
     description: SSH PORT
     required: true
-  SSH_PASSWORD:
-    description: SSH PASSWORD
-    required: true
 
 runs:
   using: "composite"
@@ -29,5 +26,5 @@ runs:
         chmod 600 ~/.ssh/id_rsa
         eval `ssh-agent -s`
         ssh-add ~/.ssh/id_rsa
-        ssh "${{ SSH_USERNAME }}@${{ SSH_HOST }}" "whoami"
+        ssh "${{ inputs.SSH_USERNAME }}@${{ inputs.SSH_HOST }}" "whoami"
       shell: bash
