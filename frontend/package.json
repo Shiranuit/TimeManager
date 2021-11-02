@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vue-cli-service serve --mode dev_local",
     "serve": "vue-cli-service serve --mode development",
+    "docker:dev": "vue-cli-service serve --mode docker_dev",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
