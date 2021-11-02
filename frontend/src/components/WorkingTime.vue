@@ -135,10 +135,10 @@ export default {
         return;
       }
 
-      const date = new Date(this.selected.date);
-      date.setUTCHours(this.selected.time.hours);
-      date.setUTCMinutes(this.selected.time.minutes);
-      this.selected.start = date.getTime();
+      const date = moment(this.selected.date);
+      date.add(this.selected.time.hours, 'hours');
+      date.add(this.selected.time.minutes, 'minute');
+      this.selected.start = date.unix() * 1000;
       this.selected.end = this.selected.start + ms(this.selected.worked);
 
       const url = this.me
@@ -178,21 +178,22 @@ export default {
         return;
       }
 
-      const date = new Date(this.selected.date);
-      date.setUTCHours(this.selected.time.hours);
-      date.setUTCMinutes(this.selected.time.minutes);
-      this.selected.start = date.getTime();
+      const date = moment(this.selected.date);
+      date.add(this.selected.time.hours, 'hours');
+      date.add(this.selected.time.minutes, 'minute');
+      this.selected.start = date.unix() * 1000;
       this.selected.end = this.selected.start + ms(this.selected.worked);
 
       const url = this.me
         ? this.$constructUrl(`/api/workingtime/_me`)
         : this.$constructUrl(`/api/workingtime/${this.userId}`);
 
+      console.log(moment.utc(this.selected.date), this.selected.date);
       axios.post(
         url,
         {
-          start: new Date(this.selected.start).toISOString(),
-          end: new Date(this.selected.end).toISOString(),
+          start: moment(this.selected.start).utc().toISOString(),
+          end: moment(this.selected.end).utc().toISOString(),
           jwt: this.$store.state.jwt
         },
         { headers:{ authorization:this.$store.state.jwt } }
