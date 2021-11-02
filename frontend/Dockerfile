@@ -18,6 +18,7 @@ ADD package-lock.json .
 ADD package.json .
 ADD .env.dev_local .
 ADD .env.development .
+ADD .env.docker_dev .
 
 RUN npm install
 ADD public ./public
