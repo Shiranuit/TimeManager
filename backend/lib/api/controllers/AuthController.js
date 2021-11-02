@@ -158,6 +158,8 @@ class AuthController extends BaseController {
       error.throwError('security:user:not_found', req.getUser().id);
     }
 
+    const body = req.getBody();
+
     if (body.email) {
       if (!EMAIL_PATTERN.test(body.email)) {
         error.throwError('request:invalid:email_format');
@@ -170,7 +172,6 @@ class AuthController extends BaseController {
       }
     }
 
-    const body = req.getBody();
     const sanitizeBody = JSON.parse(JSON.stringify({
       email: body.email,
       username: body.username,
