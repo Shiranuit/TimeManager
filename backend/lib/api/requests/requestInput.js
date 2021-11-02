@@ -19,7 +19,7 @@ class RequestInput {
   }
 
   getHeaders () {
-    return this.request.headers || {}; 
+    return this.request.headers || {};
   }
 
   getRequest () {

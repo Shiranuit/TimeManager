@@ -17,7 +17,7 @@ class Router {
     const _path = this._cleanupPath(path);
     const _verb = verb.toLowerCase();
     const part = new RouterPart(verb, _path, handler, controller, action);
-    
+
     if (!this.routes.has(_verb)) {
       this.routes.set(_verb, new Map());
     }

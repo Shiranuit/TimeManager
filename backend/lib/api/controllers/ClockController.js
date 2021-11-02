@@ -132,7 +132,7 @@ class ClockController extends BaseController {
 
   async delete (req) {
     const userId = req.getInteger('userId');
-    
+
     const user = await this.backend.ask('core:security:user:get', userId);
 
     if (!user) {

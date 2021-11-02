@@ -22,7 +22,7 @@ class TokenRepository {
 
   async generateToken (user, options) {
     const encodedJwt = jwt.sign({id: user.id}, this.config.secret, options);
-    
+
     const token = new Token({
       id: `${user.id}#${encodedJwt}`,
       userId: user.id,
@@ -76,7 +76,7 @@ class TokenRepository {
 
     error.throwError('security:token:invalid');
   }
-  
+
 }
 
 module.exports = TokenRepository;

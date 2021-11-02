@@ -20,13 +20,13 @@ class UserRepository {
 
   async registerUser (data) {
     const hashedPassword = await this.backend.ask('core:security:vault:hash', data.password);
-    
+
     const result = await this.backend.ask(
       'postgres:query',
       'INSERT INTO users (email, username, password) VALUES ($1, $2, $3) RETURNING id;',
       [data.email, data.username, hashedPassword]
     );
-    
+
     return new User(result.rows[0].id);
   }
 

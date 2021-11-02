@@ -34,7 +34,7 @@ class Postgres {
       }
       await Prom.sleep(retryDelay);
     }
-    
+
     this.backend.onAsk('postgres:query', this.query.bind(this));
   }
 

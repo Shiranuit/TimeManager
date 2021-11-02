@@ -7,7 +7,7 @@ class Vault {
     this.backend = null;
     this.config = null;
   }
-  
+
   async init (backend) {
     this.backend = backend;
     this.config = this.backend.config.vault;

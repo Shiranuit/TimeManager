@@ -89,7 +89,7 @@ class Request {
   getBodyNumber (name, def = null) {
     return this._getNumber(this.input.body, name, `body.${name}`, def);
   }
-  
+
   getBodyInteger (name, def = null) {
     return this._getInteger(this.input.body, name, `body.${name}`, def);
   }
@@ -105,7 +105,6 @@ class Request {
   getBodyArray (name, def = null) {
     return this._getArray(this.input.body, name, `body.${name}`, def);
   }
-
 
   _getNumber (
     obj,

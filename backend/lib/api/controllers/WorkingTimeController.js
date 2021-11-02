@@ -17,7 +17,7 @@ class WorkingTimeController extends BaseController {
 
       { verb: 'put', path: '/:userId/:workId', action: 'updateWorkingTime' },
       { verb: 'put', path: '/_me/:workId', action: 'updateMyWorkingTime' },
-      
+
       { verb: 'delete', path: '/:userId/:workId', action: 'deleteWorkingTime' },
       { verb: 'delete', path: '/_me/:workId', action: 'deleteMyWorkingTime' },
     ]);

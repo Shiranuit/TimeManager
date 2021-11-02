@@ -87,11 +87,11 @@ class EntryPoint {
 
       this.backend.funnel.execute(request, (err, result) => {
         const _res = result || request;
-  
+
         if (err && !_res.response.error) {
           _res.setError(err);
         }
-  
+
         res.writeHead(200, {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',

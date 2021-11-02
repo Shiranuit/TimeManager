@@ -15,7 +15,7 @@ class Backend extends BackendEventEmitter {
   constructor (config) {
     super();
     this.config = config;
-    
+
     this.funnel = new Funnel();
     this.entryPoint = new EntryPoint();
     this.router = new Router();
@@ -23,7 +23,7 @@ class Backend extends BackendEventEmitter {
 
     this.security = new SecurityModule();
     this.repository = new RepositoryModule();
-    
+
     this.logger = new Logger(this);
     this.state = BackendStateEnum.STARTING;
   }
@@ -39,7 +39,7 @@ class Backend extends BackendEventEmitter {
       // Backend is starting
       this.logger.info('Starting backend...');
 
-      await this.router.init();
+      await this.router.init(this);
       await this.funnel.init(this);
       await this.entryPoint.init(this);
       await this.postgres.init(this);
@@ -49,7 +49,7 @@ class Backend extends BackendEventEmitter {
       // Module initialized, requests still not accepted
 
       await this.entryPoint.startListening();
-      
+
       // Backend is ready
       this.state = BackendStateEnum.RUNNING;
       this.logger.info('Backend has started');

@@ -15,7 +15,7 @@ module.exports = {
       minLength: 8,
     },
     jwt: {
-      secret: 'verysecurepassword',
+      secret: process.env.JWT_SECRET || 'verysecurepassword',
       algorithm: 'HS256',
     },
   },
