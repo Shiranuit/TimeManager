@@ -10,6 +10,7 @@ services:
       DB_NAME: ${DB_NAME:-database}
       DB_USER: ${DB_USER:-database}
       DB_USER_PASSWORD: ${DB_USER_PASSWORD:-database}
+      JWT_SECRET: ${JWT_SECRET:-verysecurepassword}
     depends_on:
       - postgres
 
