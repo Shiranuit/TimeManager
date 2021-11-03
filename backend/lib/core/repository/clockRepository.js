@@ -21,16 +21,16 @@ class ClockRepository {
     backend.onAsk('core:clock:delete', this.deleteClock.bind(this));
   }
 
-/**
- * Get the clock from the DB given a user id
- *
- * @param {integer} userId
- * @returns {Promise<{
- *  id: integer,
- *  status: boolean,
- *  start: Date,
- * }>}
- */
+  /**
+   * Get the clock from the DB given a user id
+   *
+   * @param {integer} userId
+   * @returns {Promise<{
+   *  id: integer,
+   *  status: boolean,
+   *  start: Date,
+   * }>}
+   */
   async getClock (userId) {
     const result = await this.backend.ask(
       'postgres:query',
