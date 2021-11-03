@@ -10,6 +10,10 @@ class RepositoryModule {
     this.workingtimes = new WorkingTimeRepository(this);
   }
 
+  /**
+   * Initialize all the repositories
+   * @param {Backend} backend
+   */
   async init (backend) {
     this.backend = backend;
     await this.clock.init(backend);

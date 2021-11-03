@@ -13,6 +13,15 @@ class Router {
     this.backend = backend;
   }
 
+  /**
+   * Create a route given the verb and path that will be linked to a controller's action
+   * @param {string} verb ex: GET, POST, PUT, DELETE, ...
+   * @param {string} path ex: /my/path, /my/:templated/path, ...
+   * @param {callback} handler function called when a request is sent on the given path
+   * @param {string} controller controller name
+   * @param {string} action action name
+   * @returns {void}
+   */
   attach (verb, path, handler, controller, action) {
     const _path = this._cleanupPath(path);
     const _verb = verb.toLowerCase();
@@ -38,10 +47,23 @@ class Router {
     verbRoutes.get(part.getTemplate().length).push(part);
   }
 
+  /**
+   * Take a path and remove every double slashs
+   * ex:
+   *  _cleanupPath('/a/b//c///d/e') -> 'a/b/c/d/e'
+   * @param {string} path
+   * @returns {string}
+   */
   _cleanupPath (path) {
     return path.split('/').filter(item => item !== '').join('/');
   }
 
+  /**
+   * Retrieve the specific router part based on the verb and path
+   * @param {string} verb ex: GET, POST, PUT, DELETE, ...
+   * @param {string} path
+   * @returns {RouterPart}
+   */
   find (verb, path) {
     const _verb = verb.toLowerCase();
     if (!this.routes.has(_verb)) {
@@ -62,7 +84,7 @@ class Router {
         const template = route.getTemplate();
         if (template[i].placeholder) {
           return true;
-        }  
+        }
 
         return template[i].name === pathSection[i];
       });

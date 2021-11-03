@@ -23,6 +23,12 @@ class WorkingTimeController extends BaseController {
     ]);
   }
 
+  /**
+   * List all working times for a given user
+   *
+   * @param {Request} req
+   * @returns {Promise<Array<WorkingTime>>}
+   */
   async listWorkingTimes (req) {
     const userId = req.getInteger('userId');
 
@@ -43,6 +49,12 @@ class WorkingTimeController extends BaseController {
       });
   }
 
+  /**
+   * List all working times for the current user
+   *
+   * @param {Request} req
+   * @returns {Promise<Array<WorkingTime>>}
+   */
   async listMyWorkingTimes (req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
@@ -59,6 +71,12 @@ class WorkingTimeController extends BaseController {
       });
   }
 
+  /**
+   * Get a working time for a given user
+   *
+   * @param {Request} req
+   * @returns {Promise<WorkingTime>}
+   */
   async getWorkingTime (req) {
     const userId = req.getInteger('userId');
     const workId = req.getInteger('workId');
@@ -83,6 +101,12 @@ class WorkingTimeController extends BaseController {
     };
   }
 
+  /**
+   * Get a working time for the current user
+   *
+   * @param {Request} req 
+   * @returns {Promise<WorkingTime>}
+   */
   async getMyWorkingTime (req) {
     const workId = req.getInteger('workId');
 
@@ -104,6 +128,12 @@ class WorkingTimeController extends BaseController {
     };
   }
 
+  /**
+   * Create a working time for the given user
+   *
+   * @param {Request} req
+   * @returns {Promise<WorkingTime>}
+   */
   async createWorkingTime (req) {
     const userId = req.getInteger('userId');
 
@@ -135,6 +165,12 @@ class WorkingTimeController extends BaseController {
     };
   }
 
+  /**
+   * Create a working time for the current user
+   *
+   * @param {Request} req
+   * @returns {Promise<WorkingTime>}
+   */
   async createMyWorkingTime (req) {
     const start = req.getBodyString('start');
     const end = req.getBodyString('end');
@@ -162,6 +198,12 @@ class WorkingTimeController extends BaseController {
     };
   }
 
+  /**
+   * Update a working time for the given user
+   *
+   * @param {Request} req
+   * @returns {Promise<WorkingTime>}
+   */
   async updateWorkingTime (req) {
     const userId = req.getInteger('userId');
     const workId = req.getInteger('workId');
@@ -200,6 +242,12 @@ class WorkingTimeController extends BaseController {
     };
   }
 
+  /**
+   * Update a working time for the current user
+   *
+   * @param {Request} req
+   * @returns {Promise<WorkingTime>}
+   */
   async updateMyWorkingTime (req) {
     const workId = req.getInteger('workId');
 
@@ -235,6 +283,12 @@ class WorkingTimeController extends BaseController {
     };
   }
 
+  /**
+   * Delete a working time for the given user
+   *
+   * @param {Request} req
+   * @returns {Promise<boolean>}
+   */
   async deleteWorkingTime (req) {
     const userId = req.getInteger('userId');
     const workId = req.getInteger('workId');
@@ -250,6 +304,12 @@ class WorkingTimeController extends BaseController {
     return true;
   }
 
+  /**
+   * Delete a working time for the current user
+   *
+   * @param {Request} req
+   * @returns {Promise<boolean>}
+   */
   async deleteMyWorkingTime (req) {
     const workId = req.getInteger('workId');
 

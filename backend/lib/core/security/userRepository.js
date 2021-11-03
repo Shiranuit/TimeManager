@@ -7,9 +7,16 @@ class UserRepository {
     this.backend = null;
   }
 
+  /**
+   * Initialize the repository
+   * @param {Backend} backend 
+   */
   async init (backend) {
     this.backend = backend;
 
+    /**
+     * Register all the askable methods
+     */
     backend.onAsk('core:security:user:create', this.registerUser.bind(this));
     backend.onAsk('core:security:user:verify', this.verify.bind(this));
     backend.onAsk('core:security:user:get', this.getUser.bind(this));

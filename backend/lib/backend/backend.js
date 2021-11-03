@@ -28,17 +28,27 @@ class Backend extends BackendEventEmitter {
     this.state = BackendStateEnum.STARTING;
   }
 
+  /**
+   * Calls any method instanciated by backend modules based on the given event
+   * @param {string} event
+   * @param  {...any} args
+   * @returns {any}
+   */
   async ask (event, ...args) {
     const _args = {...args};
     this.logger.debug(`Ask ${event}: ${JSON.stringify(_args)}`);
     return super.ask(event, ...args);
   }
 
+  /**
+   * Starts the backend
+   */
   async start () {
     try {
       // Backend is starting
       this.logger.info('Starting backend...');
 
+      // Initialize the backend modules
       await this.router.init(this);
       await this.funnel.init(this);
       await this.entryPoint.init(this);
@@ -47,7 +57,7 @@ class Backend extends BackendEventEmitter {
       await this.repository.init(this);
 
       // Module initialized, requests still not accepted
-
+      // Listening incoming requests
       await this.entryPoint.startListening();
 
       // Backend is ready
@@ -59,6 +69,9 @@ class Backend extends BackendEventEmitter {
     }
   }
 
+  /**
+   * Stops the backend
+   */
   async shutdown () {
     this.state = BackendStateEnum.SHUTTING_DOWN;
     this.logger.info('Backend is shutting down');

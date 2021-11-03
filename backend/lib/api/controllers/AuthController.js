@@ -23,11 +23,20 @@ class AuthController extends BaseController {
     ]);
   }
 
+  /**
+   * Initialize the controller.
+   * @param {Backend} backend
+   */
   async init (backend) {
     super.init(backend);
     this.config = backend.config.auth;
   }
 
+  /**
+   * Attemps to login with the given parameters
+   * @param {Request} req
+   * @returns {Promise<Token>}
+   */
   async login (req) {
     const username = req.getBodyString('username').toLowerCase();
     const password = req.getBodyString('password');
@@ -56,12 +65,22 @@ class AuthController extends BaseController {
     };
   }
 
+  /**
+   * Logs the current user out.
+   * @param {Request} req 
+   * @returns {Promise<boolean>}
+   */
   async logout (req) {
     await this.backend.ask('core:security:token:delete', req.getJWT());
 
     return true;
   }
 
+  /**
+   * Attempts to register a new user with the given parameters.
+   * @param {Request} req
+   * @returns {Promise<Token>}
+   */
   async register (req) {
     const username = req.getBodyString('username').toLowerCase();
     const email = req.getBodyString('email');
@@ -120,6 +139,12 @@ class AuthController extends BaseController {
     }
   }
 
+  /**
+   * Checks the validity of a token
+   *
+   * @param {Request} req
+   * @returns {Promise<object>}
+   */
   async checkToken (req) {
     const token = await this.backend.ask('core:security:token:verify', req.getJWT());
 
@@ -138,6 +163,12 @@ class AuthController extends BaseController {
     };
   }
 
+  /**
+   * Gets the current user informations
+   *
+   * @param {Request} req
+   * @returns {Promise<User>}
+   */
   async getMyUser (req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
@@ -146,6 +177,12 @@ class AuthController extends BaseController {
     return await this.backend.ask('core:security:user:get', req.getUser().id);
   }
 
+  /**
+   * Update the current user informations
+   *
+   * @param {Request} req
+   * @returns {Promise<User>}
+   */
   async updateMyUser (req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
@@ -203,6 +240,12 @@ class AuthController extends BaseController {
     }
   }
 
+  /**
+   * Delete the current user's account
+   *
+   * @param {Request} req
+   * @returns {boolean}
+   */
   async deleteMyUser (req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');

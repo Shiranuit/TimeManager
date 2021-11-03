@@ -12,6 +12,10 @@ class SecurityModule {
     this.vault = new Vault(this);
   }
 
+  /**
+   * Initialize all the security modules / repositories
+   * @param {Backend} backend
+   */
   async init (backend) {
     this.backend = backend;
     await this.vault.init(backend);

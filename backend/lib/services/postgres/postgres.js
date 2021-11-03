@@ -11,6 +11,10 @@ class Postgres {
     this.client = null;
   }
 
+  /**
+   * Initialize the Postgres service
+   * @param {Backend} backend
+   */
   async init (backend) {
     this.backend = backend;
     this.config = backend.config.postgres;
@@ -35,6 +39,9 @@ class Postgres {
       await Prom.sleep(retryDelay);
     }
 
+    /**
+     * Register all the askable methods
+     */
     this.backend.onAsk('postgres:query', this.query.bind(this));
   }
 

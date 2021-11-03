@@ -11,10 +11,18 @@ class RequestResponse {
     this.result = {};
   }
 
+  /**
+   * Set the request respond with the given value
+   * @param {any} result
+   */
   setResult (result) {
     this.result = result;
   }
 
+  /**
+   * Set the request in an errored state with the given error
+   * @param {Error} err
+   */
   setError (error) {
     if (! error || !(error instanceof Error)) {
       throw new InternalError('Cannot set non-error object as a request\'s error');
@@ -29,6 +37,11 @@ class RequestResponse {
     this.error = error;
   }
 
+  /**
+   * Get the header value for the given header name
+   * @param {string} name
+   * @returns {string}
+   */
   getHeader (name) {
     assert.assertString('header name', name);
 
@@ -40,6 +53,11 @@ class RequestResponse {
     return this.response.headers[lowerCased];
   }
 
+  /**
+   * Remove the header with the given name
+   * @param {string} name
+   * @returns {boolean}
+   */
   removeHeader (name) {
     assert.assertString('header name', name);
 
@@ -53,6 +71,12 @@ class RequestResponse {
     return true;
   }
 
+  /**
+   * Set the header value for the given header name
+   * @param {string} name
+   * @param {string | Array<string>} value
+   * @returns {string}
+   */
   setHeader (name, value) {
     assert.assertString('header name', name);
 
@@ -103,6 +127,10 @@ class RequestResponse {
     return true;
   }
 
+  /**
+   * Return an object representing the reponse
+   * @returns {Object}
+   */
   toJSON () {
     if (this.error) {
       return {

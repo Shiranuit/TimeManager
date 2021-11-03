@@ -11,10 +11,17 @@ class TokenRepository {
     this.tokens = new Map();
   }
 
+  /**
+   * Initialize the repository
+   * @param {Backend} backend 
+   */
   async init (backend) {
     this.backend = backend;
     this.config = backend.config.auth.jwt;
 
+    /**
+     * Register all the askable methods
+     */
     backend.onAsk('core:security:token:create', this.generateToken.bind(this));
     backend.onAsk('core:security:token:delete', this.expire.bind(this));
     backend.onAsk('core:security:token:verify', this.verify.bind(this));

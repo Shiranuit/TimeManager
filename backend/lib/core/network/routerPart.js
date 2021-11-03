@@ -13,6 +13,16 @@ class RouterPart {
 
   }
 
+  /**
+   * Generate the templated path used to extract variables from path
+   * like this: /path/:template/
+   * @param {string} path 
+   * @returns {Array<{
+   *  placeholder: boolean
+   *  name: string
+   *  template: string
+   * }>}
+   */
   _constructTemplate (path) {
     const templatePath = [];
     for (const subPath of path.split('/')) {
@@ -34,26 +44,55 @@ class RouterPart {
     return templatePath;
   }
 
+  /**
+   * Get the method associated to the routerPart
+   * @returns {string}
+   */
   getMethod () {
     return this.method;
   }
 
+  /**
+   * Get the path associated to the routerPart
+   * @returns {string}
+   */
   getPath () {
     return this.path;
   }
 
+  /**
+   * Get the callback associated to the routerPart
+   * @returns {callback}
+   */
   getHandler () {
     return this.handler;
   }
 
+  /**
+   * Get the templated path associated to the routerPart
+   * @returns {string}
+   */
   getTemplatePath () {
     return this.templatePath;
   }
 
+  /**
+   * Get the template associated to the routerPart
+   * @returns {Array<{
+   *  placeholder: boolean
+   *  name: string
+   *  template: string
+   * }>}
+   */
   getTemplate () {
     return this.template;
   }
 
+  /**
+   * Extract the templated parameters from the path
+   * @param {string} path
+   * @returns { {[key: string]: string} }
+   */
   getParams (path) {
     const _path = path.split('/').filter(item => item !== '');
     const params = {};

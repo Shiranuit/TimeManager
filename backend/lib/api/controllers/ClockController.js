@@ -17,6 +17,12 @@ class ClockController extends BaseController {
     ]);
   }
 
+  /**
+   * Create or update the clock of the current user.
+   *
+   * @param {Request} req
+   * @returns {Promise<Clock>}
+   */
   async createOrUpdateMyClock (req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
@@ -42,6 +48,12 @@ class ClockController extends BaseController {
     };
   }
 
+  /**
+   * Create or update the clock of the given user.
+   *
+   * @param {Request} req
+   * @returns {Promise<Clock>}
+   */
   async createOrUpdate (req) {
     const userId = req.getInteger('userId');
 
@@ -82,6 +94,12 @@ class ClockController extends BaseController {
     };
   }
 
+  /**
+   * Get the clock of the current user.
+   *
+   * @param {Request} req
+   * @returns {Promise<Clock>}
+   */
   async getMyClock (req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
@@ -99,6 +117,12 @@ class ClockController extends BaseController {
     };
   }
 
+  /**
+   * Get the clock of the given user.
+   *
+   * @param {Request} req
+   * @returns {Promise<Clock>}
+   */
   async getClock (req) {
     const userId = req.getInteger('userId');
 
@@ -120,6 +144,12 @@ class ClockController extends BaseController {
     };
   }
 
+  /**
+   * Delete the clock of the current user.
+   *
+   * @param {Request} req
+   * @returns {Promise<boolean>}
+   */
   async deleteMyClock (req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
@@ -130,6 +160,12 @@ class ClockController extends BaseController {
     return true;
   }
 
+  /**
+   * Delete the clock of the given user.
+   *
+   * @param {Request} req
+   * @returns {Promise<boolean>}
+   */
   async delete (req) {
     const userId = req.getInteger('userId');
 

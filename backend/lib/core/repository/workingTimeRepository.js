@@ -5,9 +5,16 @@ class WorkingTimeRepository {
     this.backend = null;
   }
 
+  /**
+   * Initialize the repository
+   * @param {Backend} backend
+   */
   async init (backend) {
     this.backend = backend;
 
+    /**
+     * Register all the askable methods
+     */
     backend.onAsk('core:workingtime:list', this.listWorkingTimes.bind(this));
     backend.onAsk('core:workingtime:create', this.createWorkingTime.bind(this));
     backend.onAsk('core:workingtime:update', this.updateWorkingTime.bind(this));

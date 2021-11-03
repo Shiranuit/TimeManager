@@ -16,15 +16,30 @@ class SecurityController extends BaseController {
     ]);
   }
 
+  /**
+   * Initialize the controller.
+   * @param {Backend} backend
+   */
   async init (backend) {
     super.init(backend);
     this.config = backend.config.auth;
   }
 
+  /**
+   * List all the users.
+   *
+   * @returns {Promise<Array<User>>}
+   */
   async listUsers() {
     return await this.backend.ask('core:security:user:list');
   }
 
+  /**
+   * Get user informations for a given user.
+   *
+   * @param {Request} req
+   * @returns {Promise<User>}
+   */
   async getUser(req) {
     const userId = req.getInteger('userId');
 
@@ -41,6 +56,12 @@ class SecurityController extends BaseController {
     };
   }
 
+  /**
+   * Create a user.
+   *
+   * @param {Request} req
+   * @returns {Promise<User>}
+   */
   async createUser(req) {
     const username = req.getBodyString('username');
     const email = req.getBodyString('email');
@@ -80,6 +101,12 @@ class SecurityController extends BaseController {
     }
   }
 
+  /**
+   * Update user informations for a given user.
+   *
+   * @param {Request} req
+   * @returns {Promise<User>}
+   */
   async updateUser(req) {
     const userId = req.getInteger('userId');
 
@@ -135,11 +162,17 @@ class SecurityController extends BaseController {
     }
   }
 
+  /**
+   * Delete a given user
+   *
+   * @param {Request} req
+   * @returns {Promise<boolean>}
+   */
   async deleteUser(req) {
     const userId = req.getInteger('userId');
 
     await this.backend.ask('core:security:user:delete', userId);
-    
+
     return true;
   }
 

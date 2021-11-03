@@ -5,15 +5,32 @@ class ClockRepository {
     this.backend = null;
   }
 
+  /**
+   * Initialize the repository
+   * @param {Backend} backend
+   */
   async init (backend) {
     this.backend = backend;
 
+    /**
+     * Register all the askable methods
+     */
     backend.onAsk('core:clock:create', this.createClock.bind(this));
     backend.onAsk('core:clock:update', this.updateClock.bind(this));
     backend.onAsk('core:clock:get', this.getClock.bind(this));
     backend.onAsk('core:clock:delete', this.deleteClock.bind(this));
   }
 
+/**
+ * Get the clock from the DB given a user id
+ *
+ * @param {integer} userId
+ * @returns {Promise<{
+ *  id: integer,
+ *  status: boolean,
+ *  start: Date,
+ * }>}
+ */
   async getClock (userId) {
     const result = await this.backend.ask(
       'postgres:query',
@@ -32,6 +49,16 @@ class ClockRepository {
     };
   }
 
+  /**
+   * Create a clock inside the DB given a user id
+   *
+   * @param {integer} userId
+   * @returns {Promise<{
+   *  id: integer,
+   *  status: boolean,
+   *  start: Date,
+   * }>}
+   */
   async createClock (userId) {
     const result = await this.backend.ask(
       'postgres:query',
@@ -50,6 +77,17 @@ class ClockRepository {
     };
   }
 
+  /**
+   * Update the clock informations from the DB given a user id
+   *
+   * @param {integer} userId
+   * @param {{status: boolean, start: Date}} data
+   * @returns {Promise<{
+   *  id: integer,
+   *  status: boolean,
+   *  start: Date,
+   * }>}
+   */
   async updateClock (userId, data) {
     const result = await this.backend.ask(
       'postgres:query',
@@ -68,6 +106,12 @@ class ClockRepository {
     };
   }
 
+  /**
+   * Delete the clock from the DB given a user id
+   *
+   * @param {integer} userId
+   * @returns {void}
+   */
   async deleteClock (userId) {
     await this.backend.ask(
       'postgres:query',
