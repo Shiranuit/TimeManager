@@ -171,7 +171,7 @@ class SecurityController extends BaseController {
    * @param {Request} req
    * @returns {Promise<User>}
    */
-   async updateUserRole(req) {
+  async updateUserRole(req) {
     const userId = req.getInteger('userId');
 
     const userInfos = await this.backend.ask('core:security:user:get', userId);
@@ -184,7 +184,7 @@ class SecurityController extends BaseController {
     const role = req.getBodyString('role').toLowerCase();
 
     if (!this.permissions[role] || role === 'anonymous') {
-      const roles = Object.keys(this.permissions).filter(role => role !== 'anonymous');
+      const roles = Object.keys(this.permissions).filter(_role => _role !== 'anonymous');
       error.throwError('security:user:invalid_role', role, `[${roles.join(', ')}]`);
     }
 
@@ -192,22 +192,18 @@ class SecurityController extends BaseController {
       role,
     }));
 
-    try {
-      const user = await this.backend.ask('core:security:user:update', userId, {...userInfos, ...sanitizeBody});
+    const user = await this.backend.ask('core:security:user:update', userId, {...userInfos, ...sanitizeBody});
 
-      if (!user) {
-        error.throwError('security:user:update_failed');
-      }
-
-      return {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-      };
-    } catch (err) {
-      throw err;
+    if (!user) {
+      error.throwError('security:user:update_failed');
     }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    };
   }
 
   /**

@@ -102,10 +102,10 @@ class Funnel {
     if (this.permissions[role]) {
       const rolePermissions = this.permissions[role];
       if (rolePermissions['*']) {
-        return !!(rolePermissions['*']['*'] || rolePermissions['*'][action]);
+        return Boolean(rolePermissions['*']['*'] || rolePermissions['*'][action]);
       }
       if (rolePermissions[controller]) {
-        return !!(rolePermissions[controller]['*'] || rolePermissions[controller][action]);
+        return Boolean(rolePermissions[controller]['*'] || rolePermissions[controller][action]);
       }
     }
     return false;
