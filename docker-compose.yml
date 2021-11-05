@@ -13,6 +13,10 @@ services:
       JWT_SECRET: ${JWT_SECRET:-verysecurepassword}
       DERIVATION_ROUND: ${DERIVATION_ROUND:-100000}
       VAULT_SECRET: ${VAULT_SECRET:-verysecurepassword}
+      ADMIN_ROLE: ${ADMIN_EMAIL:-admin}
+      ADMIN_USERNAME: ${ADMIN_ROLE:-admin}
+      ADMIN_PASSWORD: ${ADMIN_ROLE:-admin}
+      ADMIN_ROLE: ${ADMIN_ROLE:-super-manager}
     depends_on:
       - postgres
 

@@ -25,6 +25,14 @@ module.exports = {
       algorithm: 'HS256',
     },
   },
+  security: {
+    firstAdmin: {
+      email: process.env.ADMIN_EMAIL || 'admin',
+      username: process.env.ADMIN_USERNAME || 'admin',
+      password: process.env.ADMIN_PASSWORD || 'admin',
+      role: process.env.ADMIN_ROLE || 'super-manager',
+    }
+  },
   vault: {
     algorithm: 'sha256',
     salt: process.env.VAULT_SECRET || 'verysecurepassword',

@@ -5,6 +5,7 @@ const User = require('../../model/user');
 class UserRepository {
   constructor () {
     this.backend = null;
+    this.config = null;
   }
 
   /**
@@ -13,6 +14,7 @@ class UserRepository {
    */
   async init (backend) {
     this.backend = backend;
+    this.config = backend.config.security;
 
     /**
      * Register all the askable methods
@@ -23,6 +25,34 @@ class UserRepository {
     backend.onAsk('core:security:user:update', this.updateUser.bind(this));
     backend.onAsk('core:security:user:list', this.listUsers.bind(this));
     backend.onAsk('core:security:user:delete', this.deleteUser.bind(this));
+
+    await this.createFirstAdmin();
+  }
+
+  async createFirstAdmin() {
+    if (!this.config.firstAdmin) {
+      // No first admin to create
+      return;
+    }
+
+    const response = await this.backend.ask('postgres:query', 'SELECT firstTime FROM backend_state;');
+
+    if (response.rows.length > 0 && response.rows[0].firstTime) {
+      return;
+    }
+
+    await this.backend.ask(
+      'core:security:user:create',
+      {
+        email: this.config.firstAdmin.email,
+        username: this.config.firstAdmin.username,
+        password: this.config.firstAdmin.password,
+        role: this.config.firstAdmin.role,
+      }
+    );
+
+    await this.backend.ask('postgres:query', 'INSERT INTO backend_state (firstTime) VALUES ($1)', [true]);
+    this.backend.logger.debug('Create first admin');
   }
 
   async registerUser (data) {
@@ -30,8 +60,8 @@ class UserRepository {
 
     const result = await this.backend.ask(
       'postgres:query',
-      'INSERT INTO users (email, username, password) VALUES ($1, $2, $3) RETURNING id;',
-      [data.email, data.username, hashedPassword]
+      'INSERT INTO users (email, username, password, role) VALUES ($1, $2, $3, $4) RETURNING id;',
+      [data.email, data.username, hashedPassword, data.role || 'user']
     );
 
     return new User(result.rows[0].id);

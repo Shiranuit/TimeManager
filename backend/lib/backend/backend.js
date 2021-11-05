@@ -37,7 +37,7 @@ class Backend extends BackendEventEmitter {
   async ask (event, ...args) {
     const _args = {...args};
     const result = await super.ask(event, ...args);
-    this.logger.debug(`Ask ${event}: ${JSON.stringify(_args)}: ${JSON.stringify(result, null, 4)}`);
+    this.logger.debug(`Ask ${event}: ${JSON.stringify(_args)}\n${JSON.stringify(result, null, 4)}`);
     return result;
   }
 
@@ -50,10 +50,10 @@ class Backend extends BackendEventEmitter {
       this.logger.info('Starting backend...');
 
       // Initialize the backend modules
+      await this.postgres.init(this);
       await this.router.init(this);
       await this.funnel.init(this);
       await this.entryPoint.init(this);
-      await this.postgres.init(this);
       await this.security.init(this);
       await this.repository.init(this);
 
