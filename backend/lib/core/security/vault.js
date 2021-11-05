@@ -10,7 +10,7 @@ class Vault {
 
   /**
    * Initialize the Vault module
-   * @param {Backend} backend 
+   * @param {Backend} backend
    */
   async init (backend) {
     this.backend = backend;
@@ -23,9 +23,33 @@ class Vault {
   }
 
   async hash (str) {
+    let resolve;
+    let reject;
+    const promise = new Promise((_res, _rej) => {
+      resolve = _res;
+      reject = _rej;
+    });
+
     const hash = crypto.createHash(this.config.algorithm);
     hash.update(str);
-    return hash.digest('hex');
+    const digest = hash.digest('hex');
+
+    crypto.pbkdf2(
+      digest,
+      this.config.salt,
+      this.config.derivationRound,
+      digest.length,
+      this.config.algorithm,
+      (err, key) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve(key.toString('hex'));
+      });
+
+    return promise;
   }
 }
 

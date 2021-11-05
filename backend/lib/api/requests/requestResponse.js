@@ -80,51 +80,7 @@ class RequestResponse {
   setHeader (name, value) {
     assert.assertString('header name', name);
 
-    if (! name) {
-      return true;
-    }
-
-    const lowerCased = name.toLowerCase();
-    const _value = String(value);
-
-    switch (lowerCased) {
-      case 'age':
-      case 'authorization':
-      case 'content-length':
-      case 'content-type':
-      case 'etag':
-      case 'expires':
-      case 'from':
-      case 'host':
-      case 'if-modified-since':
-      case 'if-unmodified-since':
-      case 'last-modified, location':
-      case 'max-forwards':
-      case 'proxy-authorization':
-      case 'referer':
-      case 'retry-after':
-      case 'user-agent':
-        this.response.headers[lowerCased] = _value;
-        break;
-      case 'set-cookie':
-        if (!this.response.headers[lowerCased]) {
-          this.response.headers[lowerCased] = [_value];
-        }
-        else {
-          this.response.headers[lowerCased].push(_value);
-        }
-        break;
-      default: {
-        if (this.response.headers[lowerCased]) {
-          this.response.headers[lowerCased] += ', ' + _value;
-        }
-        else {
-          this.response.headers[lowerCased] = _value;
-        }
-      }
-    }
-
-    return true;
+    this.response.setHeader(name, value);
   }
 
   /**

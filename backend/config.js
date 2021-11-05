@@ -20,7 +20,9 @@ module.exports = {
     },
   },
   vault: {
-    algorithm: 'sha256'
+    algorithm: 'sha256',
+    salt: process.env.VAULT_SECRET || 'verysecurepassword',
+    derivationRound: parseInt(process.env.DERIVATION_ROUND) || 100000,
   },
   postgres: {
     maxRetries: 60,

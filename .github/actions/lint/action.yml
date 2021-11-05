@@ -9,5 +9,3 @@ runs:
         npm install;
         npm run test:lint;
       shell: bash
-      
-    
