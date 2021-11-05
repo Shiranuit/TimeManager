@@ -79,8 +79,8 @@ class UserRepository {
   async updateUser (id, data) {
     const result = await this.backend.ask(
       'postgres:query',
-      'UPDATE users SET username = $2, email = $3 WHERE id = $1 RETURNING id, username, email;',
-      [id, data.username, data.email]
+      'UPDATE users SET username = $2, email = $3, role = $4 WHERE id = $1 RETURNING id, username, email, role;',
+      [id, data.username, data.email, data.role]
     );
 
     if (result.rows.length === 0) {
@@ -90,7 +90,8 @@ class UserRepository {
     return {
       username: result.rows[0].username,
       email: result.rows[0].email,
-      id: result.rows[0].id
+      id: result.rows[0].id,
+      role: result.rows[0].role,
     };
   }
 

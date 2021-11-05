@@ -39,6 +39,10 @@ module.exports = {
     message: 'URL not found: "%s"',
     type: BadRequestError,
   },
+  'security:user:invalid_role': {
+    message: 'Invalid role "%s", expected %s',
+    type: BadRequestError,
+  },
   'security:user:creation_failed': {
     message: 'Failed to create user account',
     type: SecurityError,

@@ -45,7 +45,7 @@ module.exports = {
         logout: true,
         checkToken: true,
         register: true,
-      }
+      },
     },
     user: {
       auth: {
