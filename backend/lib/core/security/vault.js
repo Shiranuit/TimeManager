@@ -20,6 +20,7 @@ class Vault {
      * Register all the askable methods
      */
     backend.onAsk('core:security:vault:hash', this.hash.bind(this));
+    backend.onAsk('core:security:vault:verify', this.verify.bind(this));
   }
 
   async hash (str) {
@@ -50,6 +51,21 @@ class Vault {
       });
 
     return promise;
+  }
+
+  /**
+   * Constant time comparison function
+   * 
+   * @param {string} str 
+   * @param {string} str2 
+   * @returns {boolean}
+   */
+  async verify (str, str2) {
+    if (str.length !== str2.length) {
+      return false;
+    }
+
+    return crypto.timingSafeEqual(Buffer.from(str), Buffer.from(str2));
   }
 }
 
