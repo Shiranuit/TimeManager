@@ -11,6 +11,8 @@ services:
       DB_USER: ${DB_USER:-database}
       DB_USER_PASSWORD: ${DB_USER_PASSWORD:-database}
       JWT_SECRET: ${JWT_SECRET:-verysecurepassword}
+      DERIVATION_ROUND: ${DERIVATION_ROUND:-100000}
+      VAULT_SECRET: ${VAULT_SECRET:-verysecurepassword}
     depends_on:
       - postgres
 

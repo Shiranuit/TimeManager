@@ -8,6 +8,7 @@ class EntryPoint {
   constructor () {
     this.server = http.createServer(this.execute.bind(this));
     this.backend = null;
+    this.config = null;
   }
 
   /**
@@ -16,6 +17,7 @@ class EntryPoint {
    */
   async init (backend) {
     this.backend = backend;
+    this.config = backend.config.http;
   }
 
   /**
@@ -50,7 +52,7 @@ class EntryPoint {
    * @param {Request} req
    */
   _applyACAOHeaders(req) {
-    req.response.setHeader('Access-Control-Allow-Origin', '*');
+    req.response.setHeader('Access-Control-Allow-Origin', req.input.getHeader('Origin') || '*');
     req.response.setHeader('Access-Control-Allow-Headers', '*');
     req.response.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'PUT', 'DELETE']);
     req.response.setHeader('Vary', 'Origin');
@@ -65,6 +67,31 @@ class EntryPoint {
   execute (req, res) {
     this.backend.logger.debug('New request');
     const request = new Request(req, res);
+    /**
+     * If an origin header is present in the request,
+     * we need to verify that the origin is allowed to access the API
+     * otherwise the request will be rejected.
+     */
+    if (req.headers.origin) {
+      let found = false;
+      for (const pattern of this.config.cors['Access-Control-Allow-Origin']) {
+        if (pattern.test(req.headers.origin)) {
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        this.backend.logger.warn(`Origin ${req.headers.origin} is not allowed`);
+        const err = error.getError('request:origin:unauthorized', req.headers.origin);
+        request.setError(err);
+        this._applyACAOHeaders(request);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(request.response.toJSON()));
+        this.backend.logger.debug(`Response: ${JSON.stringify(request.response.toJSON(), null, 4)}`);
+        return;
+      }
+    }
     this.backend.logger.debug(`Request: ${request.input.getMethod()} ${request.input.getPath()} from ${req.socket.remoteAddress}`);
 
     const fullContent = [];
@@ -91,6 +118,7 @@ class EntryPoint {
         // Set the error to send
         request.setError(err);
         res.end(JSON.stringify(request.response.toJSON()));
+        this.backend.logger.debug(`Response: ${JSON.stringify(request.response.toJSON(), null, 4)}`);
         return;
       }
 
@@ -115,6 +143,7 @@ class EntryPoint {
         this._applyACAOHeaders(request);
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify(request.response.toJSON()));
+        this.backend.logger.debug(`Response: ${JSON.stringify(request.response.toJSON(), null, 4)}`);
         return;
       }
 
@@ -135,7 +164,7 @@ class EntryPoint {
         this._applyACAOHeaders(request);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(_res.response.toJSON()));
-        this.backend.logger.debug(JSON.stringify(_res.response.toJSON(), null, 4));
+        this.backend.logger.debug(`Response: ${JSON.stringify(_res.response.toJSON(), null, 4)}`);
       });
     });
   }
