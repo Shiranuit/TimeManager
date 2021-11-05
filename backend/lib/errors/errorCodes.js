@@ -7,6 +7,10 @@ const SecurityError = require('./securityError');
 const ApiError = require('./apiError');
 
 module.exports = {
+  'request:origin:unauthorized': {
+    message: 'Unauthorized origin "%s"',
+    type: SecurityError,
+  },
   'request:discarded:shutdown': {
     message: 'Backend is shutting down',
     type: ServiceUnavailableError,
@@ -89,6 +93,10 @@ module.exports = {
   },
   'security:user:not_authenticated': {
     message: 'User not authenticated',
+    type: SecurityError,
+  },
+  'security:permission:denied': {
+    message: 'User does not have the required permissions to execute "%s:%s"',
     type: SecurityError,
   },
   'api:workingtime:creation_failed': {
