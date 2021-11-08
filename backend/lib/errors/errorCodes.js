@@ -127,4 +127,28 @@ module.exports = {
     message: 'Failed to update clock',
     type: ApiError,
   },
+  'api:team:creation_failed': {
+    message: 'Failed to create a team',
+    type: ApiError,
+  },
+  'api:team:user_add_failed': {
+    message: 'Failed to add user id "%s" to "%s"',
+    type: ApiError,
+  },
+  'api:team:user_remove_failed': {
+    message: 'Failed to remove user id "%s" from "%s"',
+    type: ApiError,
+  },
+  'api:team:not_found': {
+    message: 'Team "%s" not found',
+    type: ApiError,
+  },
+  'api:team:already_exists': {
+    message: 'Team "%s" already exists',
+    type: ApiError,
+  },
+  'api:team:team_not_owned': {
+    message: 'You do not own the team "%s"',
+    type: ApiError,
+  }
 };

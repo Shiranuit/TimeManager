@@ -10,7 +10,7 @@ class UserRepository {
 
   /**
    * Initialize the repository
-   * @param {Backend} backend 
+   * @param {Backend} backend
    */
   async init (backend) {
     this.backend = backend;
@@ -37,7 +37,7 @@ class UserRepository {
 
     const response = await this.backend.ask('postgres:query', 'SELECT firstTime FROM backend_state;');
 
-    if (response.rows.length > 0 && response.rows[0].firstTime) {
+    if (response.rows.length > 0 && response.rows[0].firsttime) {
       return;
     }
 

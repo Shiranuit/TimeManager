@@ -7,6 +7,7 @@ const {
   ClockController,
   SecurityController,
   WorkingTimeController,
+  TeamController,
 } = require('./controllers');
 
 const InternalError = require('../errors/internalError');
@@ -30,6 +31,7 @@ class Funnel {
     this.controllers.set('security', new SecurityController());
     this.controllers.set('clock', new ClockController());
     this.controllers.set('workingtime', new WorkingTimeController());
+    this.controllers.set('team', new TeamController());
 
     /**
      * Create every routes for each controller
