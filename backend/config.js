@@ -111,6 +111,14 @@ module.exports = {
         deleteWorkingTime: true,
         updateWorkingTime: true,
         getWorkingTime: true,
+      },
+      team: {
+        createOwnedTeam: true,
+        deleteOwnedTeam: true,
+        listOwnedTeams: true,
+        getOwnedTeamByName: true,
+        addOwnedTeamUser: true,
+        removeOwnedTeamUser: true,
       }
     },
     'super-manager': {

@@ -13,7 +13,7 @@ class TokenRepository {
 
   /**
    * Initialize the repository
-   * @param {Backend} backend 
+   * @param {Backend} backend
    */
   async init (backend) {
     this.backend = backend;

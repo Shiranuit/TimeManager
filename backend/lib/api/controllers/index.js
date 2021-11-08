@@ -8,4 +8,5 @@ module.exports = {
   SecurityController: require('./SecurityController'),
   ClockController: require('./ClockController'),
   WorkingTimeController: require('./WorkingTimeController'),
+  TeamController: require('./TeamController'),
 };
