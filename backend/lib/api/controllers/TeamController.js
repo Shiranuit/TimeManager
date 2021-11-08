@@ -91,7 +91,6 @@ class TeamController extends BaseController {
           }
         }
       }
-      console.log(err);
       throw err;
     }
   }
