@@ -1,3 +1,5 @@
+'use strict';
+
 const BaseController = require('./BaseController');
 const error = require('../../errors');
 
@@ -50,6 +52,10 @@ class TeamController extends BaseController {
         if (err.code === '23505') {
           if (err.constraint === 'unique_team_name') {
             error.throwError('api:team:already_exists', name);
+          }
+        } else if (err.code === '23503') {
+          if (err.constraint === 'fk_user') {
+            error.throwError('security:user:with_id_not_found', ownerId);
           }
         }
       }
@@ -147,7 +153,7 @@ class TeamController extends BaseController {
    *
    * @param {Request} req
    */
-   async createOwnedTeam(req) {
+  async createOwnedTeam(req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
     }
@@ -170,6 +176,11 @@ class TeamController extends BaseController {
         if (err.code === '23505') {
           if (err.constraint === 'unique_team_name') {
             error.throwError('api:team:already_exists', name);
+          }
+        } else if (err.code === '23503') {
+          // Should never happens
+          if (err.constraint === 'fk_user') {
+            error.throwError('security:user:with_id_not_found', req.getUser().id);
           }
         }
       }
@@ -219,7 +230,6 @@ class TeamController extends BaseController {
           }
         }
       }
-      console.log(err);
       throw err;
     }
   }

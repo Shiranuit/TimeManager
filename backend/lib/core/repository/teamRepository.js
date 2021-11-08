@@ -1,7 +1,5 @@
 'use strict';
 
-const error = require('../../errors');
-
 class TeamRepository {
   constructor () {
     this.backend = null;
@@ -130,7 +128,7 @@ class TeamRepository {
       name: teamOwner.rows[0].name,
       owner_id: teamOwner.rows[0].owner_id,
       members_id: teamMembers.rows.length > 0 ? teamMembers.rows[0].members : [],
-    }
+    };
   }
 
   async verifyTeamOwner(name, ownerId) {

@@ -38,7 +38,7 @@ class Backend extends BackendEventEmitter {
     const _args = {...args};
     this.logger.debug(`Ask ${event} ${JSON.stringify(_args)}:`);
     const result = await super.ask(event, ...args);
-    this.logger.debug(`${JSON.stringify(result, null, 4)}`)
+    this.logger.debug(`${JSON.stringify(result, null, 4)}`);
     return result;
   }
 
