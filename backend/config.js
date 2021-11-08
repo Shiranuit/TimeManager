@@ -77,6 +77,9 @@ module.exports = {
         deleteMyWorkingTime: true,
         updateMyWorkingTime: true,
         getMyWorkingTime: true,
+      },
+      team: {
+        listOwnedTeams: true,
       }
     },
     manager: {
