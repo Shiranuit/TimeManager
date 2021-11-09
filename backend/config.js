@@ -92,7 +92,7 @@ module.exports = {
 
         getMyUser: true,
         updateMyUser: true,
-        changeMyPassword: true,
+        updateMyPassword: true,
         deleteMyUser: true,
       },
       clock: {
