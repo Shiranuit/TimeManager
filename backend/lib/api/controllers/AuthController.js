@@ -165,7 +165,7 @@ class AuthController extends BaseController {
         ttl: token.ttl,
         expiresAt: token.expiresAt,
       };
-    } catch {
+    } catch (_) {
       return {
         id: null,
         ttl: -1,
