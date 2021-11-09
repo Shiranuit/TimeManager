@@ -2,17 +2,27 @@
   <div>
     <b-col>
       <b-row>
-        <span>Hours worked per day</span>
-        <div class="hours-worked">
-          <apexchart width="100%" type="line" :options="chartOptions" :series="series"></apexchart>
+        <div class="chart-section1">
+          <span>Hours worked per day</span>
+          <apexchart type="line" :options="chartOptions" :series="series"></apexchart>
+        </div>
+        <div class="chart-section1">
+          <span>Hours worked per month</span>
+          <apexchart type="donut" :options="chartOptions2" :series="series2"></apexchart>
         </div>
       </b-row>
       <b-row>
-        <span>Hours worked per month</span>
-        <div class="hours-worked">
-          <apexchart width="100%" type="donut" :options="chartOptions2" :series="series2"></apexchart>
+        <div class="chart-section2">
+          <span>Hours worked per day</span>
+          <apexchart type="histogram" :options="chartOptions" :series="series"></apexchart>
         </div>
       </b-row>
+      <!-- <b-row>
+        <span>Hours worked per month</span>
+        <div class="hours-worked">
+          <apexchart width="50%" type="donut" :options="chartOptions2" :series="series2"></apexchart>
+        </div>
+      </b-row> -->
     </b-col>
   </div>
 </template>
@@ -24,6 +34,14 @@ import "twix";
 
 export default {
   name: 'UserSettings',
+  props: {
+    userId: {
+      type: Number,
+    },
+    me: {
+      type: Boolean,
+    }
+  },
   data() {
     return {
       chartOptions: {
@@ -138,14 +156,6 @@ export default {
       });
     }
   },
-  props: {
-    userId: {
-      type: Number,
-    },
-    me: {
-      type: Boolean,
-    }
-  },
   created() {
     if (!this.userId && !this.me) {
       this.$router.push('/');
@@ -175,10 +185,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.hours-worked {
-  width: 100%;
-  // background-color: rgb(168, 216, 178);
+.chart-section1 {
+  width: 50%;
   border-radius: 30px;
-  border: 2px solid rgb(168, 216, 178);
+  border: 2px solid #F8684A;;
+}
+
+.chart-section2 {
+  margin-top: 15px;
+  width: 100%;
+  border-radius: 30px;
+  border: 2px solid #F8684A;;
 }
 </style>

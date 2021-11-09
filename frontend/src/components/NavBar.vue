@@ -1,20 +1,18 @@
 <template>
   <div class="nav-bar">
+    <div class="button-container" v-if="this.$store.state.jwt !== null">
+      <b-icon-house-fill class="custom-button" @click="$router.push('/home')" />
+      <template>
+        <b-icon-people-fill class="custom-button" @click="$router.push('/userManagement')"/>
+        <b-icon-calendar class="custom-button" />
+        <b-icon-briefcase-fill class="custom-button"/>
+      </template>
+    </div>
     <div class="home" v-on:click="home">
       <div class="logo-container">
-        <b-aspect aspect="1:1">
-          <b-icon-alarm class="logo"></b-icon-alarm>
-        </b-aspect>
+        <b-icon-alarm class="logo"></b-icon-alarm>
       </div>
       <div class="title">Time Manager</div>
-    </div>
-    <div class="button-container" v-if="this.$store.state.jwt !== null">
-      <div class="custom-button" @click="$router.push('/home')">
-        Home
-      </div>
-      <div class="custom-button" @click="$router.push('/userManagement')">
-        Users Management
-      </div>
     </div>
     <user-profile-menu class="profile-menu" v-if="this.$store.state.jwt !== null"/>
   </div>
@@ -23,8 +21,13 @@
 <script>
 import UserProfileMenu from './UserProfileMenu.vue';
 export default {
-  components: { UserProfileMenu },
   name: 'NavBar',
+  components: { UserProfileMenu },
+  computed: {
+    userInfo() {
+        return this.$store.state.userInfo || {};
+    }
+  },
   methods: {
     home() {
       this.$router.push('/');
@@ -36,13 +39,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .nav-bar {
-  background-color: #42b983;
+  background-color: #F8684A;
   color: rgb(255, 255, 255);
   font-size: 20px;
   font-weight: bold;
   text-align: left;
   width: 100%;
-  height: 8vh;
+  height: 6vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -67,7 +70,7 @@ export default {
 }
 
 .logo-container {
-  width: 6vh;
+  width: 4vh;
   float: left;
 }
 
@@ -78,20 +81,18 @@ export default {
 
 .custom-button {
   height: 100%;
-  width: 200px;
-  padding-left: 1%;
-  padding-right: 1%;
+  width: 100%;
+  padding: 20px;
   align-content: center;
   justify-items: center;
   justify-content: center;
   align-items: center;
   display: flex;
-  background-color: #42b983;
 }
 
 .custom-button:hover {
   cursor: pointer;
-  background-color: #328660;
+  background-color: #eb3a17;
 }
 
 .button-container {

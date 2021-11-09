@@ -45,7 +45,7 @@ export default {
 .user-profile-settings {
   padding-left: 2%;
   border-radius: 10px;
-  border: 2px solid #42b983;
+  border: 2px solid #F8684A;;
   width: 50%;
   height: auto;
   margin-top: 50%;

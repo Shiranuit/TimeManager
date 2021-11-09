@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <div class="statistics-container">
-      <b-button squared class="refresh-button" variant="info" @click="fetchUsers">
+  <div class="user-management-page">
+    <div class="container-working-time">
+      <!-- <b-button squared class="working-time" variant="info" @click="fetchUsers">
         <b-icon icon="arrow-clockwise" class="statistics-icon" font-scale="2"></b-icon>
         <div>Refresh</div>
-      </b-button>
-      <b-button squared v-b-modal.create-user class="new-user" variant="info" @click="deselectItem">
+      </b-button> -->
+      <b-button squared v-b-modal.create-user class="working-time" variant="info" @click="deselectItem">
         <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
         <div>Create a new user account</div>
       </b-button>
@@ -28,7 +28,31 @@
       </template>
     </b-table>
     <b-modal id="create-user" title="Create user account" hide-footer>
-      <div class="modal-footer">
+      <b-col class="login-context">
+          <b-row
+            ><b-form-input 
+              v-model="user.email" 
+              placeholder="Email" 
+              @keydown.enter.native="login_register"
+              ></b-form-input
+          ></b-row>
+          <b-row
+            ><b-form-input
+              v-model="user.username"
+              placeholder="Username"
+              @keydown.enter.native="login_register"
+            ></b-form-input
+          ></b-row>
+          <b-row
+            ><b-form-input
+              v-model="user.password"
+              type="password"
+              placeholder="Password"
+              @keydown.enter.native="login_register"
+            ></b-form-input
+          ></b-row>
+          
+        </b-col><div class="modal-footer">
         <b-button variant="secondary" @click="$bvModal.hide('create-user')">Cancel</b-button>
         <b-button variant="primary" @click="createUser">Create Account</b-button>
       </div>
@@ -48,11 +72,18 @@ export default {
   components: {
     UserSettings
   },
+
+  props: {
+    userId: {
+      type: Number,
+    },
+  },
   data() {
     return {
       user: {
-        username: '',
-        email: '',
+        email: "",
+        username: "",
+        password: "",
       },
       items: [],
       fields: ['ID', 'Username', 'Email', 'Action'],
@@ -62,6 +93,9 @@ export default {
     };
   },
   methods: {
+    login_register() {
+      this.createUser();
+    },
     deselectItem() {
       this.selected = {};
     },
@@ -90,8 +124,9 @@ export default {
       axios.post(
         this.$constructUrl('/api/security/'),
         {
-          email: new Date(this.selected.start).toISOString(),
-          username: new Date(this.selected.end).toISOString(),
+          email: this.user.email,
+          username: this.user.username,
+          password: this.user.password
         },
         { headers:{ authorization:this.$store.state.jwt } }
       ).then(response => {
@@ -147,11 +182,6 @@ export default {
       });
     }
   },
-  props: {
-    userId: {
-      type: Number,
-    },
-  },
   created() {
     this.fetchUsers();
   }
@@ -159,12 +189,28 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+.user-management-page {
+  width: 66%;
+  margin-right: 15%;
+  margin-left: 15%;
+  margin-top: 5%;
+}
 .statistics-container {
   align-items: left;
   display: flex;
   justify-content: left;
   width: 100%;
+}
+
+.container-working-time {
+  display: flex;
+}
+.working-time {
+  background-color: #F8684A;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 25%;
 }
 .statistics-button {
   width: 100%;

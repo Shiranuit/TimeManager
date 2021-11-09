@@ -61,6 +61,15 @@
 import axios from "axios";
 export default {
   name: 'UserSettings',
+
+  props: {
+    userId: {
+      type: Number,
+    },
+    me: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       user: {
@@ -148,14 +157,6 @@ export default {
       });
     }
 
-  },
-  props: {
-    userId: {
-      type: Number,
-    },
-    me: {
-      type: Boolean
-    }
   },
   created() {
     if (!this.userId && !this.me) {

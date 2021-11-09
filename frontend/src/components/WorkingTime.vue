@@ -1,40 +1,58 @@
 <template>
-  <div>
-    <div class="statistics-container">
-      <b-button squared v-b-modal.view-statistics class="statistics-button" variant="info">
+  <div class="dashboard-page">
+    <div class="container-section">
+      <!-- <b-button squared v-b-modal.view-statistics class="statistics-button" variant="info">
         <b-icon icon="graph-up" class="statistics-icon"></b-icon>
         View Statistics
-      </b-button>
-      <b-button squared class="refresh-button" variant="info" @click="fetchWorkingTimes">
-        <b-icon icon="arrow-clockwise" class="statistics-icon"></b-icon>
-        Refresh
-      </b-button>
-      <b-button squared v-b-modal.create-worked-time class="new-workingtime" variant="info" @click="deselectItem">
-        <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
-        <div>Add a new working period</div>
-      </b-button>
+      </b-button> -->
+      <h1>My Statistics</h1>
+      <user-chart :user-id="this.userId" :me="this.me"/>
     </div>
-    <b-table head-variant="dark" hover :items="items" :fields="fields" inline>
-      <template #cell(Action)="row">
-        <b-modal :id="'edit-workingtime-modal' + row.item.ID" title="Edit Worked period" hide-footer>
-          <label for="datepicker">Date:</label>
-          <b-form-datepicker id="datepicker-buttons" v-model="selected.date" class="mb-2" menu-class="w-100" calendar-width="100%" :state="validatePickedDate()"></b-form-datepicker>
-          <b-form-timepicker id="timepicker-buttons" v-model="selected.time_str" @context="onTimeContext" now-button reset-button locale="fr" :state="validatePickedTime()"></b-form-timepicker>
-          <label for="worked-hours">Hours Worked (ex: 2d, 1h, 10m):</label>
-          <b-form-input  class="worked-hours" v-model="selected.worked" :state="validateWorkedHours()"></b-form-input>
-          <div class="modal-footer">
-            <b-button variant="secondary" @click="$bvModal.hide('edit-workingtime-modal' + row.item.ID)">Cancel</b-button>
-            <b-button variant="primary" @click="updateWorkingTime(row.item.ID)">Update</b-button>
-          </div>
-        </b-modal>
-        <b-button v-b-modal="'edit-workingtime-modal' + row.item.ID" size="sm" class="mr-2" @click="selectItem(row.item.ID)">
-          Edit
+    <div class="container-section">
+      <h1>My Working Times</h1>
+      <!-- <h4 class="working-time">Filter by :</h4>
+      <b-dropdown class="working-time" text="User" >
+        <b-dropdown-item>Action A</b-dropdown-item>
+        <b-dropdown-item>Action B</b-dropdown-item>
+      </b-dropdown>
+      <b-dropdown class="working-time" text="Current Month" >
+        <b-dropdown-item>Action A</b-dropdown-item>
+        <b-dropdown-item>Action B</b-dropdown-item>
+      </b-dropdown> -->
+      <div class="container-working-time">
+        <b-button squared v-b-modal.create-worked-time class="working-time" @click="deselectItem">
+          <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
+          <div>Add a new working period</div>
         </b-button>
-        <b-button @click="deleteWorkingTime(row.item.ID)" size="sm" variant="danger">
-          Delete
-        </b-button>
-      </template>
-    </b-table>
+        <!-- <b-button squared class="working-time" variant="info" @click="fetchWorkingTimes">
+          <b-icon icon="arrow-clockwise" class="statistics-icon"></b-icon>
+          Refresh
+        </b-button> -->
+      </div>
+      <b-table head-variant="dark" hover :items="items" :fields="fields" inline>
+        <template #cell(Action)="row">
+          <b-modal :id="'edit-workingtime-modal' + row.item.ID" title="Edit Worked period" hide-footer>
+            <label for="datepicker">Date:</label>
+            <b-form-datepicker id="datepicker-buttons" v-model="selected.date" class="mb-2" menu-class="w-100" calendar-width="100%" :state="validatePickedDate()"></b-form-datepicker>
+            <b-form-timepicker id="timepicker-buttons" v-model="selected.time_str" @context="onTimeContext" now-button reset-button locale="fr" :state="validatePickedTime()"></b-form-timepicker>
+            <label for="worked-hours">Hours Worked (ex: 2d, 1h, 10m):</label>
+            <b-form-input  class="worked-hours" v-model="selected.worked" :state="validateWorkedHours()"></b-form-input>
+            <div class="modal-footer">
+              <b-button variant="secondary" @click="$bvModal.hide('edit-workingtime-modal' + row.item.ID)">Cancel</b-button>
+              <b-button variant="primary" @click="updateWorkingTime(row.item.ID)">Update</b-button>
+            </div>
+          </b-modal>
+          <b-button v-b-modal="'edit-workingtime-modal' + row.item.ID" size="sm" class="mr-2" @click="selectItem(row.item.ID)">
+            Edit
+          </b-button>
+          <b-button @click="deleteWorkingTime(row.item.ID)" size="sm" variant="danger">
+            Delete
+          </b-button>
+        </template>
+      </b-table>
+    </div>
+    
+    
     <b-modal id="create-worked-time" title="New Worked period" hide-footer>
       <label for="datepicker">Date:</label>
       <b-form-datepicker id="datepicker-buttons" v-model="selected.date" class="mb-2" menu-class="w-100" calendar-width="100%" :state="validatePickedDate()"></b-form-datepicker>
@@ -46,9 +64,9 @@
         <b-button variant="primary" @click="createWorkingTime">Add</b-button>
       </div>
     </b-modal>
-    <b-modal id="view-statistics" title="User Statistics">
+    <!-- <b-modal id="view-statistics" title="User Statistics">
       <user-chart :user-id="this.userId" :me="this.me"/>
-    </b-modal>
+    </b-modal> -->
   </div>
 </template>
 
@@ -62,6 +80,14 @@ export default {
   name: 'UserSettings',
   components: {
     UserChart
+  },
+  props: {
+    userId: {
+      type: Number,
+    },
+    me: {
+      type: Boolean,
+    }
   },
   data() {
     return {
@@ -265,14 +291,6 @@ export default {
       });
     }
   },
-  props: {
-    userId: {
-      type: Number,
-    },
-    me: {
-      type: Boolean,
-    }
-  },
   created() {
     if (!this.userId && !this.me) {
       this.$router.push('/');
@@ -303,33 +321,48 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.hours-worked {
-  // width: 40%;
-  background-color: rgb(168, 216, 178);
-  border-radius: 30px;
-}
-
-.statistics-container {
-  align-items: left;
+.dashboard-page {
   display: flex;
-  justify-content: left;
-  width: 100%;
-}
-.statistics-button {
-  width: 100%;
 }
 
-.new-workingtime {
-  width: 100%;
+.container-section {
+  width: 50%;
+  margin: 10px;
+}
+.container-working-time {
+  display: flex;
+}
+.working-time {
+  background-color: #F8684A;
   align-items: center;
   display: flex;
   justify-content: center;
+  width: 25%;
 }
 
-.refresh-button {
-  width: 100%;
-  align-items: center;
-  display: flex;
-  justify-content: center;
+h1 {
+  margin: 30px;
 }
+
+
+
+// .hours-worked {
+//   // width: 40%;
+//   background-color: rgb(168, 216, 178);
+//   border-radius: 30px;
+// }
+
+
+// .statistics-button {
+//   width: 100%;
+// }
+
+
+
+// .refresh-button {
+//   width: 100%;
+//   align-items: center;
+//   display: flex;
+//   justify-content: center;
+// }
 </style>

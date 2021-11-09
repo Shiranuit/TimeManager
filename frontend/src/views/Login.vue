@@ -86,7 +86,8 @@ export default {
         .post(this.$constructUrl('/api/auth/_login'),
           {
             username: this.username,
-            password: this.password
+            password: this.password,
+            rol: this.role
           }
         ).then((response) => {
           if (response.data.error) {
