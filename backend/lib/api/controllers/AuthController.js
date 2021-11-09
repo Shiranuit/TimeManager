@@ -99,7 +99,7 @@ class AuthController extends BaseController {
       error.throwError('security:user:password_too_short', this.config.password.minLength);
     }
 
-    if (!CAPITAL_PATTERN.test(password) || !LOWER_PATTERN.test(password) || !NUMBER_PATTERN.test(password)) {
+    if (!this._validatePasswordStrength(password)) {
       error.throwError('security:user:password_too_weak');
     }
 
@@ -205,7 +205,7 @@ class AuthController extends BaseController {
 
     // Should never happen but just in case
     if (!userInfos) {
-      error.throwError('security:user:not_found', req.getUser().id);
+      error.throwError('security:user:with_id_not_found', req.getUser().id);
     }
 
     const authorized = await this.backend.ask(
@@ -280,13 +280,6 @@ class AuthController extends BaseController {
     const password = req.getBodyString('oldPassword');
     const newPassword = req.getBodyString('newPassword');
 
-    const userInfos = await this.backend.ask('core:security:user:get', req.getUser().id);
-
-    // Should never happen but just in case
-    if (!userInfos) {
-      error.throwError('security:user:not_found', req.getUser().id);
-    }
-
     const authorized = await this.backend.ask(
       'core:security:user:verifyById',
       {
@@ -299,7 +292,7 @@ class AuthController extends BaseController {
       error.throwError('security:user:invalid_credentials');
     }
 
-    if (!CAPITAL_PATTERN.test(newPassword) || !LOWER_PATTERN.test(newPassword) || !NUMBER_PATTERN.test(newPassword)) {
+    if (!this._validatePasswordStrength(newPassword)) {
       error.throwError('security:user:password_too_weak');
     }
 
@@ -329,6 +322,18 @@ class AuthController extends BaseController {
     }
 
     return await this.backend.ask('core:security:user:delete', req.getUser().id);
+  }
+
+  /**
+   * Verifies that the password is strong enough
+   * 
+   * @param {string} password 
+   * @returns 
+   */
+  _validatePasswordStrength(password) {
+    return CAPITAL_PATTERN.test(password)
+      && LOWER_PATTERN.test(password)
+      && NUMBER_PATTERN.test(password);
   }
 }
 
