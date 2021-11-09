@@ -15,8 +15,10 @@ class SecurityController extends BaseController {
       { verb: 'get', path: '/:userId', action: 'getUser' },
       { verb: 'post', path: '/', action: 'createUser' },
       { verb: 'put', path: '/:userId', action: 'updateUser' },
+      { verb: 'put', path: '/:userId/_password', action: 'updateUserPassword' },
       { verb: 'delete', path: '/:userId', action: 'deleteUser' },
       { verb: 'put', path: '/:userId/_role', action: 'updateUserRole' },
+      { verb: 'get', path: '/_roles', action: 'listRoles' },
     ]);
   }
 
@@ -37,6 +39,15 @@ class SecurityController extends BaseController {
    */
   async listUsers() {
     return await this.backend.ask('core:security:user:list');
+  }
+
+  /**
+   * List all roles.
+   *
+   * @returns {Promise<Array<string>>}
+   */
+  async listRoles() {
+    return Object.keys(this.permissions).filter(_role => _role !== 'anonymous');
   }
 
   /**
@@ -126,7 +137,6 @@ class SecurityController extends BaseController {
 
     const userInfos = await this.backend.ask('core:security:user:get', userId);
 
-    // Should never happen but just in case
     if (!userInfos) {
       error.throwError('security:user:not_found', userId);
     }
@@ -177,6 +187,41 @@ class SecurityController extends BaseController {
   }
 
   /**
+   * Change the password for a given user
+   *
+   * @param {Request} req
+   * @returns {Promise<User>}
+   */
+  async updateUserPassword (req) {
+    const userId = req.getInteger('userId');
+
+    const newPassword = req.getBodyString('newPassword');
+
+    const userInfos = await this.backend.ask('core:security:user:get', userId);
+
+    if (!userInfos) {
+      error.throwError('security:user:not_found', userId);
+    }
+
+    if (!CAPITAL_PATTERN.test(newPassword) || !LOWER_PATTERN.test(newPassword) || !NUMBER_PATTERN.test(newPassword)) {
+      error.throwError('security:user:password_too_weak');
+    }
+
+    const user = await this.backend.ask('core:security:user:updatePassword', userId, newPassword);
+
+    if (!user) {
+      error.throwError('security:user:update_failed');
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    };
+  }
+
+  /**
    * Update the role of a given user.
    *
    * @param {Request} req
@@ -187,7 +232,6 @@ class SecurityController extends BaseController {
 
     const userInfos = await this.backend.ask('core:security:user:get', userId);
 
-    // Should never happen but just in case
     if (!userInfos) {
       error.throwError('security:user:not_found', userId);
     }

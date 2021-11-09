@@ -39,7 +39,7 @@ class Funnel {
     for (const [controllerName, controller] of this.controllers) {
       for (const route of controller.__actions) {
         // If a / is missing at the start of the path we add it
-        const path = route.path[0] === '/' ? `/${controllerName}${route.path}` : `/${controllerName}/${route.path}`;
+        const path = route.path[0] === '/' ? `${controllerName}${route.path}` : `${controllerName}/${route.path}`;
 
         if (!controller[route.action] || typeof controller[route.action] !== 'function') {
           throw new InternalError(`Cannot attach path ${route.verb.toUpperCase()} /api/${path}: no action ${route.action} for controller ${controllerName}`);

@@ -19,6 +19,7 @@ class AuthController extends BaseController {
 
       { verb: 'get', path: '/_me', action: 'getMyUser'},
       { verb: 'put', path: '/', action: 'updateMyUser' },
+      { verb: 'put', path: '/_password', action: 'updateMyPassword' },
       { verb: 'delete', path: '/', action: 'deleteMyUser' },
     ]);
   }
@@ -188,11 +189,25 @@ class AuthController extends BaseController {
       error.throwError('security:user:not_authenticated');
     }
 
+    const password = req.getBodyString('actualPassword');
+
     const userInfos = await this.backend.ask('core:security:user:get', req.getUser().id);
 
     // Should never happen but just in case
     if (!userInfos) {
       error.throwError('security:user:not_found', req.getUser().id);
+    }
+
+    const authorized = await this.backend.ask(
+      'core:security:user:verifyById',
+      {
+        id: req.getUser().id,
+        password,
+      }
+    );
+
+    if (!authorized) {
+      error.throwError('security:user:invalid_credentials');
     }
 
     const body = req.getBody();
@@ -225,6 +240,7 @@ class AuthController extends BaseController {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
       };
     } catch (err) {
       if (err.code) {
@@ -238,6 +254,57 @@ class AuthController extends BaseController {
       }
       throw err;
     }
+  }
+
+  /**
+   * Change the current user password
+   *
+   * @param {Request} req
+   * @returns {Promise<User>}
+   */
+  async updateMyPassword (req) {
+    if (req.isAnonymous()) {
+      error.throwError('security:user:not_authenticated');
+    }
+
+    const password = req.getBodyString('oldPassword');
+    const newPassword = req.getBodyString('newPassword');
+
+    const userInfos = await this.backend.ask('core:security:user:get', req.getUser().id);
+
+    // Should never happen but just in case
+    if (!userInfos) {
+      error.throwError('security:user:not_found', req.getUser().id);
+    }
+
+    const authorized = await this.backend.ask(
+      'core:security:user:verifyById',
+      {
+        id: req.getUser().id,
+        password,
+      }
+    );
+
+    if (!authorized) {
+      error.throwError('security:user:invalid_credentials');
+    }
+
+    if (!CAPITAL_PATTERN.test(newPassword) || !LOWER_PATTERN.test(newPassword) || !NUMBER_PATTERN.test(newPassword)) {
+      error.throwError('security:user:password_too_weak');
+    }
+
+    const user = await this.backend.ask('core:security:user:updatePassword', req.getUser().id, newPassword);
+
+    if (!user) {
+      error.throwError('security:user:update_failed');
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    };
   }
 
   /**
