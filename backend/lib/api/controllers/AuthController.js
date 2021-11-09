@@ -147,21 +147,31 @@ class AuthController extends BaseController {
    * @returns {Promise<object>}
    */
   async checkToken (req) {
-    const token = await this.backend.ask('core:security:token:verify', req.getJWT());
+    const jwt = req.getBodyString('jwt');
 
-    if (!token) {
+    try {
+      const token = await this.backend.ask('core:security:token:verify', jwt);
+
+      if (!token) {
+        return {
+          id: null,
+          ttl: -1,
+          expiresAt: -1,
+        };
+      }
+
+      return {
+        id: token.userId,
+        ttl: token.ttl,
+        expiresAt: token.expiresAt,
+      };
+    } catch {
       return {
         id: null,
-        expiresIn: -1,
+        ttl: -1,
         expiresAt: -1,
       };
     }
-
-    return {
-      id: token.userId,
-      ttl: token.ttl,
-      expiresAt: token.expiresAt,
-    };
   }
 
   /**
