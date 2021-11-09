@@ -4,6 +4,9 @@ const BaseController = require('./BaseController');
 const error = require('../../errors');
 
 const EMAIL_PATTERN = /^[A-z0-9_-]+(\.[A-z0-9_-]+)*@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z0-9_-]+$/;
+const CAPITAL_PATTERN = /[A-Z]/;
+const NUMBER_PATTERN = /[0-9]/;
+const LOWER_PATTERN = /[a-z]/;
 
 class SecurityController extends BaseController {
   constructor () {
@@ -76,6 +79,14 @@ class SecurityController extends BaseController {
 
     if (username.length < this.config.username.minLength) {
       error.throwError('security:user:username_too_short', this.config.username.minLength);
+    }
+
+    if (password.length < this.config.password.minLength) {
+      error.throwError('security:user:password_too_short', this.config.password.minLength);
+    }
+
+    if (!CAPITAL_PATTERN.test(password) || !LOWER_PATTERN.test(password) || !NUMBER_PATTERN.test(password)) {
+      error.throwError('security:user:password_too_weak');
     }
 
     try {
