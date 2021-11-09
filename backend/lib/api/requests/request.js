@@ -35,7 +35,7 @@ class Request {
    * @returns {boolean}
    */
   isAnonymous () {
-    return !this.context.user || this.context.user === null;
+    return !this.context.user || this.context.user.id === null;
   }
 
   /**

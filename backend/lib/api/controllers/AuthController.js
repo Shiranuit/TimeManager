@@ -67,7 +67,7 @@ class AuthController extends BaseController {
 
   /**
    * Logs the current user out.
-   * @param {Request} req 
+   * @param {Request} req
    * @returns {Promise<boolean>}
    */
   async logout (req) {

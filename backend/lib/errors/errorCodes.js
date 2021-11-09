@@ -7,6 +7,10 @@ const SecurityError = require('./securityError');
 const ApiError = require('./apiError');
 
 module.exports = {
+  'request:origin:unauthorized': {
+    message: 'Unauthorized origin "%s"',
+    type: SecurityError,
+  },
   'request:discarded:shutdown': {
     message: 'Backend is shutting down',
     type: ServiceUnavailableError,
@@ -33,6 +37,10 @@ module.exports = {
   },
   'network:http:url_not_found': {
     message: 'URL not found: "%s"',
+    type: BadRequestError,
+  },
+  'security:user:invalid_role': {
+    message: 'Invalid role "%s", expected %s',
     type: BadRequestError,
   },
   'security:user:creation_failed': {
@@ -91,6 +99,10 @@ module.exports = {
     message: 'User not authenticated',
     type: SecurityError,
   },
+  'security:permission:denied': {
+    message: 'User does not have the required permissions to execute "%s:%s"',
+    type: SecurityError,
+  },
   'api:workingtime:creation_failed': {
     message: 'Failed to create working time',
     type: ApiError,
@@ -115,4 +127,28 @@ module.exports = {
     message: 'Failed to update clock',
     type: ApiError,
   },
+  'api:team:creation_failed': {
+    message: 'Failed to create a team',
+    type: ApiError,
+  },
+  'api:team:user_add_failed': {
+    message: 'Failed to add user id "%s" to "%s"',
+    type: ApiError,
+  },
+  'api:team:user_remove_failed': {
+    message: 'Failed to remove user id "%s" from "%s"',
+    type: ApiError,
+  },
+  'api:team:not_found': {
+    message: 'Team "%s" not found',
+    type: ApiError,
+  },
+  'api:team:already_exists': {
+    message: 'Team "%s" already exists',
+    type: ApiError,
+  },
+  'api:team:team_not_owned': {
+    message: 'You do not own the team "%s"',
+    type: ApiError,
+  }
 };

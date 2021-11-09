@@ -7,6 +7,7 @@ const {
   ClockController,
   SecurityController,
   WorkingTimeController,
+  TeamController,
 } = require('./controllers');
 
 const InternalError = require('../errors/internalError');
@@ -16,10 +17,12 @@ class Funnel {
   constructor () {
     this.controllers = new Map();
     this.backend = null;
+    this.permissions = {};
   }
 
   init (backend) {
     this.backend = backend;
+    this.permissions = backend.config.permissions;
     /**
      * Declare the controllers with their names
      * @type {Map<string, BaseController>}
@@ -28,6 +31,7 @@ class Funnel {
     this.controllers.set('security', new SecurityController());
     this.controllers.set('clock', new ClockController());
     this.controllers.set('workingtime', new WorkingTimeController());
+    this.controllers.set('team', new TeamController());
 
     /**
      * Create every routes for each controller
@@ -79,6 +83,34 @@ class Funnel {
   async checkRights (req) {
     const token = await this.backend.ask('core:security:token:verify', req.getJWT());
     req.context.user = token ? new User(token.userId) : new User(null);
+
+    if (req.isAnonymous()) {
+      this.backend.logger.debug('Request made as anonymous');
+      if (!this.hasPermission('anonymous', req.getController(), req.getAction())) {
+        this.backend.logger.debug(`Insufficient permissions to execute ${req.getController()}:${req.getAction()}`);
+        error.throwError('security:permission:denied', req.getController(), req.getAction());
+      }
+    } else {
+      const userInfo = await this.backend.ask('core:security:user:get', token.userId);
+      this.backend.logger.debug(`Request made as ${userInfo.username} (ID: ${userInfo.id}, role: ${userInfo.role})`);
+      if (!this.hasPermission(userInfo.role, req.getController(), req.getAction())) {
+        this.backend.logger.debug(`Insufficient permissions to execute ${req.getController()}:${req.getAction()}`);
+        error.throwError('security:permission:denied', req.getController(), req.getAction());
+      }
+    }
+  }
+
+  hasPermission(role, controller, action) {
+    if (this.permissions[role]) {
+      const rolePermissions = this.permissions[role];
+      if (rolePermissions['*']) {
+        return Boolean(rolePermissions['*']['*'] || rolePermissions['*'][action]);
+      }
+      if (rolePermissions[controller]) {
+        return Boolean(rolePermissions[controller]['*'] || rolePermissions[controller][action]);
+      }
+    }
+    return false;
   }
 }
 
