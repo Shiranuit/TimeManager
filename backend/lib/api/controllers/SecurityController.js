@@ -192,7 +192,7 @@ class SecurityController extends BaseController {
    * @param {Request} req
    * @returns {Promise<User>}
    */
-   async updateUserPassword (req) {
+  async updateUserPassword (req) {
     const userId = req.getInteger('userId');
 
     const newPassword = req.getBodyString('newPassword');
