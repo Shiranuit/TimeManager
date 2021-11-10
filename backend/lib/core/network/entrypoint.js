@@ -3,6 +3,7 @@
 const http = require('http');
 const Request = require('../../api/requests/request');
 const error = require('../../errors');
+const InternalError = require('../../errors/internalError');
 
 class EntryPoint {
   constructor () {
@@ -65,8 +66,22 @@ class EntryPoint {
    * @param {http.ServerResponse} res
    */
   execute (req, res) {
-    this.backend.logger.debug('New request');
-    const request = new Request(req, res);
+    this.backend.logger.debug(`New request ${req.url}`);
+    let request;
+    try {
+      request = new Request(req, res);
+    } catch (err) {
+      this.backend.logger.error(err);
+      const _err = new InternalError(err.message);
+      _err.stack = err.stack;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.setHeader('Access-Control-Allow-Origin', req.getHeader('Origin') || '*');
+      res.setHeader('Access-Control-Allow-Headers', '*');
+      res.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'PUT', 'DELETE']);
+      res.setHeader('Vary', 'Origin');
+      res.end(JSON.stringify(_err.toJSON()));
+      return;
+    }
     /**
      * If an origin header is present in the request,
      * we need to verify that the origin is allowed to access the API
