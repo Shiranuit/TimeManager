@@ -12,17 +12,21 @@ const {
 
 const InternalError = require('../errors/internalError');
 const User = require('../model/user');
+const RateLimiter = require('./rateLimiter');
 
 class Funnel {
   constructor () {
     this.controllers = new Map();
     this.backend = null;
     this.permissions = {};
+    this.rateLimiter = new RateLimiter();
   }
 
-  init (backend) {
+  async init (backend) {
     this.backend = backend;
     this.permissions = backend.config.permissions;
+
+    await this.rateLimiter.init(backend);
     /**
      * Declare the controllers with their names
      * @type {Map<string, BaseController>}
@@ -67,9 +71,19 @@ class Funnel {
     }
 
     this.checkRights(req).then(() => {
-      return req.routerPart.handler(req).then(result => {
-        req.setResult(result);
-        callback(null, req);
+
+      return this.rateLimiter.isAllowed(req).then((allowed) => {
+        if (!allowed) {
+          callback(
+            error.getError('request:rate:limit_exceeded', req.getController(), req.getAction())
+          );
+          return;
+        }
+
+        return req.routerPart.handler(req).then(result => {
+          req.setResult(result);
+          callback(null, req);
+        });
       });
     }).catch(err => {
       callback(err);
