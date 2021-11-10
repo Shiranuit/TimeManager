@@ -46,6 +46,13 @@ module.exports = {
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_USER_PASSWORD || 'postgres',
   },
+  // Maximum requests per minutes
+  rateLimits: {
+    auth: {
+      login: 3,
+      register: 3,
+    }
+  },
   permissions: {
     anonymous: {
       auth: {
