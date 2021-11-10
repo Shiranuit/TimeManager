@@ -53,7 +53,7 @@ class EntryPoint {
    * @param {Request} req
    */
   _applyACAOHeaders(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', req.headers['origin'] || '*');
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
     res.setHeader('Access-Control-Allow-Headers', '*');
     res.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'PUT', 'DELETE']);
     res.setHeader('X-Frame-Options', 'sameorigin');

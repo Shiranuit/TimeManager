@@ -32,7 +32,7 @@ class RateLimiter {
 
     const rates = this.connectionLimits.get(ipAddress);
     if (rates[action]) {
-      const rate = rates[action]
+      const rate = rates[action];
       
       if (rate >= limit) {
         return false;
