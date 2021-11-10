@@ -71,14 +71,14 @@ class EntryPoint {
     try {
       request = new Request(req, res);
     } catch (err) {
-      this.backend.logger.error(err);
-      const _err = new InternalError(err.message);
-      _err.stack = err.stack;
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.setHeader('Access-Control-Allow-Origin', req.getHeader('Origin') || '*');
+      const _err = new InternalError('Failed to parse URL');
+      _err.stack = null;
+      this.backend.logger.error(err.toString());
+      res.setHeader('Access-Control-Allow-Origin', req.headers['origin'] || '*');
       res.setHeader('Access-Control-Allow-Headers', '*');
       res.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'PUT', 'DELETE']);
       res.setHeader('Vary', 'Origin');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(_err.toJSON()));
       return;
     }
