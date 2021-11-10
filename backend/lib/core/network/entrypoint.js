@@ -52,11 +52,13 @@ class EntryPoint {
    * Apply Access-Control-Allow-Origin headers
    * @param {Request} req
    */
-  _applyACAOHeaders(req) {
-    req.response.setHeader('Access-Control-Allow-Origin', req.input.getHeader('Origin') || '*');
-    req.response.setHeader('Access-Control-Allow-Headers', '*');
-    req.response.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'PUT', 'DELETE']);
-    req.response.setHeader('Vary', 'Origin');
+  _applyACAOHeaders(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', req.headers['origin'] || '*');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    res.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'PUT', 'DELETE']);
+    res.setHeader('X-Frame-Options', 'sameorigin');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Vary', 'Origin');
   }
 
   /**
@@ -66,6 +68,19 @@ class EntryPoint {
    * @param {http.ServerResponse} res
    */
   execute (req, res) {
+    try {
+      this.processRequest(req, res);
+    } catch (err) {
+      this._applyACAOHeaders(req, res);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      const _err = new InternalError(err.message);
+      _err.stack = err.stack;
+      res.end(JSON.stringify(_err.toJSON()));
+      this.backend.logger.debug(`Response: ${JSON.stringify(_err.toJSON(), null, 4)}`);
+    }
+  }
+
+  processRequest (req, res) {
     this.backend.logger.debug(`New request ${req.url}`);
     let request;
     try {
@@ -74,12 +89,10 @@ class EntryPoint {
       const _err = new InternalError('Failed to parse URL');
       _err.stack = null;
       this.backend.logger.error(err.toString());
-      res.setHeader('Access-Control-Allow-Origin', req.headers['origin'] || '*');
-      res.setHeader('Access-Control-Allow-Headers', '*');
-      res.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'PUT', 'DELETE']);
-      res.setHeader('Vary', 'Origin');
+      this._applyACAOHeaders(req, res);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(_err.toJSON()));
+      this.backend.logger.debug(`Response: ${JSON.stringify(_err.toJSON(), null, 4)}`);
       return;
     }
     /**
@@ -100,7 +113,7 @@ class EntryPoint {
         this.backend.logger.warn(`Origin ${req.headers.origin} is not allowed`);
         const err = error.getError('request:origin:unauthorized', req.headers.origin);
         request.setError(err);
-        this._applyACAOHeaders(request);
+        this._applyACAOHeaders(req, res);
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify(request.response.toJSON()));
         this.backend.logger.debug(`Response: ${JSON.stringify(request.response.toJSON(), null, 4)}`);
@@ -125,7 +138,7 @@ class EntryPoint {
       } catch (e) {
         // If the body is not valid JSON, sends an error request:invalid:body
         // Apply default headers
-        this._applyACAOHeaders(request);
+        this._applyACAOHeaders(req, res);
         res.writeHead(200, {
           'Content-Type': 'application/json',
         });
@@ -155,7 +168,7 @@ class EntryPoint {
         request.setError(e);
 
         // Apply default headers
-        this._applyACAOHeaders(request);
+        this._applyACAOHeaders(req, res);
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify(request.response.toJSON()));
         this.backend.logger.debug(`Response: ${JSON.stringify(request.response.toJSON(), null, 4)}`);
@@ -176,7 +189,7 @@ class EntryPoint {
         }
 
         // Apply default headers
-        this._applyACAOHeaders(request);
+        this._applyACAOHeaders(req, res);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(_res.response.toJSON()));
         this.backend.logger.debug(`Response: ${JSON.stringify(_res.response.toJSON(), null, 4)}`);
