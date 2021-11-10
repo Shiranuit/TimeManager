@@ -1,0 +1,6 @@
+{
+  "appId": "com.timeManage.app",
+  "appName": "frontend",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
