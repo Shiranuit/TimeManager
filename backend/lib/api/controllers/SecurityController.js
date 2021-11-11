@@ -282,11 +282,11 @@ class SecurityController extends BaseController {
    * @param {string} password 
    * @returns 
    */
-     _validatePasswordStrength(password) {
-      return CAPITAL_PATTERN.test(password)
-        && LOWER_PATTERN.test(password)
-        && NUMBER_PATTERN.test(password);
-    }
+  _validatePasswordStrength(password) {
+    return CAPITAL_PATTERN.test(password)
+      && LOWER_PATTERN.test(password)
+      && NUMBER_PATTERN.test(password);
+  }
 
 }
 
