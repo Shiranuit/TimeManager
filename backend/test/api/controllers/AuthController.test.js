@@ -23,7 +23,7 @@ describe('AuthController', () => {
           minLength: 8,
         }
       }
-    })
+    });
     await authController.init(backend);
   });
   

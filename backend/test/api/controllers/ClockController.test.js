@@ -4,7 +4,6 @@ const { ClockController } = require('../../../lib/api/controllers');
 const BackendMock = require('../../mocks/backend.mock');
 const Request = require('../../../lib/api/requests/request');
 const SecurityError = require('../../../lib/errors/securityError');
-const BadRequestError = require('../../../lib/errors/badRequestError');
 const ApiError = require('../../../lib/errors/apiError');
 
 describe('ClockController', () => {
