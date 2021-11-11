@@ -13,7 +13,7 @@ const RateLimiterMock = require('../mocks/rateLimiter.mock');
 const BackendStateEnum = require('../../lib/types/BackendState');
 const User = require('../../lib/model/user');
 
-describe('funnel', () => {
+describe('Funnel', () => {
   let funnel;
   let backend;
   beforeEach(async () => {
