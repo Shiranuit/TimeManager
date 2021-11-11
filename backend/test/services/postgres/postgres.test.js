@@ -8,9 +8,14 @@ const BackendMock = require('../../mocks/backend.mock');
 describe('Postgres', () => {
   let backend;
   let postgres;
-  beforeEach(() => {
-    backend = new BackendMock();
-    postgres = new Postgres(backend);
+  beforeEach(async () => {
+    backend = new BackendMock({
+      postgres: {
+        retryDelay: '666ms',
+        maxRetries: 3
+      }
+    });
+    postgres = new Postgres();
   });
 
   describe('#init', () => {
@@ -36,7 +41,7 @@ describe('Postgres', () => {
           maxRetries: 3
         }
       });
-      postgres = new Postgres(backend);
+      postgres = new Postgres();
       
       postgres._sleep = sinon.stub();
       postgres.connect = sinon.stub();
@@ -52,12 +57,23 @@ describe('Postgres', () => {
 
   describe('#query', () => {
     it('should call client query', async () => {
+      backend = new BackendMock({
+        postgres: {
+          retryDelay: '666ms',
+          maxRetries: 3
+        }
+      });
+      postgres = new Postgres();
+
       postgres.client = {
         query: sinon.stub()
       };
 
-      await postgres.query('SELECT * FROM table');
+      postgres._sleep = sinon.stub();
+      postgres.connect = sinon.stub().resolves();
 
+      await postgres.query('SELECT * FROM table');
+      await should(postgres.init(backend)).be.fulfilled();
       await should(postgres.client.query).be.calledWith('SELECT * FROM table');
     })
   });
