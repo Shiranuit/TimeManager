@@ -1,11 +1,35 @@
 <template>
   <div class="nav-bar">
     <div class="button-container" v-if="this.$store.state.jwt !== null">
-      <b-icon-house-fill class="custom-button" @click="$router.push('/home')" />
+      <div class="icon-and-text">
+        <div class="justIcon">
+        <b-icon-house-fill
+          class="custom-button"
+          @click="$router.push('/home')"
+        />
+        </div>
+        <div class="justText">Home</div>
+      </div>
       <template>
-        <b-icon-people-fill v-if="this.userInfo.role === 'super-manager' " class="custom-button" @click="$router.push('/userManagement')"/>
-        <b-icon-briefcase-fill class="custom-button" @click="$router.push('/teamManagement')"/>
-        <b-icon-calendar class="custom-button" />
+        <div>
+          <div class="justIcon">
+          <b-icon-people-fill
+            v-if="this.userInfo.role === 'super-manager'"
+            class="custom-button"
+            @click="$router.push('/userManagement')"
+          />
+          </div>
+          <div class="justText">User</div>
+        </div>
+        <div>
+          <div class="justIcon">
+          <b-icon-briefcase-fill
+            class="custom-button"
+            @click="$router.push('/teamManagement')"
+          />
+          </div>
+          <div class="justText">Team</div>
+        </div>
       </template>
     </div>
     <div class="home" v-on:click="home">
@@ -14,52 +38,54 @@
       </div>
       <div class="title">Time Manager</div>
     </div>
-    <user-profile-menu class="profile-menu" v-if="this.$store.state.jwt !== null"/>
+    <user-profile-menu
+      class="profile-menu"
+      v-if="this.$store.state.jwt !== null"
+    />
   </div>
 </template>
 
 <script>
-import UserProfileMenu from './UserProfileMenu.vue';
+import UserProfileMenu from "./UserProfileMenu.vue";
 export default {
-  name: 'NavBar',
+  name: "NavBar",
   components: { UserProfileMenu },
   computed: {
     userInfo() {
-        return this.$store.state.userInfo || {};
-    }
+      return this.$store.state.userInfo || {};
+    },
   },
   methods: {
     home() {
-      this.$router.push('/');
-    }
-  }
-}
+      this.$router.push("/");
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .nav-bar {
-  background-color: #F8684A;
+  background-color: #f8684a;
   color: rgb(255, 255, 255);
-  font-size: 20px;
-  font-weight: bold;
-  text-align: left;
-  width: 100%;
-  height: 6vh;
+
+  height: 70px;
   display: flex;
   justify-content: space-between;
+
   align-items: center;
 }
 
 .home {
   width: 20%;
+  cursor: pointer;
 }
 
 .title {
-  float: left;
-  transform: translate(10%, 50%);
-  // padding-left: 2%;
-  // padding-top: 2%;
+  margin-left: 3rem;
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .logo {
@@ -80,14 +106,10 @@ export default {
 }
 
 .custom-button {
-  height: 100%;
   width: 100%;
-  padding: 20px;
-  align-content: center;
-  justify-items: center;
-  justify-content: center;
-  align-items: center;
-  display: flex;
+  // padding: 20px;
+  padding: 0rem 1rem;
+  margin: 0rem 1rem;
 }
 
 .custom-button:hover {
@@ -96,10 +118,19 @@ export default {
 }
 
 .button-container {
-  width: auto;
-  height: 100%;
   display: flex;
   justify-items: center;
   align-content: center;
+}
+
+.justIcon {
+  font-size:30px;
+}
+
+.justText {
+  justify-content: center;
+  margin-left:2rem;
+  font-size:15px;
+  font-weight: bold;
 }
 </style>

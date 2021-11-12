@@ -20,7 +20,7 @@
         <b-dropdown-item>Action B</b-dropdown-item>
       </b-dropdown> -->
       <div class="container-working-time">
-        <b-button squared v-b-modal.create-worked-time class="working-time" @click="deselectItem">
+        <b-button squared v-b-modal.create-worked-time class="add-working-time" @click="deselectItem">
           <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
           <div>Add a new working period</div>
         </b-button>
@@ -331,9 +331,9 @@ export default {
 }
 .container-working-time {
   display: flex;
+  justify-content: center;
 }
 .working-time {
-  background-color: #F8684A;
   align-items: center;
   display: flex;
   justify-content: center;
@@ -344,6 +344,14 @@ h1 {
   margin: 30px;
 }
 
+.add-working-time{
+  background-color: #F8684A;
+  border-radius: 15px !important;
+  border: none;
+  margin-bottom: 1rem;
+  width: 50%;
+
+}
 
 
 // .hours-worked {

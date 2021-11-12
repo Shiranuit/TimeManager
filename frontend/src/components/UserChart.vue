@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-button class="btn-refresh" @click="refresh()" >
-      <b-icon class="icon-refresh" icon="arrow-clockwise" />Refresh</b-button>
+      <b-icon class="icon-refresh" icon="arrow-clockwise" /></b-button>
     <b-col>
       <b-row>
         <div class="chart-section1">
@@ -243,9 +243,12 @@ export default {
   align-items: center;
   display: flex;
   justify-content: center;
-  width: 25%;
+  width: 6%; 
+  border:none;
+
 }
 .icon-refresh {
   margin: 5px;
+  
 }
 </style>

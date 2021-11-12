@@ -201,6 +201,7 @@ export default {
 
 .container-working-time {
   display: flex;
+  justify-content: center;
 }
 .working-time {
   background-color: #F8684A;
@@ -208,6 +209,10 @@ export default {
   display: flex;
   justify-content: center;
   width: 25%;
+  border: none;
+  border-radius: 15px !important;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
 }
 .action-icon {
   margin-right: 35px;

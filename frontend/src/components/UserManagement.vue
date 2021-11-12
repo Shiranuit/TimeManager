@@ -9,8 +9,8 @@
         <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
         <div>Create a new user account</div>
       </b-button>
-      <b-button class="working-time" @click="refresh()" >
-      <b-icon class="icon-refresh" icon="arrow-clockwise" />Refresh</b-button>
+      <b-button class="working-time-refresh" @click="refresh()" >
+      <b-icon class="icon-refresh" icon="arrow-clockwise" /></b-button>
     </div>
     <b-table head-variant="dark" hover :items="items" :fields="fields" inline>
       <template #cell(Action)="row">
@@ -207,6 +207,8 @@ export default {
 
 .container-working-time {
   display: flex;
+  justify-content: center;
+  margin-bottom:1rem;
 }
 .working-time {
   background-color: #F8684A;
@@ -214,6 +216,9 @@ export default {
   display: flex;
   justify-content: center;
   width: 25%;
+  border:none;
+  margin-right:1rem;
+  border-radius:15px !important;
 }
 .statistics-button {
   width: 100%;
@@ -229,4 +234,15 @@ export default {
 .management-modal {
   padding-left: 10%;
 }
+
+.working-time-refresh{
+  width:6%;
+  background-color: #F8684A;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border:none;
+  border-radius:15px !important;
+}
+
 </style>
