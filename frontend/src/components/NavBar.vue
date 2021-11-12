@@ -3,7 +3,7 @@
     <div class="button-container" v-if="this.$store.state.jwt !== null">
       <b-icon-house-fill class="custom-button" @click="$router.push('/home')" />
       <template>
-        <b-icon-people-fill class="custom-button" @click="$router.push('/userManagement')"/>
+        <b-icon-people-fill v-if="this.userInfo.role === 'super-manager' " class="custom-button" @click="$router.push('/userManagement')"/>
         <b-icon-briefcase-fill class="custom-button" @click="$router.push('/teamManagement')"/>
         <b-icon-calendar class="custom-button" />
       </template>
