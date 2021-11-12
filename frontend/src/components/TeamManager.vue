@@ -196,12 +196,22 @@ export default {
 .container-working-time {
   display: flex;
 }
-.working-time {
+.working-time,.working-time-icon-refresh {
   background-color: #F8684A;
   align-items: center;
   display: flex;
   justify-content: center;
   width: 25%;
+}
+
+.working-time{
+ width: 25%;
+}
+
+.working-time-icon-refresh{
+  
+  width: 6%;
+
 }
 .action-icon {
   margin-right: 35px;
