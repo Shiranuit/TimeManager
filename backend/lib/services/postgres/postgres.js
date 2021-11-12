@@ -21,10 +21,10 @@ class Postgres {
     this.backend.logger.info('Trying to connect to Postgres');
     let retries = 0;
     const retryDelay = ms(this.config.retryDelay);
+
     while (retries < this.config.maxRetries) {
       try {
-        this.client = new Client(this.config);
-        await this.client.connect();
+        await this.connect();
         this.backend.logger.info('Connected to Postgres');
         break;
       } catch (err) {
@@ -36,13 +36,22 @@ class Postgres {
           this.backend.logger.info('Waiting for postgres...');
         }
       }
-      await Prom.sleep(retryDelay);
+      await this._sleep(retryDelay);
     }
 
     /**
      * Register all the askable methods
      */
     this.backend.onAsk('postgres:query', this.query.bind(this));
+  }
+
+  async _sleep(retryDelay) {
+    return Prom.sleep(retryDelay);
+  }
+
+  async connect() {
+    this.client = new Client(this.config);
+    await this.client.connect();
   }
 
   async query (query, params) {

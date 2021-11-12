@@ -9,13 +9,15 @@
         <b-icon icon="person-plus-fill" class="action-icon" font-scale="2"></b-icon>
         <div>Add user in a team</div>
       </b-button>
+      <b-button class="working-time" @click="refresh()" >
+      <b-icon class="icon-refresh" icon="arrow-clockwise" />Refresh</b-button>
     </div>
     <b-table head-variant="dark" hover :items="items" :fields="fields" inline>
       <template #cell(Action)="row">
         <b-modal :id="'edit-team-modal' + row.item.NAME" title="Edit team informations" hide-footer>
           <team-settings :teamName="row.item.NAME" class="management-modal" :me="false"/>
         </b-modal>
-        <b-button v-b-modal="'edit-team-modal' + row.item.ID" size="sm" class="mr-2" @click="selectItem(row.item.NAME)">
+        <!-- <b-button v-b-modal="'edit-team-modal' + row.item.ID" size="sm" class="mr-2" @click="selectItem(row.item.NAME)">
           Edit
         </b-button>
         <b-button @click="$router.push(`/teamManagement/${row.item.NAME}`)" size="sm" class="mr-2" variant="primary">
@@ -24,7 +26,7 @@
         </b-button>
         <b-button @click="deleteTeam(row.item.NAME)" size="sm" variant="danger">
           Delete User
-        </b-button>
+        </b-button> -->
       </template>
     </b-table>
     <b-modal id="create-team" title="Create a team" hide-footer>
@@ -51,21 +53,13 @@
             </div> -->
           </template>
         </b-dropdown>
-          <b-row
-            ><b-form-input 
-              v-model="team.name" 
-              placeholder="Team name" 
-              @keydown.enter.native="login_register"
-              ></b-form-input
-          ></b-row>
-          <b-row
-            ><b-form-input 
-              v-model="team.name" 
-              placeholder="Team name" 
-              @keydown.enter.native="login_register"
-              ></b-form-input
-          ></b-row>
-          
+        <b-form-select id="dropdown-1" text="Users" class="m-md-2">
+          <template>
+            <!-- <div v-for="team in teamList" :key="item.name">
+              <b-dropdown-item>{{team.name}}</b-dropdown-item>
+            </div> -->
+          </template>
+        </b-form-select>
         </b-col><div class="modal-footer">
         <b-button variant="secondary" @click="$bvModal.hide('create-team')">Cancel</b-button>
         <b-button variant="primary" @click="createTeam">Create new team</b-button>
@@ -131,7 +125,7 @@ export default {
     },
     createTeam() {
       axios.post(
-        this.$constructUrl('/api/security/'),
+        this.$constructUrl('/api/team/_me/'),
         {
           name: this.team.name
         },

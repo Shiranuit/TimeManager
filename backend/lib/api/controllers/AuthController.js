@@ -19,6 +19,7 @@ class AuthController extends BaseController {
 
       { verb: 'get', path: '/_me', action: 'getMyUser'},
       { verb: 'put', path: '/', action: 'updateMyUser' },
+      { verb: 'put', path: '/_password', action: 'updateMyPassword' },
       { verb: 'delete', path: '/', action: 'deleteMyUser' },
     ]);
   }
@@ -98,7 +99,7 @@ class AuthController extends BaseController {
       error.throwError('security:user:password_too_short', this.config.password.minLength);
     }
 
-    if (!CAPITAL_PATTERN.test(password) || !LOWER_PATTERN.test(password) || !NUMBER_PATTERN.test(password)) {
+    if (!this._validatePasswordStrength(password)) {
       error.throwError('security:user:password_too_weak');
     }
 
@@ -146,21 +147,31 @@ class AuthController extends BaseController {
    * @returns {Promise<object>}
    */
   async checkToken (req) {
-    const token = await this.backend.ask('core:security:token:verify', req.getJWT());
+    const jwt = req.getBodyString('jwt');
 
-    if (!token) {
+    try {
+      const token = await this.backend.ask('core:security:token:verify', jwt);
+
+      if (!token) {
+        return {
+          id: null,
+          ttl: -1,
+          expiresAt: -1,
+        };
+      }
+
+      return {
+        id: token.userId,
+        ttl: token.ttl,
+        expiresAt: token.expiresAt,
+      };
+    } catch (_) {
       return {
         id: null,
-        expiresIn: -1,
+        ttl: -1,
         expiresAt: -1,
       };
     }
-
-    return {
-      id: token.userId,
-      ttl: token.ttl,
-      expiresAt: token.expiresAt,
-    };
   }
 
   /**
@@ -188,11 +199,25 @@ class AuthController extends BaseController {
       error.throwError('security:user:not_authenticated');
     }
 
+    const password = req.getBodyString('actualPassword');
+
     const userInfos = await this.backend.ask('core:security:user:get', req.getUser().id);
 
     // Should never happen but just in case
     if (!userInfos) {
-      error.throwError('security:user:not_found', req.getUser().id);
+      error.throwError('security:user:with_id_not_found', req.getUser().id);
+    }
+
+    const authorized = await this.backend.ask(
+      'core:security:user:verifyById',
+      {
+        id: req.getUser().id,
+        password,
+      }
+    );
+
+    if (!authorized) {
+      error.throwError('security:user:invalid_credentials');
     }
 
     const body = req.getBody();
@@ -225,6 +250,7 @@ class AuthController extends BaseController {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
       };
     } catch (err) {
       if (err.code) {
@@ -241,6 +267,50 @@ class AuthController extends BaseController {
   }
 
   /**
+   * Change the current user password
+   *
+   * @param {Request} req
+   * @returns {Promise<User>}
+   */
+  async updateMyPassword (req) {
+    if (req.isAnonymous()) {
+      error.throwError('security:user:not_authenticated');
+    }
+
+    const password = req.getBodyString('oldPassword');
+    const newPassword = req.getBodyString('newPassword');
+
+    const authorized = await this.backend.ask(
+      'core:security:user:verifyById',
+      {
+        id: req.getUser().id,
+        password,
+      }
+    );
+
+    if (!authorized) {
+      error.throwError('security:user:invalid_credentials');
+    }
+
+    if (!this._validatePasswordStrength(newPassword)) {
+      error.throwError('security:user:password_too_weak');
+    }
+
+    const user = await this.backend.ask('core:security:user:updatePassword', req.getUser().id, newPassword);
+
+    if (!user) {
+      error.throwError('security:user:update_failed');
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    };
+  }
+
+  /**
    * Delete the current user's account
    *
    * @param {Request} req
@@ -252,6 +322,18 @@ class AuthController extends BaseController {
     }
 
     return await this.backend.ask('core:security:user:delete', req.getUser().id);
+  }
+
+  /**
+   * Verifies that the password is strong enough
+   * 
+   * @param {string} password 
+   * @returns 
+   */
+  _validatePasswordStrength(password) {
+    return CAPITAL_PATTERN.test(password)
+      && LOWER_PATTERN.test(password)
+      && NUMBER_PATTERN.test(password);
   }
 }
 
