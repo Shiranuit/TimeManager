@@ -67,7 +67,7 @@ import axios from "axios";
 import UserSettings from './UserSettings.vue';
 
 export default {
-  name: 'UserManager',
+  name: 'UserManagement',
   components: {
     UserSettings
   },

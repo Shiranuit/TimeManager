@@ -1,39 +1,33 @@
 <template>
   <b-col class="column">
-    <b-row>
+    <!-- <b-row>
       <div role="group" class="group">
         <label for="input" class="input-label">
           Team Name:
         </label>
         <div class="editable-input-box">
-          <b-form-input id="input-email" class="input" v-model="user.email" :readonly="!edit.email" placeholder="Email" :state="validateEmail()" @keydown.enter.native="updateUserInfo"></b-form-input>
-          <b-button v-if="!edit.email" @click="edit.email = true">
+          <b-form-input id="input-team-name" class="input" v-model="team.name" :readonly="!edit.teamName" placeholder="Team Name"></b-form-input>
+          <b-button v-if="!edit.teamName" @click="edit.teamName = true">
             <b-icon icon="pencil" class="edit-icon"></b-icon>
           </b-button>
-          <b-tooltip target="input-email" triggers="hover" v-if="!validateEmail()" variant="danger">
-            Please enter a valid email address
-          </b-tooltip>
         </div>
       </div>
-    </b-row>
+    </b-row> -->
     <b-row>
       <div role="group" class="group">
         <label for="input" class="input-label">
-          Username:
+          Users :
         </label>
         <div class="editable-input-box">
-          <b-form-input class="input-username" v-model="user.username" size="auto" :readonly="!edit.username" placeholder="Username" :state="validateUsername()" @keydown.enter.native="updateUserInfo"></b-form-input>
-          <b-button v-if="!edit.username" @click="edit.username = true">
+          <b-form-input class="input-teamUsers" v-model="team.users" :readonly="!edit.teamUsers" placeholder="Users"></b-form-input>
+          <b-button v-if="!edit.teamUsers" @click="edit.teamUsers = true">
             <b-icon icon="pencil" class="edit-icon"></b-icon>
           </b-button>
-          <b-tooltip target="input-username" triggers="hover" v-if="validateUsername()" variant="danger">
-           Username required
-          </b-tooltip>
         </div>
       </div>
     </b-row>
     <b-row>
-      <div class="danger-zone">
+      <!-- <div class="danger-zone">
         <div class="danger-zone-title">Danger Zone</div>
         <div>
           Welcome to the Danger Zone, every action taken here are ireversible, be careful.
@@ -52,7 +46,7 @@
             <b-button variant="danger" @click="deleteTeam">Delete</b-button>
           </div>
         </b-modal>
-      </div>
+      </div> -->
     </b-row>
   </b-col>
 </template>
@@ -60,7 +54,7 @@
 <script>
 import axios from "axios";
 export default {
-  name: 'UserSettings',
+  name: 'TeamSettings',
 
   props: {
     teamName: {
@@ -72,70 +66,64 @@ export default {
   },
   data() {
     return {
-      user: {
-        username: '',
-        email: '',
+      team: {
+        name: '',
+        users: []
       },
       edit: {
-        username: false,
-        email: false,
+        teamName: false,
+        teamUsers: false
       }
     };
   },
   methods: {
-    validateEmail() {
-      const emailPattern = /^[A-z0-9_-]+(\.[A-z0-9_-]+)*@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z0-9_-]+$/g;
-      return this.user.email.length > 0 && emailPattern.test(this.user.email);
-    },
-    validateUsername() {
-      return this.user.username.length > 0;
-    },
-    updateUserInfo() {
-      if (!this.validateEmail() || !this.validateUsername()) {
-        return;
-      }
+    
+    // updateUserInfo() {
+    //   if (!this.validateEmail() || !this.validateUsername()) {
+    //     return;
+    //   }
 
-      if (!this.user) {
-        this.$store.commit('setUserInfo', null);
-        this.$router.push('/');
-      }
+    //   if (!this.user) {
+    //     this.$store.commit('setUserInfo', null);
+    //     this.$router.push('/');
+    //   }
 
-      const url = this.me
-        ? this.$constructUrl(`/api/auth`)
-        : this.$constructUrl(`/api/security/${this.teamName}`);
+    //   const url = this.me
+    //     ? this.$constructUrl(`/api/auth`)
+    //     : this.$constructUrl(`/api/security/${this.teamName}`);
 
-      axios.put(
-        url,
-        { 
-          email: this.user.email,
-          username: this.user.username,
-        },
-        { headers:{ authorization:this.$store.state.jwt } }
-      ).then(response => {
-        if (response.data.error) {
-          throw new Error(response.data.error.message);
-        }
-        if (!response.data) {
-          throw new Error('Could not update user informations');
-        }
-        this.edit.username = false;
-        this.edit.email = false;
-        this.user = response.data.result;
-        if (this.me) {
-          this.$store.commit('setUserInfo', response.data.result);
-        }
-      }).catch(error => {
-        this.$bvToast.toast(error.message, {
-          title: "Error",
-          variant: "danger",
-          solid: true,
-        });
-      });
-    },
+    //   axios.put(
+    //     url,
+    //     { 
+    //       email: this.user.email,
+    //       username: this.user.username,
+    //     },
+    //     { headers:{ authorization:this.$store.state.jwt } }
+    //   ).then(response => {
+    //     if (response.data.error) {
+    //       throw new Error(response.data.error.message);
+    //     }
+    //     if (!response.data) {
+    //       throw new Error('Could not update user informations');
+    //     }
+    //     this.edit.username = false;
+    //     this.edit.email = false;
+    //     this.user = response.data.result;
+    //     if (this.me) {
+    //       this.$store.commit('setUserInfo', response.data.result);
+    //     }
+    //   }).catch(error => {
+    //     this.$bvToast.toast(error.message, {
+    //       title: "Error",
+    //       variant: "danger",
+    //       solid: true,
+    //     });
+    //   });
+    // },
+
+    
     deleteTeam() {
-      const url = this.me
-        ? this.$constructUrl(`/api/auth`)
-        : this.$constructUrl(`/api/security/${this.teamName}`);
+      const url = this.$constructUrl(`/api/_me/${this.team.name}`);
 
       axios.delete(
         url,
@@ -145,8 +133,8 @@ export default {
           throw new Error(response.data.error.message);
         }
         if (this.me) {
-          this.$store.commit('setUserInfo', null);
-          this.$router.push('/');
+          // this.$store.commit('setUserInfo', null);
+          // this.$router.push('/');
         }
       }).catch(error => {
         this.$bvToast.toast(error.message, {
@@ -163,9 +151,7 @@ export default {
       this.$router.push('/');
     }
 
-    const url = this.me
-      ? this.$constructUrl(`/api/auth/_me`)
-      : this.$constructUrl(`/api/security/${this.teamName}`);
+    const url = this.$constructUrl(`/api/_me/${this.teamName}`);
 
     axios.get(
       url,
