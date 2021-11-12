@@ -19,8 +19,22 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - uses: ./.github/actions/lint
 
-  deploy-with-ssh:
+  unit-tests:
     needs: [lint]
+    name: Unit Tests
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: ['12.20.0']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: ./.github/actions/unit-tests
+
+  deploy-with-ssh:
+    needs: [unit-tests]
     name: Deploy with SSH
     runs-on: ubuntu-18.04
     strategy:

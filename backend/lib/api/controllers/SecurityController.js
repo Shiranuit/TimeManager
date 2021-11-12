@@ -4,6 +4,9 @@ const BaseController = require('./BaseController');
 const error = require('../../errors');
 
 const EMAIL_PATTERN = /^[A-z0-9_-]+(\.[A-z0-9_-]+)*@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z0-9_-]+$/;
+const CAPITAL_PATTERN = /[A-Z]/;
+const NUMBER_PATTERN = /[0-9]/;
+const LOWER_PATTERN = /[a-z]/;
 
 class SecurityController extends BaseController {
   constructor () {
@@ -12,8 +15,10 @@ class SecurityController extends BaseController {
       { verb: 'get', path: '/:userId', action: 'getUser' },
       { verb: 'post', path: '/', action: 'createUser' },
       { verb: 'put', path: '/:userId', action: 'updateUser' },
+      { verb: 'put', path: '/:userId/_password', action: 'updateUserPassword' },
       { verb: 'delete', path: '/:userId', action: 'deleteUser' },
       { verb: 'put', path: '/:userId/_role', action: 'updateUserRole' },
+      { verb: 'get', path: '/_roles', action: 'listRoles' },
     ]);
   }
 
@@ -34,6 +39,15 @@ class SecurityController extends BaseController {
    */
   async listUsers() {
     return await this.backend.ask('core:security:user:list');
+  }
+
+  /**
+   * List all roles.
+   *
+   * @returns {Promise<Array<string>>}
+   */
+  async listRoles() {
+    return Object.keys(this.permissions).filter(_role => _role !== 'anonymous');
   }
 
   /**
@@ -78,6 +92,14 @@ class SecurityController extends BaseController {
       error.throwError('security:user:username_too_short', this.config.username.minLength);
     }
 
+    if (password.length < this.config.password.minLength) {
+      error.throwError('security:user:password_too_short', this.config.password.minLength);
+    }
+
+    if (!this._validatePasswordStrength(password)) {
+      error.throwError('security:user:password_too_weak');
+    }
+
     try {
       const user = await this.backend.ask('core:security:user:create', { username, email, password });
 
@@ -115,9 +137,8 @@ class SecurityController extends BaseController {
 
     const userInfos = await this.backend.ask('core:security:user:get', userId);
 
-    // Should never happen but just in case
     if (!userInfos) {
-      error.throwError('security:user:not_found', userId);
+      error.throwError('security:user:with_id_not_found', userId);
     }
 
     const body = req.getBody();
@@ -150,6 +171,7 @@ class SecurityController extends BaseController {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
       };
     } catch (err) {
       if (err.code) {
@@ -166,6 +188,41 @@ class SecurityController extends BaseController {
   }
 
   /**
+   * Change the password for a given user
+   *
+   * @param {Request} req
+   * @returns {Promise<User>}
+   */
+  async updateUserPassword (req) {
+    const userId = req.getInteger('userId');
+
+    const newPassword = req.getBodyString('newPassword');
+
+    const userInfos = await this.backend.ask('core:security:user:get', userId);
+
+    if (!userInfos) {
+      error.throwError('security:user:with_id_not_found', userId);
+    }
+
+    if (!this._validatePasswordStrength(newPassword)) {
+      error.throwError('security:user:password_too_weak');
+    }
+
+    const user = await this.backend.ask('core:security:user:updatePassword', userId, newPassword);
+
+    if (!user) {
+      error.throwError('security:user:update_failed');
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    };
+  }
+
+  /**
    * Update the role of a given user.
    *
    * @param {Request} req
@@ -176,12 +233,11 @@ class SecurityController extends BaseController {
 
     const userInfos = await this.backend.ask('core:security:user:get', userId);
 
-    // Should never happen but just in case
     if (!userInfos) {
-      error.throwError('security:user:not_found', userId);
+      error.throwError('security:user:with_id_not_found', userId);
     }
 
-    const role = req.getBodyString('role').toLowerCase();
+    const role = req.getBodyString('role');
 
     if (!this.permissions[role] || role === 'anonymous') {
       const roles = Object.keys(this.permissions).filter(_role => _role !== 'anonymous');
@@ -218,6 +274,18 @@ class SecurityController extends BaseController {
     await this.backend.ask('core:security:user:delete', userId);
 
     return true;
+  }
+
+  /**
+   * Verifies that the password is strong enough
+   * 
+   * @param {string} password 
+   * @returns 
+   */
+  _validatePasswordStrength(password) {
+    return CAPITAL_PATTERN.test(password)
+      && LOWER_PATTERN.test(password)
+      && NUMBER_PATTERN.test(password);
   }
 
 }

@@ -31,6 +31,10 @@ module.exports = {
     message: 'Invalid email format',
     type: BadRequestError,
   },
+  'request:rate:limit_exceeded': {
+    message: 'Rate limit exceeded for action %s:%s',
+    type: SecurityError,
+  },
   'network:http:duplicate_url': {
     message: 'Duplicate URL: "%s"',
     type: InternalError,

@@ -12,26 +12,31 @@ const {
 
 const InternalError = require('../errors/internalError');
 const User = require('../model/user');
+const RateLimiter = require('./rateLimiter');
 
 class Funnel {
   constructor () {
     this.controllers = new Map();
     this.backend = null;
     this.permissions = {};
-  }
+    this.rateLimiter = new RateLimiter();
 
-  init (backend) {
-    this.backend = backend;
-    this.permissions = backend.config.permissions;
-    /**
-     * Declare the controllers with their names
-     * @type {Map<string, BaseController>}
-     */
     this.controllers.set('auth', new AuthController());
     this.controllers.set('security', new SecurityController());
     this.controllers.set('clock', new ClockController());
     this.controllers.set('workingtime', new WorkingTimeController());
     this.controllers.set('team', new TeamController());
+  }
+
+  async init (backend) {
+    this.backend = backend;
+    this.permissions = backend.config.permissions;
+
+    await this.rateLimiter.init(backend);
+    /**
+     * Declare the controllers with their names
+     * @type {Map<string, BaseController>}
+     */
 
     /**
      * Create every routes for each controller
@@ -39,7 +44,7 @@ class Funnel {
     for (const [controllerName, controller] of this.controllers) {
       for (const route of controller.__actions) {
         // If a / is missing at the start of the path we add it
-        const path = route.path[0] === '/' ? `/${controllerName}${route.path}` : `/${controllerName}/${route.path}`;
+        const path = route.path[0] === '/' ? `${controllerName}${route.path}` : `${controllerName}/${route.path}`;
 
         if (!controller[route.action] || typeof controller[route.action] !== 'function') {
           throw new InternalError(`Cannot attach path ${route.verb.toUpperCase()} /api/${path}: no action ${route.action} for controller ${controllerName}`);
@@ -67,9 +72,19 @@ class Funnel {
     }
 
     this.checkRights(req).then(() => {
-      return req.routerPart.handler(req).then(result => {
-        req.setResult(result);
-        callback(null, req);
+
+      return this.rateLimiter.isAllowed(req).then((allowed) => {
+        if (!allowed) {
+          callback(
+            error.getError('request:rate:limit_exceeded', req.getController(), req.getAction())
+          );
+          return;
+        }
+
+        return req.routerPart.handler(req).then(result => {
+          req.setResult(result);
+          callback(null, req);
+        });
       });
     }).catch(err => {
       callback(err);
@@ -92,6 +107,11 @@ class Funnel {
       }
     } else {
       const userInfo = await this.backend.ask('core:security:user:get', token.userId);
+
+      if (!userInfo) {
+        error.throwError('security:user:with_id_not_found', token.userId);
+      }
+
       this.backend.logger.debug(`Request made as ${userInfo.username} (ID: ${userInfo.id}, role: ${userInfo.role})`);
       if (!this.hasPermission(userInfo.role, req.getController(), req.getAction())) {
         this.backend.logger.debug(`Insufficient permissions to execute ${req.getController()}:${req.getAction()}`);
