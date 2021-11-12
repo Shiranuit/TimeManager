@@ -73,7 +73,7 @@ import axios from "axios";
 import TeamSettings from './TeamSettings.vue';
 
 export default {
-  name: 'UserManagement',
+  name: 'TeamManager',
   components: {
     TeamSettings
   },
@@ -154,22 +154,14 @@ export default {
     },
     fetchTeams() {
       axios.get(
-        this.$constructUrl('/api/security/_list'),
+        this.$constructUrl('/api/team/_list'),
         { headers:{ authorization:this.$store.state.jwt } }
       ).then(response => {
         if (response.data.error) {
           throw new Error(response.data.error.message);
         }
-
         this.teams = response.data.result;
-
         this.items = [];
-        for (const team of this.teams) {
-          this.items.push({
-            isActive: true,
-            NAME: team.name
-          });
-        }
       }).catch(error => {
         this.$bvToast.toast(error.message, {
           title: "Error",
