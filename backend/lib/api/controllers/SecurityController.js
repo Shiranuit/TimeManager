@@ -96,7 +96,7 @@ class SecurityController extends BaseController {
       error.throwError('security:user:password_too_short', this.config.password.minLength);
     }
 
-    if (!CAPITAL_PATTERN.test(password) || !LOWER_PATTERN.test(password) || !NUMBER_PATTERN.test(password)) {
+    if (!this._validatePasswordStrength(password)) {
       error.throwError('security:user:password_too_weak');
     }
 
@@ -138,7 +138,7 @@ class SecurityController extends BaseController {
     const userInfos = await this.backend.ask('core:security:user:get', userId);
 
     if (!userInfos) {
-      error.throwError('security:user:not_found', userId);
+      error.throwError('security:user:with_id_not_found', userId);
     }
 
     const body = req.getBody();
@@ -171,6 +171,7 @@ class SecurityController extends BaseController {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
       };
     } catch (err) {
       if (err.code) {
@@ -200,10 +201,10 @@ class SecurityController extends BaseController {
     const userInfos = await this.backend.ask('core:security:user:get', userId);
 
     if (!userInfos) {
-      error.throwError('security:user:not_found', userId);
+      error.throwError('security:user:with_id_not_found', userId);
     }
 
-    if (!CAPITAL_PATTERN.test(newPassword) || !LOWER_PATTERN.test(newPassword) || !NUMBER_PATTERN.test(newPassword)) {
+    if (!this._validatePasswordStrength(newPassword)) {
       error.throwError('security:user:password_too_weak');
     }
 
@@ -233,10 +234,10 @@ class SecurityController extends BaseController {
     const userInfos = await this.backend.ask('core:security:user:get', userId);
 
     if (!userInfos) {
-      error.throwError('security:user:not_found', userId);
+      error.throwError('security:user:with_id_not_found', userId);
     }
 
-    const role = req.getBodyString('role').toLowerCase();
+    const role = req.getBodyString('role');
 
     if (!this.permissions[role] || role === 'anonymous') {
       const roles = Object.keys(this.permissions).filter(_role => _role !== 'anonymous');
@@ -273,6 +274,18 @@ class SecurityController extends BaseController {
     await this.backend.ask('core:security:user:delete', userId);
 
     return true;
+  }
+
+  /**
+   * Verifies that the password is strong enough
+   * 
+   * @param {string} password 
+   * @returns 
+   */
+  _validatePasswordStrength(password) {
+    return CAPITAL_PATTERN.test(password)
+      && LOWER_PATTERN.test(password)
+      && NUMBER_PATTERN.test(password);
   }
 
 }
