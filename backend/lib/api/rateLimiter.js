@@ -4,11 +4,11 @@ class RateLimiter {
   constructor() {
     this.rateLimits = {};
     this.connectionLimits = new Map();
-    setInterval(this.resetLimits.bind(this), 60 * 1000); // reset every minute
   }
-
+  
   async init(backend) {
     this.rateLimits = backend.config.rateLimits;
+    setInterval(this.resetLimits.bind(this), 60 * 1000); // reset every minute
   }
 
   async isAllowed(req) {

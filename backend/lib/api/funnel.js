@@ -20,6 +20,12 @@ class Funnel {
     this.backend = null;
     this.permissions = {};
     this.rateLimiter = new RateLimiter();
+
+    this.controllers.set('auth', new AuthController());
+    this.controllers.set('security', new SecurityController());
+    this.controllers.set('clock', new ClockController());
+    this.controllers.set('workingtime', new WorkingTimeController());
+    this.controllers.set('team', new TeamController());
   }
 
   async init (backend) {
@@ -31,11 +37,6 @@ class Funnel {
      * Declare the controllers with their names
      * @type {Map<string, BaseController>}
      */
-    this.controllers.set('auth', new AuthController());
-    this.controllers.set('security', new SecurityController());
-    this.controllers.set('clock', new ClockController());
-    this.controllers.set('workingtime', new WorkingTimeController());
-    this.controllers.set('team', new TeamController());
 
     /**
      * Create every routes for each controller
@@ -106,6 +107,11 @@ class Funnel {
       }
     } else {
       const userInfo = await this.backend.ask('core:security:user:get', token.userId);
+
+      if (!userInfo) {
+        error.throwError('security:user:with_id_not_found', token.userId);
+      }
+
       this.backend.logger.debug(`Request made as ${userInfo.username} (ID: ${userInfo.id}, role: ${userInfo.role})`);
       if (!this.hasPermission(userInfo.role, req.getController(), req.getAction())) {
         this.backend.logger.debug(`Insufficient permissions to execute ${req.getController()}:${req.getAction()}`);
