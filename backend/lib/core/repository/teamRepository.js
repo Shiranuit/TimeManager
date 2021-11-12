@@ -23,6 +23,7 @@ class TeamRepository {
     backend.onAsk('core:team:removeUserFromTeam', this.removeUserFromTeam.bind(this));
     backend.onAsk('core:team:addUserToTeam', this.addUserToTeam.bind(this));
     backend.onAsk('core:team:verify', this.verifyTeamOwner.bind(this));
+    backend.onAsk('core:team:verify:member', this.verifyTeamMember.bind(this));
   }
 
   async createTeam(name, owner_id) {
@@ -136,6 +137,16 @@ class TeamRepository {
       'postgres:query',
       'SELECT name, owner_id FROM teams WHERE name = $1 AND owner_id = $2;',
       [name, ownerId]
+    );
+
+    return result.rows.length > 0;
+  }
+
+  async verifyTeamMember(name, user_id) {
+    const result = await this.backend.ask(
+      'postgres:query',
+      'SELECT name, user_id FROM teams_members WHERE name = $1 AND user_id = $2;',
+      [name, user_id]
     );
 
     return result.rows.length > 0;

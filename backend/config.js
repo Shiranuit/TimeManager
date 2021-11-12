@@ -88,6 +88,10 @@ module.exports = {
       },
       team: {
         listOwnedTeams: true,
+        getOwnedTeamByName: true,
+      },
+      security: {
+        listUsernames: true,
       }
     },
     manager: {
@@ -131,6 +135,9 @@ module.exports = {
         getOwnedTeamByName: true,
         addOwnedTeamUser: true,
         removeOwnedTeamUser: true,
+      },
+      security: {
+        listUsernames: true,
       }
     },
     'super-manager': {

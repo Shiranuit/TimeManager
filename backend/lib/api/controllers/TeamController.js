@@ -36,6 +36,10 @@ class TeamController extends BaseController {
     const name = req.getBodyString('name');
     const ownerId = req.getBodyInteger('owner_id', 0) || null;
 
+    if (name.length < 3) {
+      error.throwError('api:team:name_too_short');
+    }
+
     try {
       const team = await this.backend.ask('core:team:create', name, ownerId);
 
@@ -160,6 +164,10 @@ class TeamController extends BaseController {
 
     const name = req.getBodyString('name');
 
+    if (name.length < 3) {
+      error.throwError('api:team:name_too_short');
+    }
+
     try {
       const team = await this.backend.ask('core:team:create', name, req.getUser().id);
 
@@ -201,6 +209,10 @@ class TeamController extends BaseController {
   }
 
   async addOwnedTeamUser(req) {
+    if (req.isAnonymous()) {
+      error.throwError('security:user:not_authenticated');
+    }
+
     const teamname = req.getString('teamName');
     const userId = req.getInteger('userId');
 
@@ -235,6 +247,10 @@ class TeamController extends BaseController {
   }
 
   async removeOwnedTeamUser(req) {
+    if (req.isAnonymous()) {
+      error.throwError('security:user:not_authenticated');
+    }
+
     const teamname = req.getString('teamName');
     const userId = req.getInteger('userId');
 
@@ -258,11 +274,16 @@ class TeamController extends BaseController {
   }
 
   async getOwnedTeamByName(req) {
+    if (req.isAnonymous()) {
+      error.throwError('security:user:not_authenticated');
+    }
+
     const teamname = req.getString('teamName');
 
     const owned = await this.backend.ask('core:team:verify', teamname, req.getUser().id);
+    const member = await this.backend.ask('core:team:verify:member', teamname, req.getUser().id);
 
-    if (!owned) {
+    if (!owned && !member) {
       error.throwError('api:team:team_not_owned', teamname);
     }
 
