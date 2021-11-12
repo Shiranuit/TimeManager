@@ -50,9 +50,9 @@ export default {
   data() {
     return {
       show_login: true,
-      email: "",
-      username: "",
-      password: "",
+      email: '',
+      username: '',
+      password: '',
     };
   },
   methods: {
@@ -86,8 +86,7 @@ export default {
         .post(this.$constructUrl('/api/auth/_login'),
           {
             username: this.username,
-            password: this.password,
-            rol: this.role
+            password: this.password
           }
         ).then((response) => {
           if (response.data.error) {

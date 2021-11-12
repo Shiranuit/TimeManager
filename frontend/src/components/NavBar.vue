@@ -4,8 +4,8 @@
       <b-icon-house-fill class="custom-button" @click="$router.push('/home')" />
       <template>
         <b-icon-people-fill class="custom-button" @click="$router.push('/userManagement')"/>
+        <b-icon-briefcase-fill class="custom-button" @click="$router.push('/teamManagement')"/>
         <b-icon-calendar class="custom-button" />
-        <b-icon-briefcase-fill class="custom-button"/>
       </template>
     </div>
     <div class="home" v-on:click="home">

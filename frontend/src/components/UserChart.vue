@@ -1,5 +1,7 @@
 <template>
   <div>
+    <b-button class="btn-refresh" @click="refresh()" >
+      <b-icon class="icon-refresh" icon="arrow-clockwise" />Refresh</b-button>
     <b-col>
       <b-row>
         <div class="chart-section1">
@@ -8,13 +10,13 @@
         </div>
         <div class="chart-section1">
           <span>Hours worked per month</span>
-          <apexchart type="donut" :options="chartOptions2" :series="series2"></apexchart>
+          <apexchart type="pie" :options="chartOptions2" :series="series2"></apexchart>
         </div>
       </b-row>
       <b-row>
         <div class="chart-section2">
-          <span>Hours worked per day</span>
-          <apexchart type="histogram" :options="chartOptions" :series="series"></apexchart>
+          <span>Hours worked per Year</span>
+          <apexchart type="donut" :options="chartOptions3" :series="series3"></apexchart>
         </div>
       </b-row>
       <!-- <b-row>
@@ -64,10 +66,21 @@ export default {
           toolbar: {
             show: false
           },
+          type: 'pie'
+        },
+        labels: [],
+      },
+      chartOptions3: {
+        chart: {
+          id: 'vuechart-example',
+          toolbar: {
+            show: false
+          },
           type: 'donut'
         },
         labels: [],
       },
+      series3: [],
       series2: [],
       series: [],
       user: {
@@ -77,6 +90,26 @@ export default {
     };
   },
   methods: {
+    refresh() {
+      this.series3 = [],
+      this.series2 = [],
+      this.series = [],
+      this.chartOptions = {
+        xaxis: {
+          type: 'categorie'
+        },
+        yaxis: {
+          decimalsInFloat: 1
+        }
+      },
+      this.chartOptions2 = {
+        labels: [],
+      },
+      this.chartOptions3 = {
+        labels: [],
+      },
+      this.fetchWorkingTimes()
+    },
     fetchWorkingTimes() {
       const url = this.me
         ? this.$constructUrl(`/api/workingtime/_me/_list`)
@@ -119,7 +152,8 @@ export default {
         let dates = moment.twix(moment(min), moment(max)).toArray('day');
 
         const counterPerDay = {};
-        const counterPerMonth = {}
+        const counterPerMonth = {};
+        const counterPerYear = {}
 
         for (const workingtime of workingtimes) {
           const range = moment.twix(moment(workingtime.start), moment(workingtime.end));
@@ -129,9 +163,11 @@ export default {
             const dayRange = moment.twix(moment(day), moment(day).add(23, 'h').add(59, 'm').add(59, 's'));
             const time = dayRange.intersection(range).length('ms') / 3600000;
             const dayKey = day.format('Do MMMM YYYY');
-            const monthKey = day.format('MMMM YYYY')
+            const monthKey = day.format('MMMM YYYY');
+            const yearKey = day.format( 'YYYY');
             counterPerDay[dayKey] = (counterPerDay[dayKey] || 0) + time;
-            counterPerMonth[monthKey] = (counterPerMonth[monthKey] || 0) + time
+            counterPerMonth[monthKey] = (counterPerMonth[monthKey] || 0) + time;
+            counterPerYear[yearKey] = (counterPerYear[yearKey] || 0) + time;
           }
         }
 
@@ -144,6 +180,10 @@ export default {
         for (const key of Object.keys(counterPerMonth)) {
           this.series2.push(counterPerMonth[key]);
           this.chartOptions2.labels.push(key);
+        }
+        for (const key of Object.keys(counterPerYear)) {
+          this.series3.push(counterPerYear[key]);
+          this.chartOptions3.labels.push(key);
         }
         this.series.push({name: 'Hours worked per day', data: serieDay})
         // this.series2.push({name: 'Hours worked per month', data: serieMonth})
@@ -196,5 +236,16 @@ export default {
   width: 100%;
   border-radius: 30px;
   border: 2px solid #F8684A;;
+}
+.btn-refresh {
+  margin: 5px;
+  background-color: #F8684A;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 25%;
+}
+.icon-refresh {
+  margin: 5px;
 }
 </style>

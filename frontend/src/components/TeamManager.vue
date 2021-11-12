@@ -1,60 +1,74 @@
 <template>
   <div class="user-management-page">
     <div class="container-working-time">
-      <!-- <b-button squared class="working-time" variant="info" @click="fetchUsers">
-        <b-icon icon="arrow-clockwise" class="statistics-icon" font-scale="2"></b-icon>
-        <div>Refresh</div>
-      </b-button> -->
-      <b-button squared v-b-modal.create-user class="working-time" variant="info" @click="deselectItem">
-        <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
-        <div>Create a new user account</div>
+      <b-button squared v-b-modal.create-team class="working-time" variant="info" @click="deselectItem">
+        <b-icon icon="plus" class="action-icon" font-scale="2"></b-icon>
+        <div>Create a new team</div>
+      </b-button>
+      <b-button squared v-b-modal.add-user-team class="working-time" variant="info" @click="deselectItem">
+        <b-icon icon="person-plus-fill" class="action-icon" font-scale="2"></b-icon>
+        <div>Add user in a team</div>
       </b-button>
     </div>
     <b-table head-variant="dark" hover :items="items" :fields="fields" inline>
       <template #cell(Action)="row">
-        <b-modal :id="'edit-user-modal' + row.item.ID" title="Edit user informations" hide-footer>
-          <user-settings :userId="row.item.ID" class="management-modal" :me="false"/>
+        <b-modal :id="'edit-team-modal' + row.item.NAME" title="Edit team informations" hide-footer>
+          <team-settings :teamName="row.item.NAME" class="management-modal" :me="false"/>
         </b-modal>
-        <b-button v-b-modal="'edit-user-modal' + row.item.ID" size="sm" class="mr-2" @click="selectItem(row.item.ID)">
+        <b-button v-b-modal="'edit-team-modal' + row.item.ID" size="sm" class="mr-2" @click="selectItem(row.item.NAME)">
           Edit
         </b-button>
-        <b-button @click="$router.push(`/workingtimes/${row.item.ID}`)" size="sm" class="mr-2" variant="primary">
-          <b-icon icon="graph-up" class="statistics-icon"></b-icon>
+        <b-button @click="$router.push(`/teamManagement/${row.item.NAME}`)" size="sm" class="mr-2" variant="primary">
+          <b-icon icon="graph-up" class=""></b-icon>
           View Tempo
         </b-button>
-        <b-button @click="deleteUser(row.item.ID)" size="sm" variant="danger">
+        <b-button @click="deleteTeam(row.item.NAME)" size="sm" variant="danger">
           Delete User
         </b-button>
       </template>
     </b-table>
-    <b-modal id="create-user" title="Create user account" hide-footer>
+    <b-modal id="create-team" title="Create a team" hide-footer>
       <b-col class="login-context">
           <b-row
             ><b-form-input 
-              v-model="user.email" 
-              placeholder="Email" 
+              v-model="team.name" 
+              placeholder="Team name" 
+              @keydown.enter.native="login_register"
+              ></b-form-input
+          ></b-row>
+          
+        </b-col><div class="modal-footer">
+        <b-button variant="secondary" @click="$bvModal.hide('create-team')">Cancel</b-button>
+        <b-button variant="primary" @click="createTeam">Create new team</b-button>
+      </div>
+    </b-modal>
+    <b-modal id="add-user-team" title="Create a team" hide-footer>
+      <b-col class="login-context">
+        <b-dropdown id="dropdown-1" text="Teams" class="m-md-2">
+          <template>
+            <!-- <div v-for="team in teamList" :key="item.name">
+              <b-dropdown-item>{{team.name}}</b-dropdown-item>
+            </div> -->
+          </template>
+        </b-dropdown>
+          <b-row
+            ><b-form-input 
+              v-model="team.name" 
+              placeholder="Team name" 
               @keydown.enter.native="login_register"
               ></b-form-input
           ></b-row>
           <b-row
-            ><b-form-input
-              v-model="user.username"
-              placeholder="Username"
+            ><b-form-input 
+              v-model="team.name" 
+              placeholder="Team name" 
               @keydown.enter.native="login_register"
-            ></b-form-input
-          ></b-row>
-          <b-row
-            ><b-form-input
-              v-model="user.password"
-              type="password"
-              placeholder="Password"
-              @keydown.enter.native="login_register"
-            ></b-form-input
+              ></b-form-input
           ></b-row>
           
         </b-col><div class="modal-footer">
-        <b-button variant="secondary" @click="$bvModal.hide('create-user')">Cancel</b-button>
-        <b-button variant="primary" @click="createUser">Create Account</b-button>
+        <b-button variant="secondary" @click="$bvModal.hide('create-team')">Cancel</b-button>
+        <b-button variant="primary" @click="createTeam">Create new team</b-button>
       </div>
     </b-modal>
   </div>
@@ -62,12 +76,12 @@
 
 <script>
 import axios from "axios";
-import UserSettings from './UserSettings.vue';
+import TeamSettings from './TeamSettings.vue';
 
 export default {
   name: 'UserManagement',
   components: {
-    UserSettings
+    TeamSettings
   },
 
   props: {
@@ -77,35 +91,33 @@ export default {
   },
   data() {
     return {
-      user: {
-        email: '',
-        username: '',
-        password: '',
+      team: {
+        name: ''
       },
       items: [],
-      fields: ['ID', 'Username', 'Email', 'Action'],
+      fields: ['team name', 'owner_id'],
       selected: {
       },
-      users: {}
+      teams: {}
     };
   },
   methods: {
-    login_register() {
-      this.createUser();
-    },
+    // login_register() {
+    //   this.createUser();
+    // },
     deselectItem() {
       this.selected = {};
     },
-    deleteUser(id) {
+    deleteTeam(name) {
       axios.delete(
-        this.$constructUrl(`/api/security/${id}`),
+        this.$constructUrl(`/api/security/${name}`),
         { headers:{ authorization:this.$store.state.jwt } }
       ).then(response => {
         if (response.data.error) {
           throw new Error(response.data.error.message);
         }
-        this.items = this.items.filter(item => item.ID !== id);
-        this.users = this.users.filter(item => item.id !== id);
+        this.items = this.items.filter(item => item.name !== name);
+        this.teams = this.teams.filter(item => item.name !== name);
       }).catch(error => {
         this.$bvToast.toast(error.message, {
           title: "Error",
@@ -114,16 +126,14 @@ export default {
         });
       });
     },
-    selectItem(id) {
-      this.selected = this.users.find(item => item.id === id);
+    selectItem(name) {
+      this.selected = this.teams.find(item => item.name === name);
     },
-    createUser() {
+    createTeam() {
       axios.post(
         this.$constructUrl('/api/security/'),
         {
-          email: this.user.email,
-          username: this.user.username,
-          password: this.user.password
+          name: this.team.name
         },
         { headers:{ authorization:this.$store.state.jwt } }
       ).then(response => {
@@ -131,17 +141,15 @@ export default {
           throw new Error(response.data.error.message);
         }
         const result = response.data.result;
-        this.users.push({
-          email: result.email,
-          username: result.username,
-          id: result.id,
+        this.teams.push({
+          name: result.name
         });
         this.items.push({
-          ID: result.id,
-          Username: result.username,
-          Email: result.email,
+          NAME: result.name,
+          // Username: result.username,
+          // Email: result.email,
         });
-        this.$bvModal.hide('create-user');
+        this.$bvModal.hide('create-team');
       }).catch(error => {
         this.$bvToast.toast(error.message, {
           title: "Error",
@@ -150,7 +158,7 @@ export default {
         });
       });
     },
-    fetchUsers() {
+    fetchTeams() {
       axios.get(
         this.$constructUrl('/api/security/_list'),
         { headers:{ authorization:this.$store.state.jwt } }
@@ -159,15 +167,13 @@ export default {
           throw new Error(response.data.error.message);
         }
 
-        this.users = response.data.result;
+        this.teams = response.data.result;
 
         this.items = [];
-        for (const user of this.users) {
+        for (const team of this.teams) {
           this.items.push({
             isActive: true,
-            ID: user.id,
-            Email: user.email,
-            Username: user.username,
+            NAME: team.name
           });
         }
       }).catch(error => {
@@ -180,7 +186,7 @@ export default {
     }
   },
   created() {
-    this.fetchUsers();
+    this.fetchTeams();
   }
 }
 </script>
@@ -209,8 +215,8 @@ export default {
   justify-content: center;
   width: 25%;
 }
-.statistics-button {
-  width: 100%;
+.action-icon {
+  margin-right: 35px;
 }
 
 .new-user {
