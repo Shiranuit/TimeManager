@@ -9,6 +9,8 @@
         <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
         <div>Create a new user account</div>
       </b-button>
+      <b-button class="working-time" @click="refresh()" >
+      <b-icon class="icon-refresh" icon="arrow-clockwise" />Refresh</b-button>
     </div>
     <b-table head-variant="dark" hover :items="items" :fields="fields" inline>
       <template #cell(Action)="row">
@@ -90,6 +92,10 @@ export default {
     };
   },
   methods: {
+    refresh() {
+      this.items = [],
+      this.fetchUsers()
+    },
     login_register() {
       this.createUser();
     },
@@ -214,13 +220,6 @@ export default {
 }
 
 .new-user {
-  width: 100%;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
-.refresh-button {
   width: 100%;
   align-items: center;
   display: flex;

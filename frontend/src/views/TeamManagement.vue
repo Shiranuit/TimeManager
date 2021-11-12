@@ -1,7 +1,7 @@
 <template>
     <div class="view">
         <nav-bar/>
-        <team-manager></team-manager>
+        <team-manager :userId="this.$route.params.userId"></team-manager>
     </div>
 </template>
 
