@@ -1,5 +1,11 @@
 <template>
   <div class="nav-bar">
+    <div class="home" v-on:click="home">
+      <div class="logo-container">
+        <b-icon-alarm class="logo"></b-icon-alarm>
+      </div>
+      <div class="title">Time Manager</div>
+    </div>
     <div class="button-container" v-if="this.$store.state.jwt !== null">
       <div class="custom-button" @click="$router.push('/home')">
         <div class="justIcon">
@@ -7,24 +13,18 @@
         </div>
         <div class="justText">Home</div>
       </div>
-      <div class="custom-button" v-if="this.userInfo.role === 'super-manager'" @click="$router.push('/userManagement')">
-        <div class="justIcon">
-        <b-icon-people-fill/>
-        </div>
-        <div class="justText">User</div>
-      </div>
       <div class="custom-button" @click="$router.push('/teamManagement')">
         <div class="justIcon">
           <b-icon-briefcase-fill/>
         </div>
-        <div class="justText">Team</div>
+        <div class="justText">My Teams</div>
       </div>
-    </div>
-    <div class="home" v-on:click="home">
-      <div class="logo-container">
-        <b-icon-alarm class="logo"></b-icon-alarm>
+      <div class="custom-button" v-if="this.userInfo.role === 'super-manager'" @click="$router.push('/userManagement')">
+        <div class="justIcon">
+        <b-icon-people-fill/>
+        </div>
+        <div class="justText">Manage Users</div>
       </div>
-      <div class="title">Time Manager</div>
     </div>
     <user-profile-menu
       class="profile-menu"
@@ -120,6 +120,8 @@ export default {
 
 .button-container {
   display: flex;
+  flex-direction: row;
+  width: 30%;
   // justify-items: center;
   // align-content: center;
 }

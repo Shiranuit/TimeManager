@@ -77,6 +77,7 @@
         </b-tooltip>
 
         <b-form-input
+        class="input-field"
         id="input-confirm-password"
         v-model="confirm_new_password"
         type="password"
@@ -94,6 +95,10 @@
         </div>
       </b-modal>
       <b-button class="password-button" variant="primary" @click="beforeChangingPassword">Change password</b-button>
+      <label v-if="!me && isSuperManager()">
+        Role:
+      </label>
+      <b-form-select v-model="user.role" :options="options" :state="this.user.role !== null" v-if="!me && isSuperManager()" @change="changeUserRole"></b-form-select>
     </b-row>
     <b-row>
       <div class="danger-zone">
@@ -143,14 +148,29 @@ export default {
       user: {
         username: '',
         email: '',
+        role: 'user',
       },
       edit: {
         username: false,
         email: false,
-      }
+      },
+      options: [{
+        value: 'user',
+        text: 'User'
+      }, {
+        value: 'manager',
+        text: 'Manager'
+      }, {
+        value: 'super-manager',
+        text: 'Super Manager'
+      }],
     };
   },
   methods: {
+    isSuperManager() {
+      const userInfo = this.$store.state.userInfo || {};
+      return userInfo.role === "super-manager";
+    },
     validatePasswordLength() {
       return this.new_password.length > 8;
     },
@@ -168,6 +188,31 @@ export default {
     },
     validateUsername() {
       return this.user.username.length > 0;
+    },
+    changeUserRole(value) {
+      axios.put(
+        this.$constructUrl(`/api/security/${this.userId}/_role`),
+        {
+          role: value
+        },
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+
+        if (!response.data) {
+          throw new Error('Could not update user informations');
+        }
+
+        this.user = response.data.result;
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
+        });
+      });
     },
     passwordBeforeUpdateUserInfo() {
       this.actual_password = '';
@@ -406,6 +451,10 @@ export default {
   width: 100%;
   justify-content: center;
   
+}
+
+.input-field {
+  margin-top: 10px;
 }
 
 </style>

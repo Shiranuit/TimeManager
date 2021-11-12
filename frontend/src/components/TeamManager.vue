@@ -1,7 +1,7 @@
 <template>
   <div class="user-management-page">
     <div class="container-team">
-      <b-button squared v-b-modal.create-team class="team" variant="info" @click="deselectItem">
+      <b-button squared v-b-modal.create-team class="team" variant="info" @click="deselectItem" v-if="isManager()">
         <b-icon icon="plus" class="action-icon" font-scale="2"/>
         Create a new team
       </b-button>
@@ -9,14 +9,14 @@
       <b-icon class="icon-refresh" icon="arrow-clockwise" />Refresh</b-button>
     </div>
     <b-table head-variant="dark" hover :items="teams" :fields="fields" inline>
-      <template #cell(Action)="">
-        <b-modal :id="'edit-team-modal'" title="Edit team informations" hide-footer>
-          <team-settings :teamName="team.name" class="management-modal" :me="false"/>
+      <template #cell(Action)="row">
+        <b-modal :id="'edit-team-modal' + row.item.name" :title="'Members of team ' + row.item.name" hide-footer>
+          <team-settings :teamName="row.item.name" class="management-modal" :me="me"/>
         </b-modal>
-        <b-button v-b-modal="'edit-team-modal'" size="sm" class="mr-2" @click="selectItem()">
-          Edit
+        <b-button v-b-modal="'edit-team-modal' + row.item.name" size="sm" class="mr-2" @click="selectItem(row.item.name)">
+          {{ userInfo.role === 'user' ? 'View Members' : 'View / Edit Members' }}
         </b-button>
-        <b-button @click="deleteTeam(team.name)" size="sm" variant="danger">
+        <b-button @click="deleteTeam(row.item.name)" size="sm" variant="danger" v-if="isManager()">
           Delete Team
         </b-button>
       </template>
@@ -24,57 +24,48 @@
     <b-modal id="create-team" title="Create a team" hide-footer>
       <b-col class="login-context">
           <b-row
-            ><b-form-input 
+            ><b-form-input
+              id="input-team-name"
               v-model="team.name" 
               placeholder="Team name" 
-              @keydown.enter.native="login_register"
+              @keydown.enter.native="createTeam"
+              :state="team.name.length >= 3"
               ></b-form-input
           ></b-row>
+          <b-tooltip target="input-team-name" triggers="hover" v-if="team.name.length < 3" variant="danger">
+            Team name must be at least 3 characters long
+          </b-tooltip>
           
         </b-col><div class="modal-footer">
         <b-button variant="secondary" @click="$bvModal.hide('create-team')">Cancel</b-button>
         <b-button variant="primary" @click="createTeam">Create new team</b-button>
       </div>
     </b-modal>
-    <b-modal id="add-user-team" title="Add user to a team" hide-footer>
-      <b-col class="login-context">
-        <b-dropdown id="dropdown-1" text="Teams" class="m-md-2" >
-          <template>
-            <div v-for="team in teams" :key="team.name">
-              <b-dropdown-item>{{team.name}}</b-dropdown-item>
-            </div>
-          </template>
-        </b-dropdown>
-       
-        <b-form-select id="dropdown-1" text="Users" class="m-md-2">
-          <template>
-            <!-- <div v-for="team in teamList" :key="item.name">
-              <b-dropdown-item>{{team.name}}</b-dropdown-item>
-            </div> -->
-          </template>
-        </b-form-select>
-        </b-col><div class="modal-footer">
-        <b-button variant="secondary" @click="$bvModal.hide('add-user-team')">Cancel</b-button>
-        <b-button variant="primary" @click="addUserToTeam">Validate</b-button>
-      </div>
-    </b-modal>
+
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import TeamSettings from './TeamSettings.vue';
 // import TeamSettings from './TeamSettings.vue';
 
 export default {
   name: 'TeamManager',
   components: {
+    TeamSettings
     // TeamSettings
   },
-
   props: {
-    userId: {
-      type: Number,
-    },
+    me: {
+      type: Boolean,
+      default: true
+    }
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo || {};
+    }
   },
   data() {
     return {
@@ -85,49 +76,51 @@ export default {
       fields: ['name', 'Action'],
       selected: {
       },
-      teams: {},
+      teams: [],
       teamSelected: []
     };
   },
   methods: {
-    // login_register() {
-    //   this.createUser();
-    // },
-    refresh() {
-      this.items = [],
-      this.teams = {},
-      this.fetchTeams()
+    isManager() {
+      const userInfo = this.$store.state.userInfo || {};
+      return userInfo.role === "manager" || userInfo.role === "super-manager";
     },
-    addUserToTeam() {
-      return null
+    refresh() {
+      this.items = [];
+      this.teams = {};
+      this.fetchTeams();
     },
     deselectItem() {
       this.selected = {};
     },
-    // deleteTeam(name) {
-    //   axios.delete(
-    //     this.$constructUrl(`/api/security/${name}`),
-    //     { headers:{ authorization:this.$store.state.jwt } }
-    //   ).then(response => {
-    //     if (response.data.error) {
-    //       throw new Error(response.data.error.message);
-    //     }
-    //     this.items = this.items.filter(item => item.name !== name);
-    //     this.teams = this.teams.filter(item => item.name !== name);
-    //   }).catch(error => {
-    //     this.$bvToast.toast(error.message, {
-    //       title: "Error",
-    //       variant: "danger",
-    //       solid: true,
-    //     });
-    //   });
-    // },
+    deleteTeam(name) {
+      axios.delete(
+        this.$constructUrl(`/api/team/${name}`),
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+        this.items = this.items.filter(item => item.name !== name);
+        this.teams = this.teams.filter(item => item.name !== name);
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
+        });
+      });
+    },
     selectItem(name) {
       this.selected = this.teams.find(item => item.name === name);
     },
     createTeam() {
+      const url = this.me
+        ? this.$constructUrl('/api/team/_me')
+        : this.$constructUrl('/api/team');
+
       axios.post(
-        this.$constructUrl('/api/team/_me/'),
+        url,
         {
           name: this.team.name
         },
@@ -142,8 +135,6 @@ export default {
         });
         this.items.push({
           NAME: result.name,
-          // Username: result.username,
-          // Email: result.email,
         });
         this.$bvModal.hide('create-team');
       }).catch(error => {
@@ -155,8 +146,12 @@ export default {
       });
     },
     fetchTeams() {
+      const url = this.me
+        ? this.$constructUrl('/api/team/_me/_list')
+        : this.$constructUrl('/api/team/_list')
+
       axios.get(
-        this.$constructUrl('/api/team/_list'),
+        url,
         { headers:{ authorization:this.$store.state.jwt } }
       ).then(response => {
         if (response.data.error) {
@@ -174,7 +169,21 @@ export default {
     }
   },
   created() {
-    this.fetchTeams();
+    if (this.me) {
+      return axios.get(
+        this.$constructUrl('/api/auth/_me'),
+        { headers: { authorization: this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+        this.$store.commit('setUserInfo', response.data.result);
+        return this.fetchTeams();
+      }).catch(() => {
+        this.$router.push('/');
+      });
+    }
+    return this.fetchTeams();
   }
 }
 </script>

@@ -192,6 +192,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.row {
+  padding-top: 1%
+}
+
 .user-management-page {
   width: 66%;
   margin-right: 15%;

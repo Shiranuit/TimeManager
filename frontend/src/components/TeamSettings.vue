@@ -1,53 +1,27 @@
 <template>
   <b-col class="column">
-    <!-- <b-row>
-      <div role="group" class="group">
-        <label for="input" class="input-label">
-          Team Name:
+    <b-modal id="add-user-team" title="Add user to a team" hide-footer>
+      <b-col class="login-context">
+        <label>
+          Username
         </label>
-        <div class="editable-input-box">
-          <b-form-input id="input-team-name" class="input" v-model="team.name" :readonly="!edit.teamName" placeholder="Team Name"></b-form-input>
-          <b-button v-if="!edit.teamName" @click="edit.teamName = true">
-            <b-icon icon="pencil" class="edit-icon"></b-icon>
-          </b-button>
-        </div>
+        <b-form-select v-model="selected" :options="options" :state="this.selected !== null"></b-form-select>
+      </b-col>
+      <div class="modal-footer">
+        <b-button variant="secondary" @click="$bvModal.hide('add-user-team')">Cancel</b-button>
+        <b-button variant="primary" @click="addUser">Add to team</b-button>
       </div>
-    </b-row> -->
-    <b-row>
-      <div role="group" class="group">
-        <label for="input" class="input-label">
-          Users :
-        </label>
-        <div class="editable-input-box">
-          <b-form-input class="input-teamUsers" v-model="team.users" :readonly="!edit.teamUsers" placeholder="Users"></b-form-input>
-          <b-button v-if="!edit.teamUsers" @click="edit.teamUsers = true">
-            <b-icon icon="pencil" class="edit-icon"></b-icon>
-          </b-button>
-        </div>
-      </div>
-    </b-row>
-    <b-row>
-      <!-- <div class="danger-zone">
-        <div class="danger-zone-title">Danger Zone</div>
-        <div>
-          Welcome to the Danger Zone, every action taken here are ireversible, be careful.
-        </div>
-        <b-col>
-          <b-row></b-row>
-          <b-row><b-button v-b-modal.delete-user-modal variant="danger" class="danger-button">Delete this account</b-button></b-row>
-          <b-row></b-row>
-        </b-col>
-        <b-modal id="delete-user-modal" title="Delete account" hide-footer>
-          <div class="modal-body">
-            <p>Are you sure you want to delete this account: {{ user.email }}</p>
-          </div>
-          <div class="modal-footer">
-            <b-button variant="secondary" @click="$bvModal.hide('delete-user-modal')">Cancel</b-button>
-            <b-button variant="danger" @click="deleteTeam">Delete</b-button>
-          </div>
-        </b-modal>
-      </div> -->
-    </b-row>
+    </b-modal>
+
+    <b-button variant="primary" class="full-width-button" @click="$bvModal.show('add-user-team')" v-if="isManager()">Add User</b-button>
+    <b-table head-variant="dark" hover :items="members" :fields="fields" inline>
+      <template #cell(Action)="row">
+        <b-button @click="removeUser(row.item.ID)" size="sm" variant="danger">
+          Remove Member
+        </b-button>
+      </template>
+    </b-table>
+
   </b-col>
 </template>
 
@@ -58,84 +32,54 @@ export default {
 
   props: {
     teamName: {
-      type: Number,
+      type: String,
     },
     me: {
       type: Boolean
     }
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo || {};
+    },
+  },
   data() {
     return {
-      team: {
-        name: '',
-        users: []
-      },
-      edit: {
-        teamName: false,
-        teamUsers: false
-      }
+      fields: ['ID', 'name', this.isManager() ? 'Action' : undefined],
+      members: [],
+      teamInfo: {},
+      options: [],
+      selected: null,
     };
   },
   methods: {
-    
-    // updateUserInfo() {
-    //   if (!this.validateEmail() || !this.validateUsername()) {
-    //     return;
-    //   }
+    isManager() {
+      const userInfo = this.$store.state.userInfo || {};
+      return userInfo.role === "manager" || userInfo.role === "super-manager";
+    },
+    addUser() {
+      if (!this.selected) {
+        return;
+      }
 
-    //   if (!this.user) {
-    //     this.$store.commit('setUserInfo', null);
-    //     this.$router.push('/');
-    //   }
-
-    //   const url = this.me
-    //     ? this.$constructUrl(`/api/auth`)
-    //     : this.$constructUrl(`/api/security/${this.teamName}`);
-
-    //   axios.put(
-    //     url,
-    //     { 
-    //       email: this.user.email,
-    //       username: this.user.username,
-    //     },
-    //     { headers:{ authorization:this.$store.state.jwt } }
-    //   ).then(response => {
-    //     if (response.data.error) {
-    //       throw new Error(response.data.error.message);
-    //     }
-    //     if (!response.data) {
-    //       throw new Error('Could not update user informations');
-    //     }
-    //     this.edit.username = false;
-    //     this.edit.email = false;
-    //     this.user = response.data.result;
-    //     if (this.me) {
-    //       this.$store.commit('setUserInfo', response.data.result);
-    //     }
-    //   }).catch(error => {
-    //     this.$bvToast.toast(error.message, {
-    //       title: "Error",
-    //       variant: "danger",
-    //       solid: true,
-    //     });
-    //   });
-    // },
-
-    
-    deleteTeam() {
-      const url = this.$constructUrl(`/api/_me/${this.team.name}`);
-
-      axios.delete(
+      const url = this.me
+        ? this.$constructUrl(`/api/team/_me/${this.teamName}/${this.selected}`)
+        : this.$constructUrl(`/api/team/${this.teamName}/${this.selected}`);
+      
+      axios.put(
         url,
-        { headers:{ authorization:this.$store.state.jwt } }
-      ).then(response => {
+        {},
+        { headers: { authorization: this.$store.state.jwt } }
+      )
+      .then((response) => {
         if (response.data.error) {
           throw new Error(response.data.error.message);
         }
-        if (this.me) {
-          // this.$store.commit('setUserInfo', null);
-          // this.$router.push('/');
-        }
+
+        return this.fetchMembers()
+          .then(() => {
+             this.$bvModal.hide('add-user-team');
+          });
       }).catch(error => {
         this.$bvToast.toast(error.message, {
           title: "Error",
@@ -143,32 +87,90 @@ export default {
           solid: true,
         });
       });
-    }
 
+    },
+    removeUser(userId) {
+      const url = this.me
+        ? this.$constructUrl(`/api/team/_me/${this.teamName}/${userId}`)
+        : this.$constructUrl(`/api/team/${this.teamName}/${userId}`);
+
+      axios.delete(
+        url,
+        { headers:{ authorization:this.$store.state.jwt } }
+      )
+      .then((response) => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+
+        this.members = this.members.filter(member => member.ID !== userId);
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
+        });
+      });
+    },
+    fetchMembers() {
+      const url = this.me
+        ? this.$constructUrl(`/api/team/_me/${this.teamName}`)
+        : this.$constructUrl(`/api/team/${this.teamName}`);
+
+      return axios.get(
+        url,
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+
+        return this.fetchUserList().then(() => {
+          this.teamInfo = response.data.result;
+          this.members = response.data.result.members_id.map(member_id => {
+            return {
+              ID: member_id,
+              name: this.userList.find(user => user.id === member_id).username,
+            };
+          });
+          this.options = this.userList.map(user => {
+            return {
+              value: user.id,
+              text: user.username,
+            };
+          });
+        });
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
+        });
+      });
+    },
+    fetchUserList() {
+      return axios.get(
+        this.$constructUrl('/api/security/_list/_soft'),
+        { headers:{ authorization:this.$store.state.jwt } }
+      ).then(response => {
+        if (response.data.error) {
+          throw new Error(response.data.error.message);
+        }
+        this.userList = response.data.result;
+        return this.userList;
+      }).catch(error => {
+        this.$bvToast.toast(error.message, {
+          title: "Error",
+          variant: "danger",
+          solid: true,
+        });
+      }
+      );
+    },
   },
   created() {
-    if (!this.teamName && !this.me) {
-      this.$router.push('/');
-    }
-
-    const url = this.$constructUrl(`/api/_me/${this.teamName}`);
-
-    axios.get(
-      url,
-      { headers:{ authorization:this.$store.state.jwt } }
-    ).then(response => {
-      if (response.data.error) {
-        throw new Error(response.data.error.message);
-      }
-      this.user = response.data.result;
-    }).catch(error => {
-      this.$bvToast.toast(error.message, {
-        title: "Error",
-        variant: "danger",
-        solid: true,
-      });
-    })
-  }
+    this.fetchMembers();
+  },
 }
 </script>
 
@@ -236,6 +238,10 @@ export default {
   width: 100%;
   margin-left: 10%;
   margin-right: 10%
+}
+
+.full-width-button {
+  width: 100%;
 }
 
 </style>
