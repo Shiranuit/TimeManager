@@ -72,7 +72,7 @@ module.exports = {
     type: SecurityError,
   },
   'security:user:invalid_credentials': {
-    message: 'Invalid credentials',
+    message: 'Invalid Username or Password',
     type: SecurityError,
   },
   'security:user:password_too_short': {

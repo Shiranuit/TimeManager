@@ -53,13 +53,16 @@ export default {
 
 .home {
   width: 20%;
+  display: flex;
+  align-self: center;
+  align-content: center;
+  justify-items: center;
 }
 
 .title {
   float: left;
-  transform: translate(10%, 50%);
-  // padding-left: 2%;
-  // padding-top: 2%;
+  transform: translate(10%, 0%);
+  align-self: center;
 }
 
 .logo {
