@@ -1,11 +1,11 @@
 <template>
   <div class="user-management-page">
-    <div class="container-working-time">
-      <b-button squared v-b-modal.create-team class="working-time" variant="info" @click="deselectItem">
-        <b-icon icon="plus" class="action-icon" font-scale="2"></b-icon>
-        <div>Create a new team</div>
+    <div class="container-team">
+      <b-button squared v-b-modal.create-team class="team" variant="info" @click="deselectItem">
+        <b-icon icon="plus" class="action-icon" font-scale="2"/>
+        Create a new team
       </b-button>
-      <b-button class="working-time" @click="refresh()" >
+      <b-button class="team" @click="refresh()" >
       <b-icon class="icon-refresh" icon="arrow-clockwise" />Refresh</b-button>
     </div>
     <b-table head-variant="dark" hover :items="teams" :fields="fields" inline>
@@ -193,28 +193,33 @@ export default {
   width: 100%;
 }
 
-.container-working-time {
+.container-team {
   display: flex;
+  justify-content: center;
 }
-.working-time,.working-time-icon-refresh {
+.team,.team-icon-refresh {
   background-color: #F8684A;
   align-items: center;
   display: flex;
   justify-content: center;
   width: 25%;
+  border: none;
+  border-radius: 15px !important;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
 }
 
-.working-time{
+.team{
  width: 25%;
 }
 
-.working-time-icon-refresh{
+.team-icon-refresh{
   
   width: 6%;
 
 }
 .action-icon {
-  margin-right: 35px;
+  // margin-right: 35px;
 }
 
 .new-user {
