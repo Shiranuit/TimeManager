@@ -9,8 +9,8 @@
         <b-icon icon="person-plus-fill" class="action-icon" font-scale="2"></b-icon>
         <div>Add user in a team</div>
       </b-button>
-      <b-button class="working-time" @click="refresh()" >
-      <b-icon class="icon-refresh" icon="arrow-clockwise" />Refresh</b-button>
+      <b-button class="working-time-icon-refresh" @click="refresh()" >
+      <b-icon class="icon-refresh" icon="arrow-clockwise" /></b-button>
     </div>
     <b-table head-variant="dark" hover :items="items" :fields="fields" inline>
       <template #cell(Action)="row">
@@ -203,7 +203,7 @@ export default {
   display: flex;
   justify-content: center;
 }
-.working-time {
+.working-time,.working-time-icon-refresh {
   background-color: #F8684A;
   align-items: center;
   display: flex;
@@ -213,6 +213,16 @@ export default {
   border-radius: 15px !important;
   margin-right: 1rem;
   margin-bottom: 1rem;
+}
+
+.working-time{
+ width: 25%;
+}
+
+.working-time-icon-refresh{
+  
+  width: 6%;
+
 }
 .action-icon {
   margin-right: 35px;
