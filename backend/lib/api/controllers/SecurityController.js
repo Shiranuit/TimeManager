@@ -47,14 +47,14 @@ class SecurityController extends BaseController {
    *
    * @returns {Promise<Array<User>>}
    */
-     async listUsernames() {
-      return (await this.backend.ask('core:security:user:list')).map(user => {
-        return {
-          id: user.id,
-          username: user.username,
-        };
-      });
-    }
+  async listUsernames() {
+    return (await this.backend.ask('core:security:user:list')).map(user => {
+      return {
+        id: user.id,
+        username: user.username,
+      };
+    });
+  }
 
   /**
    * List all roles.
