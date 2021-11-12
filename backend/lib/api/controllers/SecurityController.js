@@ -12,6 +12,7 @@ class SecurityController extends BaseController {
   constructor () {
     super([
       { verb: 'get', path: '/_list', action: 'listUsers' },
+      { verb: 'get', path: '/_list/_soft', action: 'listUsernames' },
       { verb: 'get', path: '/:userId', action: 'getUser' },
       { verb: 'post', path: '/', action: 'createUser' },
       { verb: 'put', path: '/:userId', action: 'updateUser' },
@@ -39,6 +40,20 @@ class SecurityController extends BaseController {
    */
   async listUsers() {
     return await this.backend.ask('core:security:user:list');
+  }
+
+  /**
+   * List all the users names.
+   *
+   * @returns {Promise<Array<User>>}
+   */
+  async listUsernames() {
+    return (await this.backend.ask('core:security:user:list')).map(user => {
+      return {
+        id: user.id,
+        username: user.username,
+      };
+    });
   }
 
   /**

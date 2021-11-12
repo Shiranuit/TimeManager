@@ -2,7 +2,7 @@
   <div>
     <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
       <template #button-content>
-        <b class="username">{{ userInfo.email }}</b>
+        <b class="username">{{ userInfo.username }}</b>
         <b-avatar button></b-avatar>
       </template>
       <b-dropdown-item to="/user/settings">Settings</b-dropdown-item>

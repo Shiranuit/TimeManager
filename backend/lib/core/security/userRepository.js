@@ -62,11 +62,16 @@ class UserRepository {
 
     const result = await this.backend.ask(
       'postgres:query',
-      'INSERT INTO users (email, username, password, role) VALUES ($1, $2, $3, $4) RETURNING id;',
+      'INSERT INTO users (email, username, password, role) VALUES ($1, $2, $3, $4) RETURNING id, username, email, role;',
       [data.email, data.username, hashedPassword, data.role || 'user']
     );
 
-    return new User(result.rows[0].id);
+    return {
+      username: result.rows[0].username,
+      email: result.rows[0].email,
+      role: result.rows[0].role,
+      id: result.rows[0].id,
+    };
   }
 
   async verify (data) {

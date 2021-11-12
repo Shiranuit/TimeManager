@@ -72,7 +72,7 @@ module.exports = {
     type: SecurityError,
   },
   'security:user:invalid_credentials': {
-    message: 'Invalid credentials',
+    message: 'Invalid Username or Password',
     type: SecurityError,
   },
   'security:user:password_too_short': {
@@ -153,6 +153,10 @@ module.exports = {
   },
   'api:team:team_not_owned': {
     message: 'You do not own the team "%s"',
+    type: ApiError,
+  },
+  'api:team:name_too_short': {
+    message: 'Team name too short, should be at least 3 characters',
     type: ApiError,
   }
 };

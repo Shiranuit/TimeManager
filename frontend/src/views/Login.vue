@@ -4,24 +4,24 @@
     <div class="login">
       <b-container fluid class="login-flexbox">
         <b-col class="login-context">
-          <b-row v-if="!show_login"
-            ><b-form-input v-model="email" placeholder="Email" @keydown.enter.native="login_register"></b-form-input
-          ></b-row>
-          <b-row
-            ><b-form-input
+          <b-row v-if="!show_login">
+            <b-form-input v-model="email" placeholder="Email" @keydown.enter.native="login_register"/>
+          </b-row>
+          <b-row>
+            <b-form-input
               v-model="username"
               placeholder="Username"
-              @keydown.enter.native="login_register"
-            ></b-form-input
-          ></b-row>
-          <b-row
-            ><b-form-input
+              @keydown.enter.native="login_register">
+            </b-form-input>
+          </b-row>
+          <b-row>
+            <b-form-input
               v-model="password"
               type="password"
               placeholder="Password"
-              @keydown.enter.native="login_register"
-            ></b-form-input
-          ></b-row>
+              @keydown.enter.native="login_register">
+            </b-form-input>
+          </b-row>
           <b-row
             ><b-button class="action-button" v-on:click="login_register">{{
               (show_login && "Login") || "Register"
@@ -50,9 +50,9 @@ export default {
   data() {
     return {
       show_login: true,
-      email: "",
-      username: "",
-      password: "",
+      email: '',
+      username: '',
+      password: '',
     };
   },
   methods: {

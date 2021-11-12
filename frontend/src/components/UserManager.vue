@@ -1,14 +1,16 @@
 <template>
-  <div>
-    <div class="statistics-container">
-      <b-button squared class="refresh-button" variant="info" @click="fetchUsers">
+  <div class="user-management-page">
+    <div class="container-working-time">
+      <!-- <b-button squared class="working-time" variant="info" @click="fetchUsers">
         <b-icon icon="arrow-clockwise" class="statistics-icon" font-scale="2"></b-icon>
         <div>Refresh</div>
-      </b-button>
-      <b-button squared v-b-modal.create-user class="new-user" variant="info" @click="deselectItem">
+      </b-button> -->
+      <b-button squared v-b-modal.create-user class="working-time" variant="info" @click="deselectItem">
         <b-icon icon="plus" class="statistics-icon" font-scale="2"></b-icon>
         <div>Create a new user account</div>
       </b-button>
+      <b-button class="working-time-refresh" @click="refresh()" >
+      <b-icon class="icon-refresh" icon="arrow-clockwise" /></b-button>
     </div>
     <b-table head-variant="dark" hover :items="items" :fields="fields" inline>
       <template #cell(Action)="row">
@@ -28,13 +30,34 @@
       </template>
     </b-table>
     <b-modal id="create-user" title="Create user account" hide-footer>
-      <div class="modal-footer">
+      <b-col class="login-context">
+          <b-row
+            ><b-form-input 
+              v-model="user.email" 
+              placeholder="Email" 
+              @keydown.enter.native="login_register"
+              ></b-form-input
+          ></b-row>
+          <b-row
+            ><b-form-input
+              v-model="user.username"
+              placeholder="Username"
+              @keydown.enter.native="login_register"
+            ></b-form-input
+          ></b-row>
+          <b-row
+            ><b-form-input
+              v-model="user.password"
+              type="password"
+              placeholder="Password"
+              @keydown.enter.native="login_register"
+            ></b-form-input
+          ></b-row>
+          
+        </b-col><div class="modal-footer">
         <b-button variant="secondary" @click="$bvModal.hide('create-user')">Cancel</b-button>
         <b-button variant="primary" @click="createUser">Create Account</b-button>
       </div>
-    </b-modal>
-    <b-modal id="view-statistics" title="User Statistics">
-      <user-chart :user-id="this.userId" :me="false"/>
     </b-modal>
   </div>
 </template>
@@ -48,11 +71,18 @@ export default {
   components: {
     UserSettings
   },
+
+  props: {
+    userId: {
+      type: Number,
+    },
+  },
   data() {
     return {
       user: {
-        username: '',
         email: '',
+        username: '',
+        password: '',
       },
       items: [],
       fields: ['ID', 'Username', 'Email', 'Action'],
@@ -62,6 +92,13 @@ export default {
     };
   },
   methods: {
+    refresh() {
+      this.items = [],
+      this.fetchUsers()
+    },
+    login_register() {
+      this.createUser();
+    },
     deselectItem() {
       this.selected = {};
     },
@@ -90,8 +127,9 @@ export default {
       axios.post(
         this.$constructUrl('/api/security/'),
         {
-          email: new Date(this.selected.start).toISOString(),
-          username: new Date(this.selected.end).toISOString(),
+          email: this.user.email,
+          username: this.user.username,
+          password: this.user.password
         },
         { headers:{ authorization:this.$store.state.jwt } }
       ).then(response => {
@@ -147,11 +185,6 @@ export default {
       });
     }
   },
-  props: {
-    userId: {
-      type: Number,
-    },
-  },
   created() {
     this.fetchUsers();
   }
@@ -159,12 +192,37 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.row {
+  padding-top: 1%
+}
 
+.user-management-page {
+  width: 66%;
+  margin-right: 15%;
+  margin-left: 15%;
+  margin-top: 5%;
+}
 .statistics-container {
   align-items: left;
   display: flex;
   justify-content: left;
   width: 100%;
+}
+
+.container-working-time {
+  display: flex;
+  justify-content: center;
+  margin-bottom:1rem;
+}
+.working-time {
+  background-color: #F8684A;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 25%;
+  border:none;
+  margin-right:1rem;
+  border-radius:15px !important;
 }
 .statistics-button {
   width: 100%;
@@ -177,14 +235,18 @@ export default {
   justify-content: center;
 }
 
-.refresh-button {
-  width: 100%;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
 .management-modal {
   padding-left: 10%;
 }
+
+.working-time-refresh{
+  width:6%;
+  background-color: #F8684A;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border:none;
+  border-radius:15px !important;
+}
+
 </style>

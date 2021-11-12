@@ -2,7 +2,7 @@
   <div class="view">
     <nav-bar/>
     <div class="user-management">
-    <user-management/>
+    <user-manager/>
   </div>
 </div>
 </template>
@@ -10,13 +10,13 @@
 <script>
 // @ is an alias to /src
 import NavBar from '../components/NavBar.vue';
-import UserManagement from '../components/UserManagement.vue';
+import UserManager from '../components/UserManager.vue';
 
 export default {
-  name: 'User Management',
+  name: 'UserManagement',
   components: {
     NavBar,
-    UserManagement
+    UserManager
   },
 }
 </script>

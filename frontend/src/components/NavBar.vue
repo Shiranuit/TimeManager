@@ -2,61 +2,85 @@
   <div class="nav-bar">
     <div class="home" v-on:click="home">
       <div class="logo-container">
-        <b-aspect aspect="1:1">
-          <b-icon-alarm class="logo"></b-icon-alarm>
-        </b-aspect>
+        <b-icon-alarm class="logo"></b-icon-alarm>
       </div>
       <div class="title">Time Manager</div>
     </div>
     <div class="button-container" v-if="this.$store.state.jwt !== null">
       <div class="custom-button" @click="$router.push('/home')">
-        Home
+        <div class="justIcon">
+        <b-icon-house-fill/>
+        </div>
+        <div class="justText">Home</div>
       </div>
-      <div class="custom-button" @click="$router.push('/userManagement')">
-        Users Management
+      <div class="custom-button" @click="$router.push('/teamManagement')">
+        <div class="justIcon">
+          <b-icon-briefcase-fill/>
+        </div>
+        <div class="justText">My Teams</div>
+      </div>
+      <div class="custom-button" v-if="this.userInfo.role === 'super-manager'" @click="$router.push('/userManagement')">
+        <div class="justIcon">
+        <b-icon-people-fill/>
+        </div>
+        <div class="justText">Manage Users</div>
       </div>
     </div>
-    <user-profile-menu class="profile-menu" v-if="this.$store.state.jwt !== null"/>
+    <user-profile-menu
+      class="profile-menu"
+      v-if="this.$store.state.jwt !== null"
+    />
   </div>
 </template>
 
 <script>
-import UserProfileMenu from './UserProfileMenu.vue';
+import UserProfileMenu from "./UserProfileMenu.vue";
 export default {
+  name: "NavBar",
   components: { UserProfileMenu },
-  name: 'NavBar',
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo || {};
+    },
+  },
   methods: {
     home() {
-      this.$router.push('/');
-    }
-  }
-}
+      this.$router.push("/");
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .nav-bar {
-  background-color: #42b983;
+  background-color: #f8684a;
   color: rgb(255, 255, 255);
-  font-size: 20px;
-  font-weight: bold;
-  text-align: left;
-  width: 100%;
-  height: 8vh;
+
+  height: 70px;
   display: flex;
   justify-content: space-between;
+
   align-items: center;
 }
 
 .home {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-content: center;
+  align-self: center;
+  align-items: center;
   width: 20%;
+  cursor: pointer;
 }
 
 .title {
-  float: left;
-  transform: translate(10%, 50%);
-  // padding-left: 2%;
-  // padding-top: 2%;
+  // margin-left: 3rem;
+  padding: 3%;
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .logo {
@@ -67,7 +91,7 @@ export default {
 }
 
 .logo-container {
-  width: 6vh;
+  width: 4vh;
   float: left;
 }
 
@@ -77,28 +101,39 @@ export default {
 }
 
 .custom-button {
-  height: 100%;
-  width: 200px;
-  padding-left: 1%;
-  padding-right: 1%;
-  align-content: center;
-  justify-items: center;
+  width: 100%;
+  display: flex;
   justify-content: center;
   align-items: center;
-  display: flex;
-  background-color: #42b983;
+  flex-direction: column;
+
+  // padding: 20px;
+  
+  padding: 0rem 1rem;
+  margin: 0rem 1rem;
 }
 
 .custom-button:hover {
   cursor: pointer;
-  background-color: #328660;
+  background-color: #eb3a17;
 }
 
 .button-container {
-  width: auto;
-  height: 100%;
   display: flex;
-  justify-items: center;
-  align-content: center;
+  flex-direction: row;
+  width: 30%;
+  // justify-items: center;
+  // align-content: center;
+}
+
+.justIcon {
+  font-size:30px;
+}
+
+.justText {
+  justify-content: center;
+  // margin-left:2rem;
+  // font-size:15px;
+  font-weight: bold;
 }
 </style>
