@@ -40,5 +40,15 @@ services:
       - pg_data:/var/lib/postgresql/data
     restart: always
 
+  swagger-ui:
+    image: swaggerapi/swagger-ui:v4.1.0
+    volumes:
+      - ./Swagger/docapi.yaml:/api.yaml
+    environment:
+      SWAGGER_FILE: /api.yaml
+      SWAGGER_JSON: /api.yaml
+    ports:
+      - 8081:8080
+
 volumes:
   pg_data:
