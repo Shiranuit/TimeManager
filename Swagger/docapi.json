@@ -2543,6 +2543,1249 @@
         }
       }
     },
+    "/api/workingtime/{userId}/_list": {
+      "get": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "List all working times for a given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "id": 1,
+                      "start": "2018-01-01T00:00:00.000Z",
+                      "end": "2018-01-01T00:00:00.000Z",
+                      "description": ""
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workingtime/_me/_list": {
+      "get": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "List all working times of the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "id": 1,
+                      "start": "2018-01-01T00:00:00.000Z",
+                      "end": "2018-01-01T00:00:00.000Z",
+                      "description": ""
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workingtime/{userId}/{workId}": {
+      "get": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "Get information about a working time for a given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "in": "path",
+            "name": "workId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the working time",
+                      "example": 1
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The start date of the working time",
+                      "example": "2018-01-01T00:00:00.000Z"
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "The end date of the working time",
+                      "example": "2018-01-01T01:00:00.000Z"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the working time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:workingtime:not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:workingtime:not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "No working time found with id \"%s\" for user_id \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "Update informations of working time for the given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "description": "The start date of the working time",
+                  "example": "2018-01-01T00:00:00.000Z"
+                },
+                "end": {
+                  "type": "string",
+                  "description": "The end date of the working time",
+                  "example": "2018-01-01T10:00:00.000Z"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The description of the working time"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "in": "path",
+            "name": "workId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the working time",
+                      "example": 1
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The start date of the working time",
+                      "example": "2018-01-01T00:00:00.000Z"
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "The end date of the working time",
+                      "example": "2018-01-01T01:00:00.000Z"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the working time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:workingtime:not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:workingtime:not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "No working time found with id \"%s\" for user_id \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:workingtime:update_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:workingtime:update_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to update working time"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "Delete a working time for the given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "in": "path",
+            "name": "workId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workingtime/_me/{workId}": {
+      "get": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "Get information about a working time for a given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the working time",
+                      "example": 1
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The start date of the working time",
+                      "example": "2018-01-01T00:00:00.000Z"
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "The end date of the working time",
+                      "example": "2018-01-01T01:00:00.000Z"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the working time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:workingtime:not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:workingtime:not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "No working time found with id \"%s\" for user_id \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "Update informations of working time for the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "description": "The start date of the working time",
+                  "example": "2018-01-01T00:00:00.000Z"
+                },
+                "end": {
+                  "type": "string",
+                  "description": "The end date of the working time",
+                  "example": "2018-01-01T10:00:00.000Z"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The description of the working time"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "workId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the working time",
+                      "example": 1
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The start date of the working time",
+                      "example": "2018-01-01T00:00:00.000Z"
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "The end date of the working time",
+                      "example": "2018-01-01T01:00:00.000Z"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the working time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:workingtime:not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:workingtime:not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "No working time found with id \"%s\" for user_id \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:workingtime:update_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:workingtime:update_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to update working time"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "Delete a working time for the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workingtime/{userId}": {
+      "post": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "Create a working time for the given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "description": "The start date of the working time",
+                  "example": "2018-01-01T00:00:00.000Z"
+                },
+                "end": {
+                  "type": "string",
+                  "description": "The end date of the working time",
+                  "example": "2018-01-01T10:00:00.000Z"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The description of the working time"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the working time",
+                      "example": 1
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The start date of the working time",
+                      "example": "2018-01-01T00:00:00.000Z"
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "The end date of the working time",
+                      "example": "2018-01-01T01:00:00.000Z"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the working time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:workingtime:creation_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:workingtime:creation_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to create working time"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workingtime/_me": {
+      "post": {
+        "tags": [
+          "Workingtime"
+        ],
+        "description": "Create a working time for the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "description": "The start date of the working time",
+                  "example": "2018-01-01T00:00:00.000Z"
+                },
+                "end": {
+                  "type": "string",
+                  "description": "The end date of the working time",
+                  "example": "2018-01-01T10:00:00.000Z"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The description of the working time"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the working time",
+                      "example": 1
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The start date of the working time",
+                      "example": "2018-01-01T00:00:00.000Z"
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "The end date of the working time",
+                      "example": "2018-01-01T01:00:00.000Z"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the working time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:workingtime:creation_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:workingtime:creation_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to create working time"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/clock/_me": {
       "post": {
         "tags": [
