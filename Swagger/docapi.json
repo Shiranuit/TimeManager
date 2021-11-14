@@ -1,0 +1,4821 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "TimeManager",
+    "description": "Welcome to TimeManager's API documentation",
+    "termsOfService": "http://example.com/terms/",
+    "contact": {
+      "email": "the4musketeers@epitech.eu"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "tags": [
+    "Auth",
+    "Security",
+    "Workingtime",
+    "Clock",
+    "Team"
+  ],
+  "paths": {
+    "/api/auth/_login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Login as user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": ""
+                },
+                "password": {
+                  "type": "string",
+                  "description": ""
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The user id",
+                      "example": 1
+                    },
+                    "jwt": {
+                      "type": "string",
+                      "description": "The JSON Web Token",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp..."
+                    },
+                    "ttl": {
+                      "type": "number",
+                      "description": "The token lifetime",
+                      "example": 36000000
+                    },
+                    "expiresAt": {
+                      "type": "number",
+                      "description": "The token expiration date",
+                      "example": 1589788400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:invalid_credentials": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:invalid_credentials",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Invalid Username or Password"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:token:creation_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:token:creation_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to generate new token"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/_logout": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Logout the current user and revoke his token",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/_register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Register a new account",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": ""
+                },
+                "email": {
+                  "type": "string",
+                  "description": ""
+                },
+                "password": {
+                  "type": "string",
+                  "description": ""
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The user id",
+                      "example": 1
+                    },
+                    "jwt": {
+                      "type": "string",
+                      "description": "The JSON Web Token",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp..."
+                    },
+                    "ttl": {
+                      "type": "number",
+                      "description": "The token lifetime",
+                      "example": 36000000
+                    },
+                    "expiresAt": {
+                      "type": "number",
+                      "description": "The token expiration date",
+                      "example": 1589788400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "request:invalid:email_format": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "request:invalid:email_format",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "BadRequest",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Invalid email format"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:username_taken": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:username_taken",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Username already taken"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:email_taken": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:email_taken",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Email already taken"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:username_too_short": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:username_too_short",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Username too short, should be at least %s characters"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:password_too_short": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:password_too_short",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Password too short, should be at least %s characters"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:password_too_weak": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:password_too_weak",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Password too weak, should include at least 1 Capital letter and 1 Number"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:creation_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:creation_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to create user account"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/_checkToken": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Verify the validity of a token",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "jwt": {
+                  "type": "string",
+                  "description": "The JSON Web Token"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The user id",
+                      "example": 1
+                    },
+                    "ttl": {
+                      "type": "number",
+                      "description": "The token lifetime",
+                      "example": 3600000
+                    },
+                    "expiresAt": {
+                      "type": "number",
+                      "description": "The token expiration date",
+                      "example": 1589788400
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/_me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Retrieve informations of the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The user id",
+                      "example": 1
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The user email",
+                      "example": "email@gmail.com"
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The user username",
+                      "example": "username"
+                    },
+                    "role": {
+                      "type": "string",
+                      "description": "The user role",
+                      "example": "user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Update informations of the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "The user email"
+                },
+                "username": {
+                  "type": "string",
+                  "description": "The user username"
+                },
+                "actualPassword": {
+                  "type": "string",
+                  "description": "The user's actual password"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The user id",
+                      "example": 1
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The user email",
+                      "example": "email@gmail.com"
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The user username",
+                      "example": "username"
+                    },
+                    "role": {
+                      "type": "string",
+                      "description": "The user role",
+                      "example": "user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:email_taken": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:email_taken",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Email already taken"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:username_taken": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:username_taken",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Username already taken"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:invalid_credentials": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:invalid_credentials",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Invalid Username or Password"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:update_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:update_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to update user account informations"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Delete the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/_password": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Update the password of the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "oldPassword": {
+                  "type": "string",
+                  "description": "The user's actual password"
+                },
+                "newPassword": {
+                  "type": "string",
+                  "description": "The user's new password"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The user id",
+                      "example": 1
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The user email",
+                      "example": "email@gmail.com"
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The user username",
+                      "example": "username"
+                    },
+                    "role": {
+                      "type": "string",
+                      "description": "The user role",
+                      "example": "user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:invalid_credentials": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:invalid_credentials",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Invalid Username or Password"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:update_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:update_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to update user account informations"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:password_too_short": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:password_too_short",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Password too short, should be at least %s characters"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:password_too_weak": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:password_too_weak",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Password too weak, should include at least 1 Capital letter and 1 Number"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/security/_list": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "description": "List all the existing users",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "id": "number",
+                      "username": "string",
+                      "email": "string",
+                      "role": "string"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/security/_list/_soft": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "description": "List the usernames and ids of all the users",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "id": "number",
+                      "username": "string"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/security/_roles": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "description": "List all the existing roles",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "array",
+                  "example": [
+                    "roleName1",
+                    "roleName2",
+                    "..."
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/security/{userId}": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "description": "Retrieve the information of a given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the user",
+                      "example": 1
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The username of the user",
+                      "example": "email@gmail.com"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The email of the user",
+                      "example": "username"
+                    },
+                    "role": {
+                      "type": "string",
+                      "description": "The role of the user",
+                      "example": "user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Security"
+        ],
+        "description": "Update the informations of a given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "The new user username",
+                  "example": "username"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The new user email",
+                  "example": "email@gmail.com"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the user",
+                      "example": 1
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The username of the user",
+                      "example": "email@gmail.com"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The email of the user",
+                      "example": "username"
+                    },
+                    "role": {
+                      "type": "string",
+                      "description": "The role of the user",
+                      "example": "user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "request:invalid:email_format": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "request:invalid:email_format",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "BadRequest",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Invalid email format"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:username_too_short": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:username_too_short",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Username too short, should be at least %s characters"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:email_taken": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:email_taken",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Email already taken"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:username_taken": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:username_taken",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Username already taken"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:update_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:update_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to update user account informations"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Security"
+        ],
+        "description": "Delete a given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean:",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/security/": {
+      "post": {
+        "tags": [
+          "Security"
+        ],
+        "description": "Create a new user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "The username of the user",
+                  "example": "username"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The email of the user",
+                  "example": "email@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "The password of the user",
+                  "example": "password"
+                },
+                "role": {
+                  "type": "string",
+                  "description": "The role of the user",
+                  "example": "user"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the user",
+                      "example": 1
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The username of the user",
+                      "example": "email@gmail.com"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The email of the user",
+                      "example": "username"
+                    },
+                    "role": {
+                      "type": "string",
+                      "description": "The role of the user",
+                      "example": "user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "request:invalid:email_format": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "request:invalid:email_format",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "BadRequest",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Invalid email format"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:username_too_short": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:username_too_short",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Username too short, should be at least %s characters"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:password_too_short": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:password_too_short",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Password too short, should be at least %s characters"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:password_too_weak": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:password_too_weak",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Password too weak, should include at least 1 Capital letter and 1 Number"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:email_taken": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:email_taken",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Email already taken"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:username_taken": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:username_taken",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Username already taken"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:invalid_role": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:invalid_role",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "BadRequest",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Invalid role \"%s\", expected %s"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:creation_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:creation_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to create user account"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/security/{userId}/_password": {
+      "put": {
+        "tags": [
+          "Security"
+        ],
+        "description": "Update the password of a given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "description": "The new user password",
+                  "example": "password"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the user",
+                      "example": 1
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The username of the user",
+                      "example": "email@gmail.com"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The email of the user",
+                      "example": "username"
+                    },
+                    "role": {
+                      "type": "string",
+                      "description": "The role of the user",
+                      "example": "user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:password_too_short": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:password_too_short",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Password too short, should be at least %s characters"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:password_too_weak": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:password_too_weak",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Password too weak, should include at least 1 Capital letter and 1 Number"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:update_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:update_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to update user account informations"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/security/{userId}/_role": {
+      "put": {
+        "tags": [
+          "Security"
+        ],
+        "description": "Update the role of a given user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "description": "The new user role",
+                  "example": "user"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "The id of the user",
+                      "example": 1
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The username of the user",
+                      "example": "email@gmail.com"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The email of the user",
+                      "example": "username"
+                    },
+                    "role": {
+                      "type": "string",
+                      "description": "The role of the user",
+                      "example": "user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:invalid_role": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:invalid_role",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "BadRequest",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Invalid role \"%s\", expected %s"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:update_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:update_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to update user account informations"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clock/_me": {
+      "post": {
+        "tags": [
+          "Clock"
+        ],
+        "description": "Start a new clock or stop the current one for the current user.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "description": "The Clock status, running or not",
+                      "example": true
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The Clock start date",
+                      "example": "2021-11-14T11:23:28.353Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:clock:creation_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:clock:creation_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to create a new clock"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:clock:update_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:clock:update_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to update clock"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Clock"
+        ],
+        "description": "Get clock informations for the current user.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "description": "The Clock status, running or not",
+                      "example": true
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The Clock start date",
+                      "example": "2021-11-14T11:23:28.353Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:clock:not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:clock:not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "No clock found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Clock"
+        ],
+        "description": "Delete the clock of the current user.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clock/{userId}": {
+      "post": {
+        "tags": [
+          "Clock"
+        ],
+        "description": "Start a new clock or stop the current one.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "description": "The Clock status, running or not",
+                      "example": true
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The Clock start date",
+                      "example": "2021-11-14T11:23:28.353Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:clock:creation_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:clock:creation_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to create a new clock"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:clock:update_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:clock:update_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to update clock"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Clock"
+        ],
+        "description": "Get clock informations for the current user.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "description": "The Clock status, running or not",
+                      "example": true
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The Clock start date",
+                      "example": "2021-11-14T11:23:28.353Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:clock:not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:clock:not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "No clock found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Clock"
+        ],
+        "description": "Delete the clock of a user.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/": {
+      "post": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Create a new team",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the team",
+                  "example": "team_name"
+                },
+                "owner_id": {
+                  "type": "number",
+                  "description": "The id of the owner of the team",
+                  "example": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the team",
+                      "example": "team_name"
+                    },
+                    "owner": {
+                      "type": "number",
+                      "description": "The id of the owner of the team",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:name_too_short": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:name_too_short",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "BadRequest",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Team name too short, should be at least 3 characters"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:creation_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:creation_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to create a team"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:already_exists": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:already_exists",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Team \"%s\" already exists"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/_list": {
+      "get": {
+        "tags": [
+          "Team"
+        ],
+        "description": "List all the teams",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "name": "team_name",
+                      "owner_id": 1,
+                      "members_id": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/{teamName}": {
+      "delete": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Delete a team",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "teamName",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Retrieve team informations by name",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "teamName",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the team",
+                      "example": "team_name"
+                    },
+                    "owner": {
+                      "type": "number",
+                      "description": "The id of the owner of the team",
+                      "example": 1
+                    },
+                    "members_id": {
+                      "type": "array",
+                      "description": "The ids of the members of the team",
+                      "example": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Team \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/{teamName}/{userId}": {
+      "put": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Add a user to a team",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "teamName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the team",
+                      "example": "team_name"
+                    },
+                    "owner": {
+                      "type": "number",
+                      "description": "The id of the owner of the team",
+                      "example": 1
+                    },
+                    "members_id": {
+                      "type": "array",
+                      "description": "The ids of the members of the team",
+                      "example": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:user_add_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:user_add_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to add user id \"%s\" to \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Remove a user from a team",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "teamName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the team",
+                      "example": "team_name"
+                    },
+                    "owner": {
+                      "type": "number",
+                      "description": "The id of the owner of the team",
+                      "example": 1
+                    },
+                    "members_id": {
+                      "type": "array",
+                      "description": "The ids of the members of the team",
+                      "example": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:user_remove_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:user_remove_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to remove user id \"%s\" from \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/{userId}/_list": {
+      "get": {
+        "tags": [
+          "Team"
+        ],
+        "description": "List all the teams a user is member of",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "name": "team_name",
+                      "owner_id": 1,
+                      "members_id": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/_me/_list": {
+      "get": {
+        "tags": [
+          "Team"
+        ],
+        "description": "List all the teams owned by the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "name": "team_name",
+                      "owner_id": 1,
+                      "members_id": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/_me": {
+      "post": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Create a new team owned by the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the team",
+                      "example": "team_name"
+                    },
+                    "owner": {
+                      "type": "number",
+                      "description": "The id of the owner of the team",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:name_too_short": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:name_too_short",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "BadRequest",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Team name too short, should be at least 3 characters"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:creation_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:creation_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to create a team"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:already_exists": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:already_exists",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Team \"%s\" already exists"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/_me/{teamName}": {
+      "delete": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Delete a team owned by the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "teamName",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:team_not_owned": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:team_not_owned",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "You do not own the team \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Retrieve informations about a team owned by the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "teamName",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the team",
+                      "example": "team_name"
+                    },
+                    "owner": {
+                      "type": "number",
+                      "description": "The id of the owner of the team",
+                      "example": 1
+                    },
+                    "members_id": {
+                      "type": "array",
+                      "description": "The ids of the members of the team",
+                      "example": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:team_not_owned": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:team_not_owned",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "You do not own the team \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Team \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/_me/{teamName}/{userId}": {
+      "put": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Add a user to a team owned by the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "teamName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the team",
+                      "example": "team_name"
+                    },
+                    "owner": {
+                      "type": "number",
+                      "description": "The id of the owner of the team",
+                      "example": 1
+                    },
+                    "members_id": {
+                      "type": "array",
+                      "description": "The ids of the members of the team",
+                      "example": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:team_not_owned": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:team_not_owned",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "You do not own the team \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:user_add_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:user_add_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to add user id \"%s\" to \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:with_id_not_found": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:with_id_not_found",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User with id \"%s\" not found"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Team"
+        ],
+        "description": "Remove a user from a team owned by the current user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "teamName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "success": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the team",
+                      "example": "team_name"
+                    },
+                    "owner": {
+                      "type": "number",
+                      "description": "The id of the owner of the team",
+                      "example": 1
+                    },
+                    "members_id": {
+                      "type": "array",
+                      "description": "The ids of the members of the team",
+                      "example": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security:user:not_authenticated": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "security:user:not_authenticated",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "SecurityError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "User not authenticated"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 502
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:team_not_owned": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:team_not_owned",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "You do not own the team \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "api:team:user_remove_failed": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "api:team:user_remove_failed",
+                      "description": "Error ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ApiError",
+                      "description": "Error Class Type"
+                    },
+                    "stack": {
+                      "type": "string",
+                      "description": "Error StackTrace",
+                      "example": "Error at ..."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error Message",
+                      "example": "Failed to remove user id \"%s\" from \"%s\""
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "Status Code",
+                      "example": 504
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
