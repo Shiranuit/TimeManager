@@ -43,10 +43,10 @@ services:
   swagger-ui:
     image: swaggerapi/swagger-ui:v4.1.0
     volumes:
-      - ./Swagger/docapi.yaml:/api.yaml
+      - ./Swagger/docapi.json:/api.json
     environment:
-      SWAGGER_FILE: /api.yaml
-      SWAGGER_JSON: /api.yaml
+      SWAGGER_FILE: /api.json
+      SWAGGER_JSON: /api.json
     ports:
       - 8081:8080
 
