@@ -1,3 +1,11 @@
+/**
+ * Ugly code written in 5 minutes to generate swagger documentation based on
+ * comments in the code.
+ * 
+ * @TODO: Refactor this code
+ */
+
+
 const { parse } = require('comment-parser');
 const config = require('./config');
 const fs = require('fs');
