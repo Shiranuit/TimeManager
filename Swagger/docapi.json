@@ -59,6 +59,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -91,6 +92,7 @@
             }
           },
           "security:user:invalid_credentials": {
+            "description": "Response when the error security:user:invalid_credentials occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -128,6 +130,7 @@
             }
           },
           "security:token:creation_failed": {
+            "description": "Response when the error security:token:creation_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -182,6 +185,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -233,6 +237,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -265,6 +270,7 @@
             }
           },
           "request:invalid:email_format": {
+            "description": "Response when the error request:invalid:email_format occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -302,6 +308,7 @@
             }
           },
           "security:user:username_taken": {
+            "description": "Response when the error security:user:username_taken occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -339,6 +346,7 @@
             }
           },
           "security:user:email_taken": {
+            "description": "Response when the error security:user:email_taken occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -376,6 +384,7 @@
             }
           },
           "security:user:username_too_short": {
+            "description": "Response when the error security:user:username_too_short occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -413,6 +422,7 @@
             }
           },
           "security:user:password_too_short": {
+            "description": "Response when the error security:user:password_too_short occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -450,6 +460,7 @@
             }
           },
           "security:user:password_too_weak": {
+            "description": "Response when the error security:user:password_too_weak occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -487,6 +498,7 @@
             }
           },
           "security:user:creation_failed": {
+            "description": "Response when the error security:user:creation_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -556,6 +568,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -600,6 +613,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -632,6 +646,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -709,6 +724,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -741,6 +757,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -778,6 +795,7 @@
             }
           },
           "security:user:email_taken": {
+            "description": "Response when the error security:user:email_taken occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -815,6 +833,7 @@
             }
           },
           "security:user:username_taken": {
+            "description": "Response when the error security:user:username_taken occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -852,6 +871,7 @@
             }
           },
           "security:user:invalid_credentials": {
+            "description": "Response when the error security:user:invalid_credentials occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -889,6 +909,7 @@
             }
           },
           "security:user:update_failed": {
+            "description": "Response when the error security:user:update_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -941,6 +962,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -952,6 +974,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1025,6 +1048,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -1057,6 +1081,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1094,6 +1119,7 @@
             }
           },
           "security:user:invalid_credentials": {
+            "description": "Response when the error security:user:invalid_credentials occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1131,6 +1157,7 @@
             }
           },
           "security:user:update_failed": {
+            "description": "Response when the error security:user:update_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1168,6 +1195,7 @@
             }
           },
           "security:user:password_too_short": {
+            "description": "Response when the error security:user:password_too_short occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1205,6 +1233,7 @@
             }
           },
           "security:user:password_too_weak": {
+            "description": "Response when the error security:user:password_too_weak occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1259,6 +1288,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -1294,6 +1324,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -1327,6 +1358,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -1366,6 +1398,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -1398,6 +1431,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1477,6 +1511,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -1509,6 +1544,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1546,6 +1582,7 @@
             }
           },
           "request:invalid:email_format": {
+            "description": "Response when the error request:invalid:email_format occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1583,6 +1620,7 @@
             }
           },
           "security:user:username_too_short": {
+            "description": "Response when the error security:user:username_too_short occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1620,6 +1658,7 @@
             }
           },
           "security:user:email_taken": {
+            "description": "Response when the error security:user:email_taken occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1657,6 +1696,7 @@
             }
           },
           "security:user:username_taken": {
+            "description": "Response when the error security:user:username_taken occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1694,6 +1734,7 @@
             }
           },
           "security:user:update_failed": {
+            "description": "Response when the error security:user:update_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1753,6 +1794,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -1812,6 +1854,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -1844,6 +1887,7 @@
             }
           },
           "request:invalid:email_format": {
+            "description": "Response when the error request:invalid:email_format occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1881,6 +1925,7 @@
             }
           },
           "security:user:username_too_short": {
+            "description": "Response when the error security:user:username_too_short occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1918,6 +1963,7 @@
             }
           },
           "security:user:password_too_short": {
+            "description": "Response when the error security:user:password_too_short occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1955,6 +2001,7 @@
             }
           },
           "security:user:password_too_weak": {
+            "description": "Response when the error security:user:password_too_weak occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -1992,6 +2039,7 @@
             }
           },
           "security:user:email_taken": {
+            "description": "Response when the error security:user:email_taken occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2029,6 +2077,7 @@
             }
           },
           "security:user:username_taken": {
+            "description": "Response when the error security:user:username_taken occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2066,6 +2115,7 @@
             }
           },
           "security:user:invalid_role": {
+            "description": "Response when the error security:user:invalid_role occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2103,6 +2153,7 @@
             }
           },
           "security:user:creation_failed": {
+            "description": "Response when the error security:user:creation_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2179,6 +2230,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -2211,6 +2263,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2248,6 +2301,7 @@
             }
           },
           "security:user:password_too_short": {
+            "description": "Response when the error security:user:password_too_short occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2285,6 +2339,7 @@
             }
           },
           "security:user:password_too_weak": {
+            "description": "Response when the error security:user:password_too_weak occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2322,6 +2377,7 @@
             }
           },
           "security:user:update_failed": {
+            "description": "Response when the error security:user:update_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2398,6 +2454,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -2430,6 +2487,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2467,6 +2525,7 @@
             }
           },
           "security:user:invalid_role": {
+            "description": "Response when the error security:user:invalid_role occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2504,6 +2563,7 @@
             }
           },
           "security:user:update_failed": {
+            "description": "Response when the error security:user:update_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2565,6 +2625,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -2583,6 +2644,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2637,6 +2699,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -2655,6 +2718,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2722,6 +2786,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -2753,6 +2818,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2790,6 +2856,7 @@
             }
           },
           "api:workingtime:not_found": {
+            "description": "Response when the error api:workingtime:not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2879,6 +2946,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -2910,6 +2978,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2947,6 +3016,7 @@
             }
           },
           "api:workingtime:not_found": {
+            "description": "Response when the error api:workingtime:not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -2984,6 +3054,7 @@
             }
           },
           "api:workingtime:update_failed": {
+            "description": "Response when the error api:workingtime:update_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3049,6 +3120,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -3060,6 +3132,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3121,6 +3194,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -3152,6 +3226,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3189,6 +3264,7 @@
             }
           },
           "api:workingtime:not_found": {
+            "description": "Response when the error api:workingtime:not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3272,6 +3348,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -3303,6 +3380,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3340,6 +3418,7 @@
             }
           },
           "api:workingtime:not_found": {
+            "description": "Response when the error api:workingtime:not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3377,6 +3456,7 @@
             }
           },
           "api:workingtime:update_failed": {
+            "description": "Response when the error api:workingtime:update_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3436,6 +3516,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -3447,6 +3528,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3532,6 +3614,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -3563,6 +3646,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3600,6 +3684,7 @@
             }
           },
           "api:workingtime:creation_failed": {
+            "description": "Response when the error api:workingtime:creation_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3679,6 +3764,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -3710,6 +3796,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3747,6 +3834,7 @@
             }
           },
           "api:workingtime:creation_failed": {
+            "description": "Response when the error api:workingtime:creation_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3801,6 +3889,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -3823,6 +3912,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3860,6 +3950,7 @@
             }
           },
           "api:clock:creation_failed": {
+            "description": "Response when the error api:clock:creation_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3897,6 +3988,7 @@
             }
           },
           "api:clock:update_failed": {
+            "description": "Response when the error api:clock:update_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -3949,6 +4041,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -3971,6 +4064,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4008,6 +4102,7 @@
             }
           },
           "api:clock:not_found": {
+            "description": "Response when the error api:clock:not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4060,6 +4155,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -4095,6 +4191,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -4117,6 +4214,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4154,6 +4252,7 @@
             }
           },
           "api:clock:creation_failed": {
+            "description": "Response when the error api:clock:creation_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4191,6 +4290,7 @@
             }
           },
           "api:clock:update_failed": {
+            "description": "Response when the error api:clock:update_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4250,6 +4350,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -4272,6 +4373,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4309,6 +4411,7 @@
             }
           },
           "api:clock:not_found": {
+            "description": "Response when the error api:clock:not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4368,6 +4471,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -4379,6 +4483,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4454,6 +4559,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -4476,6 +4582,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4513,6 +4620,7 @@
             }
           },
           "api:team:name_too_short": {
+            "description": "Response when the error api:team:name_too_short occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4550,6 +4658,7 @@
             }
           },
           "api:team:creation_failed": {
+            "description": "Response when the error api:team:creation_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4587,6 +4696,7 @@
             }
           },
           "api:team:already_exists": {
+            "description": "Response when the error api:team:already_exists occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4624,6 +4734,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4678,6 +4789,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -4723,6 +4835,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -4756,6 +4869,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -4787,6 +4901,7 @@
             }
           },
           "api:team:not_found": {
+            "description": "Response when the error api:team:not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4854,6 +4969,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -4885,6 +5001,7 @@
             }
           },
           "api:team:user_add_failed": {
+            "description": "Response when the error api:team:user_add_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4922,6 +5039,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -4987,6 +5105,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -5018,6 +5137,7 @@
             }
           },
           "api:team:user_remove_failed": {
+            "description": "Response when the error api:team:user_remove_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5079,6 +5199,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -5117,6 +5238,7 @@
         "parameters": [],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -5138,6 +5260,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5199,6 +5322,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -5221,6 +5345,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5258,6 +5383,7 @@
             }
           },
           "api:team:name_too_short": {
+            "description": "Response when the error api:team:name_too_short occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5295,6 +5421,7 @@
             }
           },
           "api:team:creation_failed": {
+            "description": "Response when the error api:team:creation_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5332,6 +5459,7 @@
             }
           },
           "api:team:already_exists": {
+            "description": "Response when the error api:team:already_exists occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5369,6 +5497,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5430,6 +5559,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -5441,6 +5571,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5478,6 +5609,7 @@
             }
           },
           "api:team:team_not_owned": {
+            "description": "Response when the error api:team:team_not_owned occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5537,6 +5669,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -5568,6 +5701,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5605,6 +5739,7 @@
             }
           },
           "api:team:team_not_owned": {
+            "description": "Response when the error api:team:team_not_owned occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5642,6 +5777,7 @@
             }
           },
           "api:team:not_found": {
+            "description": "Response when the error api:team:not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5709,6 +5845,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -5740,6 +5877,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5777,6 +5915,7 @@
             }
           },
           "api:team:team_not_owned": {
+            "description": "Response when the error api:team:team_not_owned occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5814,6 +5953,7 @@
             }
           },
           "api:team:user_add_failed": {
+            "description": "Response when the error api:team:user_add_failed occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5851,6 +5991,7 @@
             }
           },
           "security:user:with_id_not_found": {
+            "description": "Response when the error security:user:with_id_not_found occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5916,6 +6057,7 @@
         ],
         "responses": {
           "success": {
+            "description": "Response when the request succeeded",
             "schema": {
               "type": "object",
               "properties": {
@@ -5947,6 +6089,7 @@
             }
           },
           "security:user:not_authenticated": {
+            "description": "Response when the error security:user:not_authenticated occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -5984,6 +6127,7 @@
             }
           },
           "api:team:team_not_owned": {
+            "description": "Response when the error api:team:team_not_owned occurs",
             "schema": {
               "type": "object",
               "properties": {
@@ -6021,6 +6165,7 @@
             }
           },
           "api:team:user_remove_failed": {
+            "description": "Response when the error api:team:user_remove_failed occurs",
             "schema": {
               "type": "object",
               "properties": {

@@ -205,6 +205,7 @@ async function main() {
           parameters: params,
           responses: {
             success: {
+              description: 'Response when the request succeeded',
               schema: {
                 type: 'object',
                 properties: {
@@ -226,6 +227,7 @@ async function main() {
           }
           const errorInstance = new error.type();
           route.responses[errorName] = {
+            description: `Response when the error ${errorName} occurs`,
             schema: {
               type: 'object',
               properties: {
