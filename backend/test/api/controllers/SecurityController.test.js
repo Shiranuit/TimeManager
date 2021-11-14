@@ -21,7 +21,10 @@ describe('SecurityController', () => {
         password: {
           minLength: 8,
         }
-      }
+      },
+      permissions: {
+        'user': {}
+      },
     });
     await securityController.init(backend);
   });
@@ -150,6 +153,14 @@ describe('SecurityController', () => {
       );
     });
 
+    it('should reject if the role does not exists', async () => {
+      request.input.body.role = 'foo';
+      securityController._validatePasswordStrength = sinon.stub().returns(true);
+      await should(securityController.createUser(request)).be.rejectedWith(
+        BadRequestError,
+        { id: 'security:user:invalid_role' }
+      );
+    });
 
     it('should reject if cannot create the user', async () => {
       backend.ask.withArgs('core:security:user:create').resolves(null);
@@ -177,7 +188,8 @@ describe('SecurityController', () => {
       );
     });
 
-    it('should return valid token when succesfuly registered', async () => {
+    it('should return user informations when succesfuly registered', async () => {
+
       backend.ask.withArgs('core:security:user:create').resolves({
         id: 1,
         username: 'foo',
@@ -191,7 +203,8 @@ describe('SecurityController', () => {
         {
           username: 'foo',
           password: 'Password0',
-          email: 'foo@bar.baz'
+          email: 'foo@bar.baz',
+          role: 'user',
         }
       );
 
@@ -432,7 +445,15 @@ describe('SecurityController', () => {
         );
     });
 
+    it('should reject if the given password is too short', async () => {
+      await should(securityController.updateUserPassword(request)).be.rejectedWith(
+        SecurityError,
+        { id: 'security:user:password_too_short' }
+      );
+    });
+
     it('should reject if the given password is too weak', async () => {
+      request.input.body.newPassword = 'foobarbaz';
       securityController._validatePasswordStrength = sinon.stub().returns(false);
 
       await should(securityController.updateUserPassword(request)).be.rejectedWith(
@@ -440,10 +461,11 @@ describe('SecurityController', () => {
         { id: 'security:user:password_too_weak' }
       );
 
-      await should(securityController._validatePasswordStrength).be.calledWith('bar');
+      await should(securityController._validatePasswordStrength).be.calledWith('foobarbaz');
     });
 
     it('should user information if the update succeeded', async () => {
+      request.input.body.newPassword = 'foobarbaz';
       securityController._validatePasswordStrength = sinon.stub().returns(true);
       backend.ask.withArgs('core:security:user:updatePassword')
         .resolves({
@@ -455,8 +477,8 @@ describe('SecurityController', () => {
 
       const response = await securityController.updateUserPassword(request);
 
-      await should(securityController._validatePasswordStrength).be.calledWith('bar');
-      await should(backend.ask).be.calledWith('core:security:user:updatePassword', 42, 'bar');
+      await should(securityController._validatePasswordStrength).be.calledWith('foobarbaz');
+      await should(backend.ask).be.calledWith('core:security:user:updatePassword', 42, 'foobarbaz');
 
       await should(response)
         .be.an.Object()
@@ -469,6 +491,7 @@ describe('SecurityController', () => {
     });
 
     it('should reject if update failed', async () => {
+      request.input.body.newPassword = 'foobarbaz';
       securityController._validatePasswordStrength = sinon.stub().returns(true);
       backend.ask.withArgs('core:security:user:updatePassword')
         .resolves(null);
@@ -479,8 +502,8 @@ describe('SecurityController', () => {
           { id: 'security:user:update_failed' }
         );
 
-      await should(securityController._validatePasswordStrength).be.calledWith('bar');
-      await should(backend.ask).be.calledWith('core:security:user:updatePassword', 42, 'bar');
+      await should(securityController._validatePasswordStrength).be.calledWith('foobarbaz');
+      await should(backend.ask).be.calledWith('core:security:user:updatePassword', 42, 'foobarbaz');
     });
   });
 

@@ -157,6 +157,6 @@ module.exports = {
   },
   'api:team:name_too_short': {
     message: 'Team name too short, should be at least 3 characters',
-    type: ApiError,
+    type: BadRequestError,
   }
 };

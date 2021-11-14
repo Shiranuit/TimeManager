@@ -37,6 +37,11 @@ class SecurityController extends BaseController {
    * List all the users.
    *
    * @returns {Promise<Array<User>>}
+   * 
+   * @openapi
+   * @action listUsers
+   * @description List all the existing users
+   * @return {array} [[{"id":"number","username":"string","email":"string","role":"string"}]]
    */
   async listUsers() {
     return await this.backend.ask('core:security:user:list');
@@ -46,6 +51,11 @@ class SecurityController extends BaseController {
    * List all the users names.
    *
    * @returns {Promise<Array<User>>}
+   * 
+   * @openapi
+   * @action listUsernames
+   * @description List the usernames and ids of all the users
+   * @return {array} [[{"id":"number","username":"string"}]]
    */
   async listUsernames() {
     return (await this.backend.ask('core:security:user:list')).map(user => {
@@ -60,6 +70,11 @@ class SecurityController extends BaseController {
    * List all roles.
    *
    * @returns {Promise<Array<string>>}
+   * 
+   * @openapi
+   * @action listRoles
+   * @description List all the existing roles
+   * @return {array} [["roleName1", "roleName2", "..."]]
    */
   async listRoles() {
     return Object.keys(this.permissions).filter(_role => _role !== 'anonymous');
@@ -70,6 +85,16 @@ class SecurityController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<User>}
+   * 
+   * @openapi
+   * @action getUser
+   * @description Retrieve the information of a given user
+   * @templateParam {number} userId The id of the user
+   * @successField {number:1} id The id of the user
+   * @successField {string:"email@gmail.com"} username The username of the user
+   * @successField {string:"username"} email The email of the user
+   * @successField {string:"user"} role The role of the user
+   * @error security:user:with_id_not_found
    */
   async getUser(req) {
     const userId = req.getInteger('userId');
@@ -93,10 +118,31 @@ class SecurityController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<User>}
+   * 
+   * @openapi
+   * @action createUser
+   * @description Create a new user
+   * @bodyParam {string:"username"} username The username of the user
+   * @bodyParam {string:"email@gmail.com"} email The email of the user
+   * @bodyParam {string:"password"} password The password of the user
+   * @bodyParam {string:"user"} role The role of the user
+   * @successField {number:1} id The id of the user
+   * @successField {string:"email@gmail.com"} username The username of the user
+   * @successField {string:"username"} email The email of the user
+   * @successField {string:"user"} role The role of the user
+   * @error request:invalid:email_format
+   * @error security:user:username_too_short
+   * @error security:user:password_too_short
+   * @error security:user:password_too_weak
+   * @error security:user:email_taken
+   * @error security:user:username_taken
+   * @error security:user:invalid_role
+   * @error security:user:creation_failed
    */
   async createUser(req) {
     const username = req.getBodyString('username');
     const email = req.getBodyString('email');
+    const role = req.getBodyString('role', 'user');
     const password = req.getBodyString('password');
 
     if (!EMAIL_PATTERN.test(email)) {
@@ -115,8 +161,13 @@ class SecurityController extends BaseController {
       error.throwError('security:user:password_too_weak');
     }
 
+    if (!this.permissions[role] || role === 'anonymous') {
+      const roles = Object.keys(this.permissions).filter(_role => _role !== 'anonymous');
+      error.throwError('security:user:invalid_role', role, `[${roles.join(', ')}]`);
+    }
+
     try {
-      const user = await this.backend.ask('core:security:user:create', { username, email, password });
+      const user = await this.backend.ask('core:security:user:create', { username, email, password, role });
 
       if (!user) {
         error.throwError('security:user:creation_failed');
@@ -126,6 +177,7 @@ class SecurityController extends BaseController {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
       };
     } catch (err) {
       if (err.code) {
@@ -146,6 +198,23 @@ class SecurityController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<User>}
+   * 
+   * @openapi
+   * @action updateUser
+   * @description Update the informations of a given user
+   * @templateParam {number} userId The id of the user
+   * @bodyParam {string:"username"} username The new user username
+   * @bodyParam {string:"email@gmail.com"} email The new user email
+   * @successField {number:1} id The id of the user
+   * @successField {string:"email@gmail.com"} username The username of the user
+   * @successField {string:"username"} email The email of the user
+   * @successField {string:"user"} role The role of the user
+   * @error security:user:with_id_not_found
+   * @error request:invalid:email_format
+   * @error security:user:username_too_short
+   * @error security:user:email_taken
+   * @error security:user:username_taken
+   * @error security:user:update_failed
    */
   async updateUser(req) {
     const userId = req.getInteger('userId');
@@ -207,6 +276,20 @@ class SecurityController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<User>}
+   * 
+   * @openapi
+   * @action updateUserPassword
+   * @description Update the password of a given user
+   * @templateParam {number} userId The id of the user
+   * @bodyParam {string:"password"} password The new user password
+   * @successField {number:1} id The id of the user
+   * @successField {string:"email@gmail.com"} username The username of the user
+   * @successField {string:"username"} email The email of the user
+   * @successField {string:"user"} role The role of the user
+   * @error security:user:with_id_not_found
+   * @error security:user:password_too_short
+   * @error security:user:password_too_weak
+   * @error security:user:update_failed
    */
   async updateUserPassword (req) {
     const userId = req.getInteger('userId');
@@ -217,6 +300,10 @@ class SecurityController extends BaseController {
 
     if (!userInfos) {
       error.throwError('security:user:with_id_not_found', userId);
+    }
+
+    if (newPassword.length < this.config.password.minLength) {
+      error.throwError('security:user:password_too_short', this.config.password.minLength);
     }
 
     if (!this._validatePasswordStrength(newPassword)) {
@@ -242,6 +329,19 @@ class SecurityController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<User>}
+   * 
+   * @openapi
+   * @action updateUserRole
+   * @description Update the role of a given user
+   * @templateParam {number} userId The id of the user
+   * @bodyParam {string:"user"} role The new user role
+   * @successField {number:1} id The id of the user
+   * @successField {string:"email@gmail.com"} username The username of the user
+   * @successField {string:"username"} email The email of the user
+   * @successField {string:"user"} role The role of the user
+   * @error security:user:with_id_not_found
+   * @error security:user:invalid_role
+   * @error security:user:update_failed
    */
   async updateUserRole(req) {
     const userId = req.getInteger('userId');
@@ -282,6 +382,12 @@ class SecurityController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<boolean>}
+   * 
+   * @openapi
+   * @action deleteUser
+   * @description Delete a given user
+   * @templateParam {number} userId The id of the user
+   * @return {boolean:} true
    */
   async deleteUser(req) {
     const userId = req.getInteger('userId');

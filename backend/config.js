@@ -59,7 +59,6 @@ module.exports = {
         login: true,
         logout: true,
         checkToken: true,
-        register: true,
       },
     },
     user: {
@@ -81,7 +80,7 @@ module.exports = {
       },
       workingtime: {
         listMyWorkingTimes: true,
-        createOrUpdateMyWorkingTime: true,
+        createMyWorkingTime: true,
         deleteMyWorkingTime: true,
         updateMyWorkingTime: true,
         getMyWorkingTime: true,

@@ -653,7 +653,18 @@ describe('AuthController', () => {
       );
     });
 
+    it('should reject if the given password is too short', async () => {
+      request.input.body.newPassword = 'a';
+      backend.ask.withArgs('core:security:user:verifyById')
+      .resolves(true);
+      await should(authController.updateMyPassword(request)).be.rejectedWith(
+        SecurityError,
+        { id: 'security:user:password_too_short' }
+      );
+    });
+
     it('should reject if the given password is too weak', async () => {
+      request.input.body.newPassword = 'foobarbaz';
       authController._validatePasswordStrength = sinon.stub().returns(false);
       backend.ask.withArgs('core:security:user:verifyById')
         .resolves(true);
@@ -667,10 +678,11 @@ describe('AuthController', () => {
         'core:security:user:verifyById',
         {id: 42, password: 'foo'},
       );
-      await should(authController._validatePasswordStrength).be.calledWith('bar');
+      await should(authController._validatePasswordStrength).be.calledWith('foobarbaz');
     });
 
-    it('should user information if the update succeeded', async () => {
+    it('should update user information if the update succeeded', async () => {
+      request.input.body.newPassword = 'foobarbaz';
       authController._validatePasswordStrength = sinon.stub().returns(true);
       backend.ask.withArgs('core:security:user:verifyById')
         .resolves(true);
@@ -688,8 +700,8 @@ describe('AuthController', () => {
         'core:security:user:verifyById',
         {id: 42, password: 'foo'},
       );
-      await should(authController._validatePasswordStrength).be.calledWith('bar');
-      await should(backend.ask).be.calledWith('core:security:user:updatePassword', 42, 'bar');
+      await should(authController._validatePasswordStrength).be.calledWith('foobarbaz');
+      await should(backend.ask).be.calledWith('core:security:user:updatePassword', 42, 'foobarbaz');
 
       await should(response)
         .be.an.Object()
@@ -702,6 +714,7 @@ describe('AuthController', () => {
     });
 
     it('should reject if update failed', async () => {
+      request.input.body.newPassword = 'foobarbaz';
       authController._validatePasswordStrength = sinon.stub().returns(true);
       backend.ask.withArgs('core:security:user:verifyById')
         .resolves(true);
@@ -718,8 +731,8 @@ describe('AuthController', () => {
         'core:security:user:verifyById',
         {id: 42, password: 'foo'},
       );
-      await should(authController._validatePasswordStrength).be.calledWith('bar');
-      await should(backend.ask).be.calledWith('core:security:user:updatePassword', 42, 'bar');
+      await should(authController._validatePasswordStrength).be.calledWith('foobarbaz');
+      await should(backend.ask).be.calledWith('core:security:user:updatePassword', 42, 'foobarbaz');
     });
   });
 

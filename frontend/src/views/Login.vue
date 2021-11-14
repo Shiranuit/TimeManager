@@ -28,7 +28,7 @@
             }}</b-button></b-row
           >
           <b-row
-            ><b-link class="swap-action" v-on:click="swap_action">{{
+            ><b-link class="swap-action" v-on:click="swap_action" v-if="false">{{
               (show_login && "Register a new account ?") ||
               "Already have an account ?"
             }}</b-link></b-row

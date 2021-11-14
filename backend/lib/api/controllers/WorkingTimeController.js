@@ -28,6 +28,13 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<Array<WorkingTime>>}
+   * 
+   * @openapi
+   * @action listWorkingTimes
+   * @description List all working times for a given user
+   * @templateParam {number} userId The id of the user
+   * @return {array} [[{"id":1,"start":"2018-01-01T00:00:00.000Z","end":"2018-01-01T00:00:00.000Z","description":""}]]
+   * @error security:user:with_id_not_found
    */
   async listWorkingTimes (req) {
     const userId = req.getInteger('userId');
@@ -54,6 +61,12 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<Array<WorkingTime>>}
+   * 
+   * @openapi
+   * @action listMyWorkingTimes
+   * @description List all working times of the current user
+   * @return {array} [[{"id":1,"start":"2018-01-01T00:00:00.000Z","end":"2018-01-01T00:00:00.000Z","description":""}]]
+   * @error security:user:not_authenticated
    */
   async listMyWorkingTimes (req) {
     if (req.isAnonymous()) {
@@ -76,6 +89,18 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<WorkingTime>}
+   * 
+   * @openapi
+   * @action getWorkingTime
+   * @description Get information about a working time for a given user
+   * @templateParam {number} userId The id of the user
+   * @templateParam {number} workId The id of the working time
+   * @successField {number:1} id The id of the working time
+   * @successField {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @successField {string:"2018-01-01T01:00:00.000Z"} end The end date of the working time
+   * @successField {string} description The description of the working time
+   * @error security:user:with_id_not_found
+   * @error api:workingtime:not_found
    */
   async getWorkingTime (req) {
     const userId = req.getInteger('userId');
@@ -106,6 +131,17 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req 
    * @returns {Promise<WorkingTime>}
+   * 
+   * @openapi
+   * @action getMyWorkingTime
+   * @description Get information about a working time for a given user
+   * @templateParam {number} workId The id of the working time
+   * @successField {number:1} id The id of the working time
+   * @successField {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @successField {string:"2018-01-01T01:00:00.000Z"} end The end date of the working time
+   * @successField {string} description The description of the working time
+   * @error security:user:not_authenticated
+   * @error api:workingtime:not_found
    */
   async getMyWorkingTime (req) {
     const workId = req.getInteger('workId');
@@ -133,6 +169,20 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<WorkingTime>}
+   * 
+   * @openapi
+   * @action createWorkingTime
+   * @description Create a working time for the given user
+   * @templateParam {number} userId The id of the user
+   * @bodyParam {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @bodyParam {string:"2018-01-01T10:00:00.000Z"} end The end date of the working time
+   * @bodyParam {string} description The description of the working time
+   * @successField {number:1} id The id of the working time
+   * @successField {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @successField {string:"2018-01-01T01:00:00.000Z"} end The end date of the working time
+   * @successField {string} description The description of the working time
+   * @error security:user:with_id_not_found
+   * @error api:workingtime:creation_failed
    */
   async createWorkingTime (req) {
     const userId = req.getInteger('userId');
@@ -170,6 +220,19 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<WorkingTime>}
+   * 
+   * @openapi
+   * @action createMyWorkingTime
+   * @description Create a working time for the current user
+   * @bodyParam {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @bodyParam {string:"2018-01-01T10:00:00.000Z"} end The end date of the working time
+   * @bodyParam {string} description The description of the working time
+   * @successField {number:1} id The id of the working time
+   * @successField {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @successField {string:"2018-01-01T01:00:00.000Z"} end The end date of the working time
+   * @successField {string} description The description of the working time
+   * @error security:user:not_authenticated
+   * @error api:workingtime:creation_failed
    */
   async createMyWorkingTime (req) {
     const start = req.getBodyString('start');
@@ -203,6 +266,22 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<WorkingTime>}
+   * 
+   * @openapi
+   * @action updateWorkingTime
+   * @description Update informations of working time for the given user
+   * @templateParam {number} userId The id of the user
+   * @templateParam {number} workId The id of the working time
+   * @bodyParam {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @bodyParam {string:"2018-01-01T10:00:00.000Z"} end The end date of the working time
+   * @bodyParam {string} description The description of the working time
+   * @successField {number:1} id The id of the working time
+   * @successField {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @successField {string:"2018-01-01T01:00:00.000Z"} end The end date of the working time
+   * @successField {string} description The description of the working time
+   * @error security:user:with_id_not_found
+   * @error api:workingtime:not_found
+   * @error api:workingtime:update_failed
    */
   async updateWorkingTime (req) {
     const userId = req.getInteger('userId');
@@ -247,6 +326,21 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<WorkingTime>}
+   * 
+   * @openapi
+   * @action updateMyWorkingTime
+   * @description Update informations of working time for the current user
+   * @templateParam {number} workId The id of the working time
+   * @bodyParam {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @bodyParam {string:"2018-01-01T10:00:00.000Z"} end The end date of the working time
+   * @bodyParam {string} description The description of the working time
+   * @successField {number:1} id The id of the working time
+   * @successField {string:"2018-01-01T00:00:00.000Z"} start The start date of the working time
+   * @successField {string:"2018-01-01T01:00:00.000Z"} end The end date of the working time
+   * @successField {string} description The description of the working time
+   * @error security:user:not_authenticated
+   * @error api:workingtime:not_found
+   * @error api:workingtime:update_failed
    */
   async updateMyWorkingTime (req) {
     const workId = req.getInteger('workId');
@@ -288,6 +382,14 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<boolean>}
+   * 
+   * @openapi
+   * @action deleteWorkingTime
+   * @description Delete a working time for the given user
+   * @templateParam {number} userId The id of the user
+   * @templateParam {number} workId The id of the working time
+   * @return {boolean} true
+   * @error security:user:with_id_not_found
    */
   async deleteWorkingTime (req) {
     const userId = req.getInteger('userId');
@@ -309,6 +411,13 @@ class WorkingTimeController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<boolean>}
+   * 
+   * @openapi
+   * @action deleteMyWorkingTime
+   * @description Delete a working time for the current user
+   * @templateParam {number} workId The id of the working time
+   * @return {boolean} true
+   * @error security:user:not_authenticated
    */
   async deleteMyWorkingTime (req) {
     const workId = req.getInteger('workId');
