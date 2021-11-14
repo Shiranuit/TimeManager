@@ -27,6 +27,19 @@ class TeamController extends BaseController {
    * Create a new team
    *
    * @param {Request} req
+   * 
+   * @openapi
+   * @action createTeam
+   * @description Create a new team
+   * @bodyParam {string:"team_name"} name The name of the team
+   * @bodyParam {number:null} owner_id The id of the owner of the team
+   * @successField {string:"team_name"} name The name of the team
+   * @successField {number:null} owner The id of the owner of the team
+   * @error security:user:not_authenticated
+   * @error api:team:name_too_short
+   * @error api:team:creation_failed
+   * @error api:team:already_exists
+   * @error security:user:with_id_not_found
    */
   async createTeam(req) {
     if (req.isAnonymous()) {
@@ -49,7 +62,7 @@ class TeamController extends BaseController {
 
       return {
         name: team.name,
-        owner: team.owner_id
+        owner_id: team.owner_id
       };
     } catch (err) {
       if (err.code) {
@@ -67,16 +80,41 @@ class TeamController extends BaseController {
     }
   }
 
+  /**
+   * @openapi
+   * @action listTeams
+   * @description List all the teams
+   * @return {array} [[{"name":"team_name","owner_id":1, "members_id":[1,2,3]}]]
+   */
   async listTeams() {
     return await this.backend.ask('core:team:list');
   }
 
+  /**
+   * @openapi
+   * @action deleteTeam
+   * @templateParam {string} teamName The name of the team
+   * @description Delete a team
+   * @return {boolean} true
+   */
   async deleteTeam(req) {
     const teamname = req.getString('teamName');
 
     return await this.backend.ask('core:team:delete', teamname);
   }
 
+  /**
+   * @openapi
+   * @action addTeamUser
+   * @description Add a user to a team
+   * @templateParam {string} teamName The name of the team
+   * @templateParam {number} userId The id of the user
+   * @successField {string:"team_name"} name The name of the team
+   * @successField {number:1} owner The id of the owner of the team
+   * @successField {array:[1,2,3]} members_id The ids of the members of the team
+   * @error api:team:user_add_failed
+   * @error security:user:with_id_not_found
+   */
   async addTeamUser(req) {
     const teamname = req.getString('teamName');
     const userId = req.getInteger('userId');
@@ -105,6 +143,17 @@ class TeamController extends BaseController {
     }
   }
 
+  /**
+   * @openapi
+   * @action removeTeamUser
+   * @description Remove a user from a team
+   * @templateParam {string} teamName The name of the team
+   * @templateParam {number} userId The id of the user
+   * @successField {string:"team_name"} name The name of the team
+   * @successField {number:1} owner The id of the owner of the team
+   * @successField {array:[1,2,3]} members_id The ids of the members of the team
+   * @error api:team:user_remove_failed
+   */
   async removeTeamUser(req) {
     const teamname = req.getString('teamName');
     const userId = req.getInteger('userId');
@@ -122,6 +171,16 @@ class TeamController extends BaseController {
     };
   }
 
+  /**
+   * @openapi
+   * @action getTeamByName
+   * @description Retrieve team informations by name
+   * @templateParam {string} teamName The name of the team
+   * @successField {string:"team_name"} name The name of the team
+   * @successField {number:1} owner The id of the owner of the team
+   * @successField {array:[1,2,3]} members_id The ids of the members of the team
+   * @error api:team:not_found
+   */
   async getTeamByName(req) {
     const teamname = req.getString('teamName');
 
@@ -138,12 +197,26 @@ class TeamController extends BaseController {
     };
   }
 
+  /**
+   * @openapi
+   * @action listUserTeams
+   * @description List all the teams a user is member of
+   * @templateParam {number} userId The id of the user
+   * @return {array} [[{"name":"team_name","owner_id":1, "members_id":[1,2,3]}]]
+   */
   async listUserTeams(req) {
     const userId = req.getInteger('userId');
 
     return await this.backend.ask('core:team:list:byUser', userId);
   }
 
+  /**
+   * @openapi
+   * @action listOwnedTeams
+   * @description List all the teams owned by the current user
+   * @return {array} [[{"name":"team_name","owner_id":1, "members_id":[1,2,3]}]]
+   * @error security:user:not_authenticated
+   */
   async listOwnedTeams(req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
@@ -153,9 +226,19 @@ class TeamController extends BaseController {
   }
 
   /**
-   * Create a new team for owned by the requesting user
-   *
-   * @param {Request} req
+   * Create a new team owned by the current user
+   * 
+   * @openapi
+   * @action createOwnedTeam
+   * @description Create a new team owned by the current user
+   * @templateParam {string} name The name of the team
+   * @successField {string:"team_name"} name The name of the team
+   * @successField {number:1} owner The id of the owner of the team
+   * @error security:user:not_authenticated
+   * @error api:team:name_too_short
+   * @error api:team:creation_failed
+   * @error api:team:already_exists
+   * @error security:user:with_id_not_found
    */
   async createOwnedTeam(req) {
     if (req.isAnonymous()) {
@@ -177,7 +260,7 @@ class TeamController extends BaseController {
 
       return {
         name: team.name,
-        owner: team.owner_id
+        owner_id: team.owner_id
       };
     } catch (err) {
       if (err.code) {
@@ -196,7 +279,20 @@ class TeamController extends BaseController {
     }
   }
 
+  /**
+   * @openapi
+   * @action deleteOwnedTeam
+   * @description Delete a team owned by the current user
+   * @templateParam {string} teamName The name of the team
+   * @return {boolean} true
+   * @error security:user:not_authenticated
+   * @error api:team:team_not_owned
+   */
   async deleteOwnedTeam(req) {
+    if (req.isAnonymous()) {
+      error.throwError('security:user:not_authenticated');
+    }
+
     const teamname = req.getString('teamName');
 
     const owned = await this.backend.ask('core:team:verify', teamname, req.getUser().id);
@@ -208,6 +304,20 @@ class TeamController extends BaseController {
     return await this.backend.ask('core:team:delete', teamname);
   }
 
+  /**
+   * @openapi
+   * @action addOwnedTeamUser
+   * @description Add a user to a team owned by the current user
+   * @templateParam {string} teamName The name of the team
+   * @templateParam {number} userId The id of the user
+   * @successField {string:"team_name"} name The name of the team
+   * @successField {number:1} owner The id of the owner of the team
+   * @successField {array:[1,2,3]} members_id The ids of the members of the team
+   * @error security:user:not_authenticated
+   * @error api:team:team_not_owned
+   * @error api:team:user_add_failed
+   * @error security:user:with_id_not_found
+   */
   async addOwnedTeamUser(req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
@@ -246,6 +356,19 @@ class TeamController extends BaseController {
     }
   }
 
+  /**
+   * @openapi
+   * @action removeOwnedTeamUser
+   * @description Remove a user from a team owned by the current user
+   * @templateParam {string} teamName The name of the team
+   * @templateParam {number} userId The id of the user
+   * @successField {string:"team_name"} name The name of the team
+   * @successField {number:1} owner The id of the owner of the team
+   * @successField {array:[1,2,3]} members_id The ids of the members of the team
+   * @error security:user:not_authenticated
+   * @error api:team:team_not_owned
+   * @error api:team:user_remove_failed
+   */
   async removeOwnedTeamUser(req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');
@@ -273,6 +396,18 @@ class TeamController extends BaseController {
     };
   }
 
+  /**
+   * @openapi
+   * @action getOwnedTeamByName
+   * @description Retrieve informations about a team owned by the current user
+   * @templateParam {string} teamName The name of the team
+   * @successField {string:"team_name"} name The name of the team
+   * @successField {number:1} owner The id of the owner of the team
+   * @successField {array:[1,2,3]} members_id The ids of the members of the team
+   * @error security:user:not_authenticated
+   * @error api:team:team_not_owned
+   * @error api:team:not_found
+   */
   async getOwnedTeamByName(req) {
     if (req.isAnonymous()) {
       error.throwError('security:user:not_authenticated');

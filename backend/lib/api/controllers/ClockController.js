@@ -22,6 +22,15 @@ class ClockController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<Clock>}
+   * 
+   * @openapi
+   * @action createOrUpdateMyClock
+   * @description Start a new clock or stop the current one for the current user.
+   * @successField {boolean:true} status The Clock status, running or not
+   * @successField {string:"2021-11-14T11:23:28.353Z"} start The Clock start date
+   * @error security:user:not_authenticated
+   * @error api:clock:creation_failed
+   * @error api:clock:update_failed
    */
   async createOrUpdateMyClock (req) {
     if (req.isAnonymous()) {
@@ -63,6 +72,16 @@ class ClockController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<Clock>}
+   * 
+   * @openapi
+   * @action createOrUpdate
+   * @description Start a new clock or stop the current one.
+   * @templateParam {number} userId The user id
+   * @successField {boolean:true} status The Clock status, running or not
+   * @successField {string:"2021-11-14T11:23:28.353Z"} start The Clock start date
+   * @error security:user:with_id_not_found
+   * @error api:clock:creation_failed
+   * @error api:clock:update_failed
    */
   async createOrUpdate (req) {
     const userId = req.getInteger('userId');
@@ -109,6 +128,14 @@ class ClockController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<Clock>}
+   * 
+   * @openapi
+   * @action getMyClock
+   * @description Get clock informations for the current user.
+   * @successField {boolean:true} status The Clock status, running or not
+   * @successField {string:"2021-11-14T11:23:28.353Z"} start The Clock start date
+   * @error security:user:not_authenticated
+   * @error api:clock:not_found
    */
   async getMyClock (req) {
     if (req.isAnonymous()) {
@@ -132,6 +159,15 @@ class ClockController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<Clock>}
+   * 
+   * @openapi
+   * @action getClock
+   * @description Get clock informations for the current user.
+   * @templateParam {number} userId The user id
+   * @successField {boolean:true} status The Clock status, running or not
+   * @successField {string:"2021-11-14T11:23:28.353Z"} start The Clock start date
+   * @error security:user:with_id_not_found
+   * @error api:clock:not_found
    */
   async getClock (req) {
     const userId = req.getInteger('userId');
@@ -159,6 +195,11 @@ class ClockController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<boolean>}
+   * 
+   * @openapi
+   * @action deleteMyClock
+   * @description Delete the clock of the current user.
+   * @return {boolean} true
    */
   async deleteMyClock (req) {
     if (req.isAnonymous()) {
@@ -175,6 +216,13 @@ class ClockController extends BaseController {
    *
    * @param {Request} req
    * @returns {Promise<boolean>}
+   * 
+   * @openapi
+   * @action delete
+   * @description Delete the clock of a user.
+   * @templateParam {number} userId The user id
+   * @return {boolean} true
+   * @error security:user:with_id_not_found
    */
   async delete (req) {
     const userId = req.getInteger('userId');
